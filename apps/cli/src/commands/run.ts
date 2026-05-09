@@ -15,8 +15,12 @@ import {
   cwvPlugin,
   customMetricExamplePlugin,
 } from "@ohmyperf/plugins-builtin";
+import { writeHtmlReport } from "@ohmyperf/reporter-html";
 import { writeJsonReport } from "@ohmyperf/reporter-json";
 import { EXIT_CODES } from "../exit-codes.js";
+
+const SUPPORTED_FORMATS = ["json", "html"] as const;
+type SupportedFormat = (typeof SUPPORTED_FORMATS)[number];
 
 const DEFAULT_RUNS = 5;
 
@@ -53,8 +57,8 @@ export const runCommand = defineCommand({
     },
     format: {
       type: "string",
-      description: "Comma-separated formats (json supported in v0)",
-      default: "json",
+      description: "Comma-separated formats (json, html)",
+      default: "json,html",
     },
     "browser-path": {
       type: "string",
@@ -128,10 +132,14 @@ export const runCommand = defineCommand({
     const formats = String(args.format)
       .split(",")
       .map((f) => f.trim())
-      .filter((f) => f.length > 0);
-    const unsupported = formats.filter((f) => f !== "json");
+      .filter((f) => f.length > 0) as ReadonlyArray<SupportedFormat>;
+    const unsupported = formats.filter(
+      (f) => !(SUPPORTED_FORMATS as ReadonlyArray<string>).includes(f),
+    );
     if (unsupported.length > 0) {
-      logger.error(`format(s) not supported in v0: ${unsupported.join(", ")} (supported: json)`);
+      logger.error(
+        `format(s) not supported in v0: ${unsupported.join(", ")} (supported: ${SUPPORTED_FORMATS.join(", ")})`,
+      );
       process.exit(EXIT_CODES.invalidUsage);
     }
 
@@ -182,15 +190,22 @@ export const runCommand = defineCommand({
       process.exit(code);
     }
 
-    let written: { path: string; bytes: number } | undefined;
+    const written: Record<SupportedFormat, { path: string; bytes: number } | undefined> = {
+      json: undefined,
+      html: undefined,
+    };
     if (formats.includes("json")) {
-      written = await writeJsonReport(report, String(args.output));
+      written.json = await writeJsonReport(report, String(args.output));
+    }
+    if (formats.includes("html")) {
+      written.html = await writeHtmlReport(report, String(args.output));
     }
 
     if (!args.quiet) {
       printHumanSummary(report, logger);
-      if (written) {
-        logger.info(`wrote ${written.path} (${String(written.bytes)} bytes)`);
+      for (const fmt of SUPPORTED_FORMATS) {
+        const info = written[fmt];
+        if (info) logger.info(`wrote ${info.path} (${String(info.bytes)} bytes)`);
       }
     }
 
@@ -201,7 +216,8 @@ export const runCommand = defineCommand({
           measurementId: report.meta.measurementId,
           aggregatedKeys: Object.keys(report.aggregated),
           auditCount: report.audits.length,
-          outputPath: written?.path ?? null,
+          outputPath: written.json?.path ?? null,
+          htmlPath: written.html?.path ?? null,
         })}\n`,
       );
     }

@@ -30,7 +30,9 @@
     "@ohmyperf/core": "workspace:*",
     "@ohmyperf/driver-playwright": "workspace:*",
     "@ohmyperf/plugins-builtin": "workspace:*",
+    "@ohmyperf/reporter-html": "workspace:*",
     "@ohmyperf/reporter-json": "workspace:*",
+    "@ohmyperf/viewer": "workspace:*",
     "citty": "catalog:",
     "playwright": "catalog:",
     "vitest": "catalog:"

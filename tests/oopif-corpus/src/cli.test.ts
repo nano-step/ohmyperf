@@ -135,6 +135,8 @@ describe("ohmyperf CLI", () => {
         "cwv",
         "--isolate-origins",
         isolateList,
+        "--format",
+        "json",
         "--json",
         "--quiet",
         ...(fullChromium ? ["--browser-path", fullChromium] : []),
@@ -151,10 +153,12 @@ describe("ohmyperf CLI", () => {
         schemaVersion: string;
         measurementId: string;
         outputPath: string | null;
+        htmlPath: string | null;
       };
       expect(summary.schemaVersion).toBe("1.0.0");
       expect(summary.measurementId.length).toBeGreaterThan(8);
       expect(summary.outputPath).not.toBeNull();
+      expect(summary.htmlPath).toBeNull();
 
       const body = await readFile(summary.outputPath!, "utf8");
       const report = JSON.parse(body) as {
@@ -169,4 +173,73 @@ describe("ohmyperf CLI", () => {
     },
     120_000,
   );
+
+  it(
+    "run --format json,html writes both report.json and report.html",
+    async () => {
+      if (!canRunBrowser) {
+        console.warn("skipping: Chromium browser not installed");
+        return;
+      }
+      if (!server) throw new Error("fixture server not started");
+
+      const url = `${parentBase}/oopif-3-cross-origin`;
+      const isolateList = `http://${server.origins[0]!.host}:${String(server.origins[0]!.port)}`;
+      const dualOutDir = join(outputDir, "dual");
+      const res = await runBin([
+        "run",
+        url,
+        "--runs",
+        "1",
+        "--allow-single-run",
+        "--output",
+        dualOutDir,
+        "--plugins",
+        "cwv",
+        "--isolate-origins",
+        isolateList,
+        "--format",
+        "json,html",
+        "--json",
+        "--quiet",
+        ...(fullChromium ? ["--browser-path", fullChromium] : []),
+      ]);
+
+      if (res.code !== 0) {
+        console.error(`stdout:\n${res.stdout}`);
+        console.error(`stderr:\n${res.stderr}`);
+      }
+      expect(res.code).toBe(0);
+
+      const lastJsonLine = res.stdout.trim().split("\n").pop() ?? "";
+      const summary = JSON.parse(lastJsonLine) as {
+        outputPath: string | null;
+        htmlPath: string | null;
+      };
+      expect(summary.outputPath).not.toBeNull();
+      expect(summary.htmlPath).not.toBeNull();
+
+      const html = await readFile(summary.htmlPath!, "utf8");
+      expect(html.startsWith("<!doctype html>")).toBe(true);
+      expect(html).toContain("OhMyPerf v1.0.0 report");
+      expect(html).toContain(url);
+      expect(html).not.toMatch(/<script[^>]+src\s*=\s*["']https?:/i);
+      expect(html).not.toMatch(/<link\b[^>]+rel\s*=\s*["']stylesheet["']/i);
+    },
+    120_000,
+  );
+
+  it("rejects --format with an unknown extension (exit 2)", async () => {
+    const res = await runBin([
+      "run",
+      parentBase,
+      "--runs",
+      "1",
+      "--allow-single-run",
+      "--format",
+      "json,gif",
+    ]);
+    expect(res.code).toBe(2);
+    expect(res.stderr).toMatch(/format.*not supported/i);
+  });
 });

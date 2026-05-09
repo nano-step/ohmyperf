@@ -1,7 +1,7 @@
 {
   "name": "@ohmyperf/reporter-html",
   "version": "0.0.0-pre",
-  "description": "Self-contained HTML reporter via Vite single-file. Embeds the React viewer.",
+  "description": "Self-contained HTML reporter; embeds @ohmyperf/viewer output + the inert Report payload.",
   "license": "Apache-2.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -22,7 +22,16 @@
     "build": "tsc -b",
     "typecheck": "tsc -b",
     "lint": "eslint src",
+    "test": "vitest run --passWithNoTests",
     "clean": "rimraf dist .turbo *.tsbuildinfo"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@ohmyperf/core": "workspace:*",
+    "@ohmyperf/viewer": "workspace:*",
+    "vitest": "catalog:"
+  },
+  "peerDependencies": {
+    "@ohmyperf/core": "workspace:*",
+    "@ohmyperf/viewer": "workspace:*"
+  }
 }

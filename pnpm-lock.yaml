@@ -65,9 +65,15 @@ importers:
       '@ohmyperf/plugins-builtin':
         specifier: workspace:*
         version: link:../../packages/plugins-builtin
+      '@ohmyperf/reporter-html':
+        specifier: workspace:*
+        version: link:../../packages/reporter-html
       '@ohmyperf/reporter-json':
         specifier: workspace:*
         version: link:../../packages/reporter-json
+      '@ohmyperf/viewer':
+        specifier: workspace:*
+        version: link:../../packages/viewer
       citty:
         specifier: 'catalog:'
         version: 0.1.6
@@ -132,7 +138,17 @@ importers:
 
   packages/reporter-har: {}
 
-  packages/reporter-html: {}
+  packages/reporter-html:
+    devDependencies:
+      '@ohmyperf/core':
+        specifier: workspace:*
+        version: link:../core
+      '@ohmyperf/viewer':
+        specifier: workspace:*
+        version: link:../viewer
+      vitest:
+        specifier: 'catalog:'
+        version: 2.1.9(@types/node@22.19.18)
 
   packages/reporter-json:
     devDependencies:
@@ -157,7 +173,14 @@ importers:
 
   packages/trace-utils: {}
 
-  packages/viewer: {}
+  packages/viewer:
+    devDependencies:
+      '@ohmyperf/core':
+        specifier: workspace:*
+        version: link:../core
+      vitest:
+        specifier: 'catalog:'
+        version: 2.1.9(@types/node@22.19.18)
 
   tests/oopif-corpus:
     devDependencies:

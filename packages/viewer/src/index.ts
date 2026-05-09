@@ -1,2 +1,3 @@
-export const PACKAGE_NAME = "@ohmyperf/viewer" as const;
-export const PACKAGE_ROLE = "React + Vite + Tailwind viewer. Consumes Report JSON only." as const;
+export { renderReportHtml, type RenderViewerOptions } from "./render.js";
+export { escapeHtml, escapeJsonForHtml, safeAttr } from "./escape.js";
+export { VIEWER_CSS } from "./styles.js";

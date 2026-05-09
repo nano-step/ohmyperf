@@ -1,7 +1,7 @@
 {
   "name": "@ohmyperf/viewer",
   "version": "0.0.0-pre",
-  "description": "React + Vite + Tailwind viewer. Consumes Report JSON only.",
+  "description": "Static, single-file HTML viewer for OhMyPerf Reports (no runtime dependencies; no React in v0).",
   "license": "Apache-2.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -23,7 +23,14 @@
     "build": "tsc -b",
     "typecheck": "tsc -b",
     "lint": "eslint src",
+    "test": "vitest run --passWithNoTests",
     "clean": "rimraf dist .turbo *.tsbuildinfo"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@ohmyperf/core": "workspace:*",
+    "vitest": "catalog:"
+  },
+  "peerDependencies": {
+    "@ohmyperf/core": "workspace:*"
+  }
 }
