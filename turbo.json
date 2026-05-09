@@ -7,11 +7,18 @@
     "pnpm-workspace.yaml",
     "eslint.config.js"
   ],
+  "globalEnv": [
+    "CI",
+    "OHMYPERF_CHROMIUM_PATH",
+    "OHMYPERF_BROWSER_PATH",
+    "PLAYWRIGHT_BROWSERS_PATH",
+    "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["src/**", "package.json", "tsconfig.json"],
-      "outputs": ["dist/**", "build/**"]
+      "outputs": ["dist/**", "build/**", "*.tsbuildinfo"]
     },
     "typecheck": {
       "dependsOn": ["^build"],

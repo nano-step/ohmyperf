@@ -1,6 +1,9 @@
 export const PACKAGE_NAME = "@ohmyperf/core" as const;
 export const SCHEMA_VERSION = "1.0.0" as const;
 
+export { createConsoleLogger, createSilentLogger } from "./logger.js";
+export type { LogLevel, ConsoleLoggerOptions } from "./logger.js";
+
 export type {
   AggregatedMetric,
   AggregatedMetrics,

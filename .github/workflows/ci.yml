@@ -40,8 +40,41 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm typecheck
       - run: pnpm lint
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install chromium
       - run: pnpm test
       - run: pnpm license:audit
+
+  oopif-corpus:
+    name: OOPIF synthetic test corpus
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Install Playwright Chromium (full, not headless-shell)
+        run: pnpm exec playwright install chromium
+      - name: Locate full Chromium binary
+        id: chromium-path
+        shell: bash
+        run: |
+          BIN=$(find ~/.cache/ms-playwright /opt/playwright-browsers -type f \
+            -path '*/chromium-*/chrome-linux/chrome' 2>/dev/null | head -1)
+          if [ -z "$BIN" ]; then
+            echo "Could not locate full Chromium binary. headless-shell does not support OOPIF site-isolation."
+            exit 1
+          fi
+          echo "OHMYPERF_CHROMIUM_PATH=$BIN" >> "$GITHUB_ENV"
+          echo "found: $BIN"
+      - run: pnpm test:oopif-corpus
+        env:
+          OHMYPERF_CHROMIUM_PATH: ${{ env.OHMYPERF_CHROMIUM_PATH }}
 
   api-freeze:
     name: API freeze (api-extractor)

@@ -9,6 +9,9 @@ catalogs:
     axe-core:
       specifier: ^4.10.2
       version: 4.11.4
+    playwright:
+      specifier: ^1.49.1
+      version: 1.59.1
     vitest:
       specifier: ^2.1.8
       version: 2.1.9
@@ -68,10 +71,16 @@ importers:
   packages/driver-extension: {}
 
   packages/driver-playwright:
-    dependencies:
+    devDependencies:
+      '@ohmyperf/core':
+        specifier: workspace:*
+        version: link:../core
       playwright:
-        specifier: '*'
+        specifier: 'catalog:'
         version: 1.59.1
+      vitest:
+        specifier: 'catalog:'
+        version: 2.1.9(@types/node@22.19.18)
 
   packages/plugins-builtin:
     dependencies:
@@ -110,7 +119,20 @@ importers:
 
   packages/viewer: {}
 
-  tests/oopif-corpus: {}
+  tests/oopif-corpus:
+    devDependencies:
+      '@ohmyperf/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@ohmyperf/driver-playwright':
+        specifier: workspace:*
+        version: link:../../packages/driver-playwright
+      playwright:
+        specifier: 'catalog:'
+        version: 1.59.1
+      vitest:
+        specifier: 'catalog:'
+        version: 2.1.9(@types/node@22.19.18)
 
 packages:
 

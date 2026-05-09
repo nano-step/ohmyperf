@@ -10,6 +10,14 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./cdp-compat": {
+      "types": "./dist/cdp-compat.d.ts",
+      "import": "./dist/cdp-compat.js"
+    },
+    "./oopif-attach": {
+      "types": "./dist/oopif-attach.d.ts",
+      "import": "./dist/oopif-attach.js"
     }
   },
   "files": [
@@ -20,12 +28,18 @@
   ],
   "scripts": {
     "build": "tsc -b",
-    "typecheck": "tsc -b --noEmit",
+    "typecheck": "tsc -b",
     "lint": "eslint src",
+    "test": "vitest run",
     "clean": "rimraf dist .turbo *.tsbuildinfo"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@ohmyperf/core": "workspace:*",
+    "playwright": "catalog:",
+    "vitest": "catalog:"
+  },
   "peerDependencies": {
-    "playwright": "*"
+    "@ohmyperf/core": "workspace:*",
+    "playwright": "catalog:"
   }
 }

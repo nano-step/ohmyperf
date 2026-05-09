@@ -4,6 +4,8 @@ build/
 coverage/
 .turbo/
 *.tsbuildinfo
+packages/*/temp/
+.vitest-cache/
 
 # Editor / OS
 .DS_Store

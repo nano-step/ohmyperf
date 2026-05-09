@@ -14,10 +14,17 @@
   },
   "scripts": {
     "build": "tsc -b",
-    "typecheck": "tsc -b --noEmit",
+    "typecheck": "tsc -b",
     "lint": "eslint src",
+    "test": "vitest run",
+    "test:oopif-corpus": "vitest run",
     "clean": "rimraf dist .turbo *.tsbuildinfo"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@ohmyperf/core": "workspace:*",
+    "@ohmyperf/driver-playwright": "workspace:*",
+    "playwright": "catalog:",
+    "vitest": "catalog:"
+  },
   "private": true
 }

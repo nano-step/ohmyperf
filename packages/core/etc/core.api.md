@@ -4,118 +4,99 @@
 
 ```ts
 
+import { AggregatedMetric } from './types.js';
+import { AggregatedMetrics } from './types.js';
+import { ArtifactRef } from './types.js';
+import { AuditResult } from './types.js';
+import { Awaitable } from './types.js';
+import { BrowserHandle } from './types.js';
+import { BrowserInfo } from './types.js';
+import { BudgetConfig } from './types.js';
+import { BudgetEvaluation } from './types.js';
+import { CalibrationInfo } from './types.js';
+import { CDPSessionLike } from './types.js';
+import { Driver } from './types.js';
+import { DriverCapability } from './types.js';
+import { DriverHandle } from './types.js';
+import { DriverRef } from './types.js';
+import { EmulationConfig } from './types.js';
+import { EngineHooks } from './types.js';
+import { FrameCtx } from './types.js';
+import { FrameNode } from './types.js';
+import { FrameTree } from './types.js';
+import { HeadlessMode } from './types.js';
+import { LaunchOpts } from './types.js';
+import { Logger } from './types.js';
+import { LongTask } from './types.js';
+import { MeasureOptions } from './types.js';
+import { Metric } from './types.js';
+import { MetricAttribution } from './types.js';
+import { Mode } from './types.js';
+import { NavigationEvent } from './types.js';
+import { PageHandle } from './types.js';
+import { ParityInfo } from './types.js';
+import { Plugin as Plugin_2 } from './types.js';
+import { PluginCapability } from './types.js';
+import { PluginHooks } from './types.js';
+import { PluginRef } from './types.js';
+import { PluginRefByName } from './types.js';
+import { Report as Report_2 } from './types.js';
+import { ReportCtx } from './types.js';
+import { ReporterName } from './types.js';
+import { ReportMeta } from './types.js';
+import { Resource } from './types.js';
+import { RunCtx } from './types.js';
+import { RunReport } from './types.js';
+import { ScenarioDefinition } from './types.js';
+import { ScenarioFn } from './types.js';
+import { ScenarioStep } from './types.js';
+import { SchemaVersion } from './types.js';
+import { SetupCtx } from './types.js';
+import { ShareCtx } from './types.js';
+import { TargetHandle } from './types.js';
+import { TeardownCtx } from './types.js';
+
+export { AggregatedMetric }
+
+export { AggregatedMetrics }
+
+export { ArtifactRef }
+
+export { AuditResult }
+
+export { Awaitable }
+
+export { BrowserHandle }
+
+export { BrowserInfo }
+
+export { BudgetConfig }
+
+export { BudgetEvaluation }
+
+export { CalibrationInfo }
+
+export { CDPSessionLike }
+
 // @public (undocumented)
-export interface AggregatedMetric {
+export interface ConsoleLoggerOptions {
     // (undocumented)
-    readonly cov: number;
+    readonly errStream?: NodeJS.WritableStream;
     // (undocumented)
-    readonly droppedOutliers: number;
+    readonly json?: boolean;
     // (undocumented)
-    readonly mean: number;
+    readonly level?: LogLevel;
     // (undocumented)
-    readonly median: number;
+    readonly prefix?: string;
     // (undocumented)
-    readonly p75: number;
-    // (undocumented)
-    readonly p95: number;
-    // (undocumented)
-    readonly runs: number;
-    // (undocumented)
-    readonly stdev: number;
+    readonly stream?: NodeJS.WritableStream;
 }
 
 // @public (undocumented)
-export interface AggregatedMetrics {
-    // (undocumented)
-    readonly [metricName: string]: AggregatedMetric;
-}
+export function createConsoleLogger(opts?: ConsoleLoggerOptions): Logger;
 
 // @public (undocumented)
-export interface ArtifactRef {
-    // (undocumented)
-    readonly path: string;
-    // (undocumented)
-    readonly sha256: string;
-    // (undocumented)
-    readonly sizeBytes: number;
-}
-
-// @public (undocumented)
-export interface AuditResult {
-    // (undocumented)
-    readonly details?: unknown;
-    // (undocumented)
-    readonly id: string;
-    // (undocumented)
-    readonly passed: boolean;
-    // (undocumented)
-    readonly score: number | null;
-    // (undocumented)
-    readonly title: string;
-}
-
-// @public (undocumented)
-export type Awaitable<T> = T | Promise<T>;
-
-// @public (undocumented)
-export interface BrowserHandle {
-    // (undocumented)
-    readonly id: string;
-}
-
-// @public (undocumented)
-export interface BrowserInfo {
-    // (undocumented)
-    readonly name: string;
-    // (undocumented)
-    readonly source: "bundled" | "system" | "extension-host";
-    // (undocumented)
-    readonly userDataDir?: string;
-    // (undocumented)
-    readonly version: string;
-}
-
-// @public (undocumented)
-export interface BudgetConfig {
-    // (undocumented)
-    readonly [metricName: string]: number;
-}
-
-// @public (undocumented)
-export interface BudgetEvaluation {
-    // (undocumented)
-    readonly metric: string;
-    // (undocumented)
-    readonly observed: number;
-    // (undocumented)
-    readonly passed: boolean;
-    // (undocumented)
-    readonly threshold: number;
-}
-
-// @public (undocumented)
-export interface CalibrationInfo {
-    // (undocumented)
-    readonly cacheHit: boolean;
-    // (undocumented)
-    readonly networkProfile: string;
-    // (undocumented)
-    readonly observedScore: number;
-    // (undocumented)
-    readonly reference: string;
-    // (undocumented)
-    readonly throttleRate: number;
-}
-
-// @public (undocumented)
-export interface CDPSessionLike {
-    // (undocumented)
-    detach(): Promise<void>;
-    // (undocumented)
-    on(event: string, handler: (payload: unknown) => void): void;
-    // (undocumented)
-    send(method: string, params?: unknown): Promise<unknown>;
-}
+export function createSilentLogger(): Logger;
 
 // @public (undocumented)
 export function defineConfig<T>(config: T): T;
@@ -126,194 +107,39 @@ export function definePlugin<T extends Plugin_2>(plugin: T): T;
 // @public (undocumented)
 export function defineScenario<T extends ScenarioDefinition>(scenario: T): T;
 
-// @public (undocumented)
-export interface Driver {
-    // (undocumented)
-    attachCDP?(target: TargetHandle): Promise<CDPSessionLike>;
-    // (undocumented)
-    readonly browserVersion: string;
-    // (undocumented)
-    readonly id: string;
-    // (undocumented)
-    launch(opts: LaunchOpts): Promise<BrowserHandle>;
-    // (undocumented)
-    newPage(browser: BrowserHandle): Promise<PageHandle>;
-    // (undocumented)
-    supports(capability: DriverCapability): boolean;
-}
+export { Driver }
+
+export { DriverCapability }
+
+export { DriverHandle }
+
+export { DriverRef }
+
+export { EmulationConfig }
+
+export { EngineHooks }
+
+export { FrameCtx }
+
+export { FrameNode }
+
+export { FrameTree }
+
+export { HeadlessMode }
+
+export { LaunchOpts }
+
+export { Logger }
 
 // @public (undocumented)
-export type DriverCapability = "cdp-oopif" | "coverage" | "heap-snapshot" | "trace" | "long-tasks" | "har" | "axe";
+export type LogLevel = "debug" | "info" | "warn" | "error";
 
-// @public (undocumented)
-export interface DriverHandle {
-    // (undocumented)
-    readonly id: string;
-}
-
-// @public (undocumented)
-export type DriverRef = "playwright-chromium" | "playwright-firefox" | "playwright-webkit" | "cdp-chrome" | "extension-chrome" | Driver;
-
-// @public (undocumented)
-export interface EmulationConfig {
-    // (undocumented)
-    readonly cpuThrottlingRate?: number;
-    // (undocumented)
-    readonly geolocation?: {
-        latitude: number;
-        longitude: number;
-    };
-    // (undocumented)
-    readonly networkProfile?: string;
-    // (undocumented)
-    readonly userAgent?: string;
-    // (undocumented)
-    readonly viewport?: {
-        width: number;
-        height: number;
-        deviceScaleFactor: number;
-    };
-}
-
-// @public (undocumented)
-export interface EngineHooks {
-    // (undocumented)
-    afterMeasure?(report: Report_2): Awaitable<void>;
-    // (undocumented)
-    beforeMeasure?(opts: MeasureOptions): Awaitable<void>;
-}
-
-// @public (undocumented)
-export interface FrameCtx {
-    // (undocumented)
-    readonly frameId: string;
-    // (undocumented)
-    readonly isOOPIF: boolean;
-    // (undocumented)
-    readonly url: string;
-}
-
-// @public (undocumented)
-export interface FrameNode {
-    // (undocumented)
-    readonly attachedAt: number;
-    // (undocumented)
-    readonly children: readonly string[];
-    // (undocumented)
-    readonly detachedAt?: number;
-    // (undocumented)
-    readonly frameId: string;
-    // (undocumented)
-    readonly inFrameMetrics?: {
-        available: false;
-        reason: string;
-    };
-    // (undocumented)
-    readonly isCrossOrigin: boolean;
-    // (undocumented)
-    readonly isFenced?: boolean;
-    // (undocumented)
-    readonly isOOPIF: boolean;
-    // (undocumented)
-    readonly isSrcdoc?: boolean;
-    // (undocumented)
-    readonly metrics: Record<string, Metric>;
-    // (undocumented)
-    readonly origin: string;
-    // (undocumented)
-    readonly parentFrameId: string | null;
-    // (undocumented)
-    readonly url: string;
-}
-
-// @public (undocumented)
-export interface FrameTree {
-    // (undocumented)
-    readonly nodes: Readonly<Record<string, FrameNode>>;
-    // (undocumented)
-    readonly root: string;
-}
-
-// @public (undocumented)
-export type HeadlessMode = "headless" | "headful";
-
-// @public (undocumented)
-export interface LaunchOpts {
-    // (undocumented)
-    readonly emulation?: EmulationConfig | false;
-    // (undocumented)
-    readonly executablePath?: string;
-    // (undocumented)
-    readonly mode: HeadlessMode;
-    // (undocumented)
-    readonly userDataDir?: string;
-}
-
-// @public (undocumented)
-export interface Logger {
-    // (undocumented)
-    debug(message: string, fields?: Record<string, unknown>): void;
-    // (undocumented)
-    error(message: string, fields?: Record<string, unknown>): void;
-    // (undocumented)
-    info(message: string, fields?: Record<string, unknown>): void;
-    // (undocumented)
-    warn(message: string, fields?: Record<string, unknown>): void;
-}
-
-// @public (undocumented)
-export interface LongTask {
-    // (undocumented)
-    readonly attribution: string;
-    // (undocumented)
-    readonly duration: number;
-    // (undocumented)
-    readonly startTime: number;
-}
+export { LongTask }
 
 // @public (undocumented)
 export function measure(opts: MeasureOptions): Promise<Report_2>;
 
-// @public (undocumented)
-export interface MeasureOptions {
-    // (undocumented)
-    readonly artifacts?: {
-        readonly trace?: boolean;
-        readonly screenshots?: boolean;
-        readonly har?: boolean;
-        readonly heap?: boolean;
-        readonly coverage?: boolean;
-    };
-    // (undocumented)
-    readonly budgets?: BudgetConfig;
-    // (undocumented)
-    readonly cacheMode?: "warm" | "cold-only" | "include-cold";
-    // (undocumented)
-    readonly driver?: DriverRef;
-    // (undocumented)
-    readonly emulation?: EmulationConfig | false;
-    // (undocumented)
-    readonly headless?: HeadlessMode;
-    // (undocumented)
-    readonly hooks?: Partial<EngineHooks>;
-    // (undocumented)
-    readonly mode?: Mode;
-    // (undocumented)
-    readonly output?: {
-        readonly dir: string;
-        readonly formats: readonly ReporterName[];
-    };
-    // (undocumented)
-    readonly plugins?: readonly PluginRef[];
-    // (undocumented)
-    readonly runs?: number;
-    // (undocumented)
-    readonly scenario?: ScenarioFn | string;
-    // (undocumented)
-    readonly signal?: AbortSignal;
-    // (undocumented)
-    readonly url: string;
-}
+export { MeasureOptions }
 
 // @public (undocumented)
 export class MeasureOptionsError extends Error {
@@ -324,109 +150,26 @@ export class MeasureOptionsError extends Error {
     readonly name = "MeasureOptionsError";
 }
 
-// @public (undocumented)
-export interface Metric {
-    // (undocumented)
-    readonly attribution?: MetricAttribution;
-    // (undocumented)
-    readonly name: string;
-    // (undocumented)
-    readonly previousValue?: number;
-    // (undocumented)
-    readonly unit: "ms" | "score" | "bytes" | "count" | "ratio";
-    // (undocumented)
-    readonly value: number;
-}
+export { Metric }
 
-// @public (undocumented)
-export interface MetricAttribution {
-    // (undocumented)
-    readonly cause?: string;
-    // (undocumented)
-    readonly element?: string;
-    // (undocumented)
-    readonly frameId?: string;
-    // (undocumented)
-    readonly source?: string;
-    // (undocumented)
-    readonly target?: string;
-    // (undocumented)
-    readonly url?: string;
-}
+export { MetricAttribution }
 
-// @public (undocumented)
-export type Mode = "real" | "ci-stable";
+export { Mode }
 
-// @public (undocumented)
-export interface NavigationEvent {
-    // (undocumented)
-    readonly frameId: string;
-    // (undocumented)
-    readonly type: "initial" | "soft-nav" | "bfcache-restore" | "prerender-activate";
-    // (undocumented)
-    readonly url: string;
-}
+export { NavigationEvent }
 
 // @public (undocumented)
 export const PACKAGE_NAME: "@ohmyperf/core";
 
-// @public (undocumented)
-export interface PageHandle {
-    // (undocumented)
-    readonly id: string;
-}
+export { PageHandle }
 
-// @public (undocumented)
-export interface ParityInfo {
-    // (undocumented)
-    readonly knownDeltas: Readonly<Record<string, string>>;
-    // (undocumented)
-    readonly mode: HeadlessMode;
-}
+export { ParityInfo }
 
-// @public (undocumented)
-interface Plugin_2 {
-    // (undocumented)
-    readonly apiVersion: "1";
-    // (undocumented)
-    readonly capabilities?: readonly PluginCapability[];
-    // (undocumented)
-    hooks?: Partial<PluginHooks>;
-    // (undocumented)
-    readonly id: string;
-    // (undocumented)
-    setup?(ctx: SetupCtx): Awaitable<void>;
-    // (undocumented)
-    teardown?(ctx: TeardownCtx): Awaitable<void>;
-    // (undocumented)
-    readonly version: string;
-}
 export { Plugin_2 as Plugin }
 
-// @public (undocumented)
-export type PluginCapability = "metric" | "audit" | "reporter" | "transport" | "collector" | "lowLevel" | "fs:read" | "fs:write" | "network";
+export { PluginCapability }
 
-// @public (undocumented)
-export interface PluginHooks {
-    // (undocumented)
-    beforeNavigate(ctx: RunCtx): Awaitable<void>;
-    // (undocumented)
-    beforeReport(ctx: ReportCtx): Awaitable<void>;
-    // (undocumented)
-    onFrameAttached(ctx: RunCtx, frame: FrameCtx): Awaitable<void>;
-    // (undocumented)
-    onIdle(ctx: RunCtx): Awaitable<void>;
-    // (undocumented)
-    onLoad(ctx: RunCtx): Awaitable<void>;
-    // (undocumented)
-    onMetric(ctx: RunCtx, metric: Metric): Awaitable<Metric | void>;
-    // (undocumented)
-    onNavigate(ctx: RunCtx, nav: NavigationEvent): Awaitable<void>;
-    // (undocumented)
-    onReport(ctx: ReportCtx, report: Report_2): Awaitable<Report_2 | void>;
-    // (undocumented)
-    onShare(ctx: ShareCtx, report: Report_2): Awaitable<void>;
-}
+export { PluginHooks }
 
 // @public (undocumented)
 export class PluginHookTimeout extends Error {
@@ -446,235 +189,42 @@ export class PluginLoadError extends Error {
     readonly name = "PluginLoadError";
 }
 
-// @public (undocumented)
-export type PluginRef = string | PluginRefByName | Plugin_2;
+export { PluginRef }
 
-// @public (undocumented)
-export interface PluginRefByName {
-    // (undocumented)
-    readonly id: string;
-    // (undocumented)
-    readonly version?: string;
-}
+export { PluginRefByName }
 
-// @public (undocumented)
-interface Report_2 {
-    // (undocumented)
-    readonly aggregated: AggregatedMetrics;
-    // (undocumented)
-    readonly artifacts: {
-        readonly traceRef?: ArtifactRef;
-        readonly harRef?: ArtifactRef;
-        readonly screenshotsRef?: readonly ArtifactRef[];
-        readonly heapRef?: ArtifactRef;
-    };
-    // (undocumented)
-    readonly audits: readonly AuditResult[];
-    // (undocumented)
-    readonly budgets?: readonly BudgetEvaluation[];
-    // (undocumented)
-    readonly coldRun?: RunReport;
-    // (undocumented)
-    readonly frames: FrameTree;
-    // (undocumented)
-    readonly meta: ReportMeta;
-    // (undocumented)
-    readonly pluginData: Readonly<Record<string, unknown>>;
-    // (undocumented)
-    readonly runs: readonly RunReport[];
-    // (undocumented)
-    readonly schemaVersion: SchemaVersion;
-    // (undocumented)
-    readonly warmAggregated?: AggregatedMetrics;
-}
 export { Report_2 as Report }
 
-// @public (undocumented)
-export interface ReportCtx {
-    // (undocumented)
-    readonly logger: Logger;
-}
+export { ReportCtx }
 
-// @public (undocumented)
-export type ReporterName = "json" | "html" | "markdown" | "junit" | "csv" | "har" | "trace" | "lh-compat";
+export { ReporterName }
 
-// @public (undocumented)
-export interface ReportMeta {
-    // (undocumented)
-    readonly browser: BrowserInfo;
-    // (undocumented)
-    readonly calibration?: CalibrationInfo;
-    // (undocumented)
-    readonly cspBypass?: "cdp-init-script" | "none";
-    // (undocumented)
-    readonly degradations?: ReadonlyArray<{
-        readonly capability: DriverCapability;
-        readonly reason: string;
-    }>;
-    // (undocumented)
-    readonly durationMs: number;
-    // (undocumented)
-    readonly emulation: false | EmulationConfig;
-    // (undocumented)
-    readonly host: {
-        os: string;
-        arch: string;
-        nodeVersion: string;
-    };
-    // (undocumented)
-    readonly measurementId: string;
-    // (undocumented)
-    readonly mode: Mode;
-    // (undocumented)
-    readonly parity: ParityInfo;
-    // (undocumented)
-    readonly pluginCapabilityUses: ReadonlyArray<{
-        pluginId: string;
-        capability: PluginCapability;
-        when: string;
-    }>;
-    // (undocumented)
-    readonly protocol?: "h1" | "h2" | "h3";
-    // (undocumented)
-    readonly runs: number;
-    // (undocumented)
-    readonly servedBy?: "service-worker" | "network";
-    // (undocumented)
-    readonly startedAt: string;
-    // (undocumented)
-    readonly unstable?: boolean;
-    // (undocumented)
-    readonly url: string;
-}
+export { ReportMeta }
 
-// @public (undocumented)
-export interface Resource {
-    // (undocumented)
-    readonly cacheHit: boolean;
-    // (undocumented)
-    readonly decodedSizeBytes: number;
-    // (undocumented)
-    readonly dnsMs?: number;
-    // (undocumented)
-    readonly encodedSizeBytes: number;
-    // (undocumented)
-    readonly mimeType: string;
-    // (undocumented)
-    readonly renderBlocking: boolean;
-    // (undocumented)
-    readonly requestMs: number;
-    // (undocumented)
-    readonly responseMs: number;
-    // (undocumented)
-    readonly tcpMs?: number;
-    // (undocumented)
-    readonly tlsMs?: number;
-    // (undocumented)
-    readonly transferSizeBytes: number;
-    // (undocumented)
-    readonly url: string;
-}
+export { Resource }
 
-// @public (undocumented)
-export interface RunCtx {
-    // (undocumented)
-    readonly driver: DriverHandle;
-    // (undocumented)
-    readonly emit: (metric: Metric) => void;
-    // (undocumented)
-    readonly logger: Logger;
-    // (undocumented)
-    readonly page: PageHandle;
-    // (undocumented)
-    readonly runIndex: number;
-    // (undocumented)
-    readonly state: Map<string, unknown>;
-}
+export { RunCtx }
 
-// @public (undocumented)
-export interface RunReport {
-    // (undocumented)
-    readonly cold: boolean;
-    // (undocumented)
-    readonly longTasks: readonly LongTask[];
-    // (undocumented)
-    readonly memory?: {
-        readonly jsHeapUsedBytes: number;
-        readonly jsHeapTotalBytes: number;
-        readonly jsHeapLimitBytes: number;
-        readonly domNodes: number;
-        readonly eventListeners: number;
-        readonly detachedNodes: number;
-    };
-    // (undocumented)
-    readonly meta: {
-        readonly servedBy?: "service-worker" | "network";
-    };
-    // (undocumented)
-    readonly metrics: Readonly<Record<string, Metric>>;
-    // (undocumented)
-    readonly resources: readonly Resource[];
-    // (undocumented)
-    readonly runIndex: number;
-}
+export { RunReport }
 
-// @public (undocumented)
-export interface ScenarioDefinition {
-    // (undocumented)
-    readonly name: string;
-    // (undocumented)
-    readonly steps: readonly ScenarioStep[];
-}
+export { ScenarioDefinition }
 
-// @public (undocumented)
-export type ScenarioFn = ScenarioDefinition;
+export { ScenarioFn }
 
-// @public (undocumented)
-export interface ScenarioStep {
-    // (undocumented)
-    readonly measure?: boolean;
-    // (undocumented)
-    readonly name: string;
-    // (undocumented)
-    readonly run: (ctx: {
-        page: unknown;
-        env: NodeJS.ProcessEnv;
-    }) => Promise<void>;
-    // (undocumented)
-    readonly timeout?: number;
-}
+export { ScenarioStep }
 
 // @public (undocumented)
 export const SCHEMA_VERSION: "1.0.0";
 
-// @public (undocumented)
-export type SchemaVersion = "1.0.0";
+export { SchemaVersion }
 
-// @public (undocumented)
-export interface SetupCtx {
-    // (undocumented)
-    readonly logger: Logger;
-}
+export { SetupCtx }
 
-// @public (undocumented)
-export interface ShareCtx {
-    // (undocumented)
-    readonly endpoint: string;
-    // (undocumented)
-    readonly logger: Logger;
-}
+export { ShareCtx }
 
-// @public (undocumented)
-export interface TargetHandle {
-    // (undocumented)
-    readonly id: string;
-}
+export { TargetHandle }
 
-// @public (undocumented)
-export interface TeardownCtx {
-    // (undocumented)
-    readonly logger: Logger;
-}
+export { TeardownCtx }
 
 // (No @packageDocumentation comment for this package)
 
