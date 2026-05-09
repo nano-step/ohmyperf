@@ -49,6 +49,13 @@ export type {
 } from "./calibration.js";
 
 export {
+  diffReports,
+  formatDiff,
+  mannWhitneyPValue,
+} from "./diff.js";
+export type { DiffOptions, MetricDiff, ReportDiff } from "./diff.js";
+
+export {
   HOOK_NAMES,
   checkDriverCompatibility,
   computePluginIntegrity,

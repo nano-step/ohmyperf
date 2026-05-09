@@ -3,6 +3,7 @@ import { runCommand } from "./commands/run.js";
 import { doctorCommand } from "./commands/doctor.js";
 import { listPluginsCommand } from "./commands/list-plugins.js";
 import { installBrowserCommand } from "./commands/install-browser.js";
+import { diffCommand } from "./commands/diff.js";
 
 export const main = defineCommand({
   meta: {
@@ -13,6 +14,7 @@ export const main = defineCommand({
   },
   subCommands: {
     run: runCommand,
+    diff: diffCommand,
     doctor: doctorCommand,
     "list-plugins": listPluginsCommand,
     "install-browser": installBrowserCommand,

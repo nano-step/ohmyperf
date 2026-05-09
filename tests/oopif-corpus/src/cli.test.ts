@@ -242,4 +242,82 @@ describe("ohmyperf CLI", () => {
     expect(res.code).toBe(2);
     expect(res.stderr).toMatch(/format.*not supported/i);
   });
+
+  it("diff: identical reports produce no regression (exit 0)", async () => {
+    const a = await fakeReportFile(outputDir, "a.json", [100, 102, 99, 101, 100]);
+    const b = await fakeReportFile(outputDir, "b.json", [101, 100, 99, 100, 102]);
+    const res = await runBin(["diff", a, b]);
+    expect(res.code).toBe(0);
+    expect(res.stdout + res.stderr).toMatch(/no regressions/i);
+  });
+
+  it("diff: clear regression in candidate exits 1", async () => {
+    const a = await fakeReportFile(outputDir, "before.json", [100, 102, 99, 101, 100, 103]);
+    const b = await fakeReportFile(outputDir, "after.json", [200, 205, 195, 210, 198, 207]);
+    const res = await runBin(["diff", a, b, "--json"]);
+    expect(res.code).toBe(1);
+    const parsed = JSON.parse(res.stdout) as {
+      hasRegressions: boolean;
+      metrics: Array<{ metric: string; direction: string; significant: boolean }>;
+    };
+    expect(parsed.hasRegressions).toBe(true);
+    const lcp = parsed.metrics.find((m) => m.metric === "lcp");
+    expect(lcp?.direction).toBe("regression");
+    expect(lcp?.significant).toBe(true);
+  });
+
+  it("diff: --fail-on-regression=false suppresses exit 1", async () => {
+    const a = await fakeReportFile(outputDir, "b1.json", [100, 102, 99, 101, 100, 103]);
+    const b = await fakeReportFile(outputDir, "b2.json", [200, 205, 195, 210, 198, 207]);
+    const res = await runBin(["diff", a, b, "--no-fail-on-regression"]);
+    expect(res.code).toBe(0);
+  });
+
+  it("diff: rejects an invalid baseline path (exit 2)", async () => {
+    const res = await runBin(["diff", "/does/not/exist.json", "/also/missing.json"]);
+    expect(res.code).toBe(2);
+  });
 });
+
+async function fakeReportFile(
+  dir: string,
+  name: string,
+  lcpValues: ReadonlyArray<number>,
+): Promise<string> {
+  const { mkdir, writeFile } = await import("node:fs/promises");
+  const { join } = await import("node:path");
+  await mkdir(dir, { recursive: true });
+  const path = join(dir, name);
+  const runs = lcpValues.map((v, i) => ({
+    runIndex: i,
+    cold: i === 0,
+    metrics: { lcp: { name: "lcp", value: v, unit: "ms" } },
+    resources: [],
+    longTasks: [],
+    meta: {},
+  }));
+  const report = {
+    schemaVersion: "1.0.0",
+    meta: {
+      url: "https://example.test/",
+      startedAt: new Date().toISOString(),
+      durationMs: 1000,
+      runs: runs.length,
+      mode: "real",
+      browser: { name: "chromium", version: "147.0", source: "bundled" },
+      host: { os: "linux", arch: "x64", nodeVersion: process.version },
+      parity: { mode: "headless", knownDeltas: {} },
+      emulation: false,
+      pluginCapabilityUses: [],
+      measurementId: name,
+    },
+    runs,
+    aggregated: {},
+    frames: { root: "r", nodes: { r: { frameId: "r", url: "https://x", origin: "https://x", parentFrameId: null, isOOPIF: false, isCrossOrigin: false, attachedAt: 0, metrics: {}, children: [] } } },
+    audits: [],
+    artifacts: {},
+    pluginData: {},
+  };
+  await writeFile(path, JSON.stringify(report, null, 2), "utf8");
+  return path;
+}

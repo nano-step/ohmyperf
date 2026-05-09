@@ -268,6 +268,17 @@ export function definePlugin<T extends Plugin_2>(plugin: T): T;
 export function defineScenario<T extends ScenarioDefinition>(scenario: T): T;
 
 // @public (undocumented)
+export interface DiffOptions {
+    // (undocumented)
+    readonly noiseFloor?: Readonly<Record<string, number>>;
+    // (undocumented)
+    readonly significanceLevel?: number;
+}
+
+// @public (undocumented)
+export function diffReports(baseline: Report_2, candidate: Report_2, opts?: DiffOptions): ReportDiff;
+
+// @public (undocumented)
 export interface Driver {
     // (undocumented)
     attachCDP?(target: TargetHandle): Promise<CDPSessionLike>;
@@ -376,6 +387,9 @@ export interface EngineRunOptions {
     // (undocumented)
     readonly opts: MeasureOptions;
 }
+
+// @public (undocumented)
+export function formatDiff(diff: ReportDiff): string;
 
 // @public (undocumented)
 export interface FrameCtx {
@@ -487,6 +501,9 @@ export const longTaskCollectorFactory: CollectorFactory;
 export function makeConsoleLoggerForEngine(level?: "debug" | "info" | "warn" | "error"): Logger;
 
 // @public (undocumented)
+export function mannWhitneyPValue(a: ReadonlyArray<number>, b: ReadonlyArray<number>): number;
+
+// @public (undocumented)
 export function measure(opts: MeasureOptions): Promise<Report_2>;
 
 // @public (undocumented)
@@ -570,6 +587,30 @@ export interface MetricAttribution {
     readonly target?: string;
     // (undocumented)
     readonly url?: string;
+}
+
+// @public (undocumented)
+export interface MetricDiff {
+    // (undocumented)
+    readonly baselineMedian: number;
+    // (undocumented)
+    readonly baselineN: number;
+    // (undocumented)
+    readonly candidateMedian: number;
+    // (undocumented)
+    readonly candidateN: number;
+    // (undocumented)
+    readonly delta: number;
+    // (undocumented)
+    readonly direction: "improvement" | "regression" | "neutral";
+    // (undocumented)
+    readonly metric: string;
+    // (undocumented)
+    readonly pValue: number;
+    // (undocumented)
+    readonly relativeDelta: number;
+    // (undocumented)
+    readonly significant: boolean;
 }
 
 // @public (undocumented)
@@ -793,6 +834,22 @@ export { Report_2 as Report }
 export interface ReportCtx {
     // (undocumented)
     readonly logger: Logger;
+}
+
+// @public (undocumented)
+export interface ReportDiff {
+    // (undocumented)
+    readonly baselineRuns: number;
+    // (undocumented)
+    readonly baselineUrl: string;
+    // (undocumented)
+    readonly candidateRuns: number;
+    // (undocumented)
+    readonly candidateUrl: string;
+    // (undocumented)
+    readonly hasRegressions: boolean;
+    // (undocumented)
+    readonly metrics: ReadonlyArray<MetricDiff>;
 }
 
 // @public (undocumented)
