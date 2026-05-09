@@ -1,0 +1,77 @@
+name: ohmyperf
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ohmyperf-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  measure:
+    name: Measure performance
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      OHMYPERF_URL: ${{ vars.OHMYPERF_URL || 'http://localhost:3000' }}
+      OHMYPERF_RUNS: '5'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+      - run: npm install -g @ohmyperf/cli
+      - name: Install Chromium for OhMyPerf
+        run: ohmyperf install-browser
+      - name: Locate Playwright Chromium binary
+        id: chromium-path
+        shell: bash
+        run: |
+          BIN=$(find ~/.cache/ms-playwright /opt/playwright-browsers -type f \
+            -path '*/chromium-*/chrome-linux/chrome' 2>/dev/null | head -1)
+          if [ -z "$BIN" ]; then
+            echo "::error::Chromium binary not found after install"
+            exit 1
+          fi
+          echo "OHMYPERF_CHROMIUM_PATH=$BIN" >> "$GITHUB_ENV"
+      - name: Run OhMyPerf
+        run: |
+          ohmyperf run "$OHMYPERF_URL" \
+            --runs "$OHMYPERF_RUNS" \
+            --mode ci-stable \
+            --output ./perf \
+            --format json,html,markdown \
+            --plugins all
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ohmyperf-reports
+          path: |
+            perf/report.json
+            perf/report.html
+            perf/report.md
+          if-no-files-found: warn
+      - name: Compare against baseline (if present)
+        if: github.event_name == 'pull_request'
+        continue-on-error: false
+        run: |
+          if [ -f .ohmyperf-baseline/report.json ]; then
+            ohmyperf diff .ohmyperf-baseline/report.json perf/report.json
+          else
+            echo "No .ohmyperf-baseline/report.json found; skipping diff."
+          fi
+      - name: Post Markdown summary to PR
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = 'perf/report.md';
+            if (!fs.existsSync(path)) return;
+            const body = fs.readFileSync(path, 'utf8');
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            await github.rest.issues.createComment({ owner, repo, issue_number, body });
