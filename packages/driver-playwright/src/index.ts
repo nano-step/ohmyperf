@@ -215,7 +215,7 @@ export function pageHandleAsTarget(handle: PageHandle): TargetHandle {
 
 function buildContextOptions(launchOpts: LaunchOpts): Parameters<Browser["newContext"]>[0] {
   const ctx: NonNullable<Parameters<Browser["newContext"]>[0]> = {};
-  if (launchOpts.emulation && launchOpts.emulation !== false) {
+  if (launchOpts.emulation) {
     const e = launchOpts.emulation;
     if (e.viewport) {
       ctx.viewport = { width: e.viewport.width, height: e.viewport.height };

@@ -23,6 +23,7 @@
   "devDependencies": {
     "@ohmyperf/core": "workspace:*",
     "@ohmyperf/driver-playwright": "workspace:*",
+    "@ohmyperf/plugins-builtin": "workspace:*",
     "playwright": "catalog:",
     "vitest": "catalog:"
   },

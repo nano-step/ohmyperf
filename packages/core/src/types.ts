@@ -247,6 +247,11 @@ export interface RunCtx {
   readonly emit: (metric: Metric) => void;
   readonly logger: Logger;
   readonly state: Map<string, unknown>;
+  readonly cdp: CDPSessionLike | null;
+  evaluateInPage<T = unknown>(expression: string): Promise<T | undefined>;
+  audit(audit: AuditResult): void;
+  setData(data: unknown): void;
+  recordCapabilityUse(capability: PluginCapability): void;
 }
 
 export interface ReportCtx {

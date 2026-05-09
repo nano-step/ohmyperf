@@ -10,6 +10,18 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./cwv": {
+      "types": "./dist/cwv.d.ts",
+      "import": "./dist/cwv.js"
+    },
+    "./axe": {
+      "types": "./dist/axe.d.ts",
+      "import": "./dist/axe.js"
+    },
+    "./custom-metric-example": {
+      "types": "./dist/custom-metric-example.d.ts",
+      "import": "./dist/custom-metric-example.js"
     }
   },
   "files": [
@@ -22,10 +34,15 @@
     "build": "tsc -b",
     "typecheck": "tsc -b",
     "lint": "eslint src",
+    "test": "vitest run --passWithNoTests",
     "clean": "rimraf dist .turbo *.tsbuildinfo"
   },
   "devDependencies": {
+    "@ohmyperf/core": "workspace:*",
+    "@ohmyperf/driver-playwright": "workspace:*",
     "axe-core": "catalog:",
+    "playwright": "catalog:",
+    "vitest": "catalog:",
     "web-vitals": "catalog:"
   },
   "peerDependencies": {

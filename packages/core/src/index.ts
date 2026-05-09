@@ -33,6 +33,20 @@ export { cwvCollectorFactory } from "./collectors-impl/cwv-collector.js";
 export { loadingCollectorFactory } from "./collectors-impl/loading-collector.js";
 export { longTaskCollectorFactory } from "./collectors-impl/longtask-collector.js";
 
+export {
+  HOOK_NAMES,
+  checkDriverCompatibility,
+  computePluginIntegrity,
+  createPluginRuntime,
+  loadPlugins,
+} from "./plugin-runtime.js";
+export type {
+  HookName,
+  PluginCapabilityUseRecord,
+  PluginRuntime,
+  PluginRuntimeOptions,
+} from "./plugin-runtime.js";
+
 export type {
   AggregatedMetric,
   AggregatedMetrics,
@@ -94,27 +108,14 @@ import type {
   ScenarioDefinition,
 } from "./types.js";
 
-export class MeasureOptionsError extends Error {
-  public readonly field: string;
-  public override readonly name = "MeasureOptionsError";
+import { MeasureOptionsError } from "./errors.js";
 
-  constructor(message: string, field: string) {
-    super(message);
-    this.field = field;
-  }
-}
-
-export class PluginLoadError extends Error {
-  public override readonly name = "PluginLoadError";
-}
-
-export class PluginHookTimeout extends Error {
-  public override readonly name = "PluginHookTimeout";
-}
-
-export class PluginIncompatibleDriver extends Error {
-  public override readonly name = "PluginIncompatibleDriver";
-}
+export {
+  MeasureOptionsError,
+  PluginLoadError,
+  PluginHookTimeout,
+  PluginIncompatibleDriver,
+} from "./errors.js";
 
 export function defineScenario<T extends ScenarioDefinition>(scenario: T): T {
   return scenario;

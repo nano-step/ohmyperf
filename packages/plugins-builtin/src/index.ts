@@ -1,2 +1,8 @@
 export const PACKAGE_NAME = "@ohmyperf/plugins-builtin" as const;
-export const PACKAGE_ROLE = "Built-in plugins: cwv, axe, lh-audits (vendored), seo, best-practices." as const;
+
+export { cwvPlugin, type CwvPluginOptions } from "./cwv.js";
+export { axePlugin, type AxePluginOptions } from "./axe.js";
+export {
+  customMetricExamplePlugin,
+  type CustomMetricExampleOptions,
+} from "./custom-metric-example.js";

@@ -43,7 +43,7 @@ export function createPlaywrightAdapter(opts: PlaywrightAdapterOptions): Playwri
       const target = pageHandleAsTarget(page);
 
       const collectedFrames: EngineAttachedFrame[] = [];
-      const oopifController = await driver.attachOopif(target, {
+      const oopifAttachOptions = {
         logger,
         onAttach: (t: AttachedTarget) => {
           collectedFrames.push({
@@ -53,17 +53,23 @@ export function createPlaywrightAdapter(opts: PlaywrightAdapterOptions): Playwri
             session: null,
           });
         },
-      });
+      };
+      const oopifController = await driver.attachOopif(
+        target,
+        oopifAttachOptions as Parameters<typeof driver.attachOopif>[1],
+      );
 
       const rootSessionLike = await driver.attachCDP!(target);
-      const internal = page as {
+      const internal = page as unknown as {
         page: {
           goto(url: string, opts?: unknown): Promise<unknown>;
           waitForLoadState(state: string, opts?: unknown): Promise<void>;
           close(): Promise<void>;
         };
       };
-      const internalBrowser = browser as { browser: { close(): Promise<void> } };
+      const internalBrowser = browser as unknown as {
+        browser: { close(): Promise<void> };
+      };
 
       const ctx: EnginePageContext = {
         browserVersion: driver.browserVersion,

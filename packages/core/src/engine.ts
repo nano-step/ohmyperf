@@ -12,6 +12,11 @@ import { cwvCollectorFactory } from "./collectors-impl/cwv-collector.js";
 import { loadingCollectorFactory } from "./collectors-impl/loading-collector.js";
 import { longTaskCollectorFactory } from "./collectors-impl/longtask-collector.js";
 import { createConsoleLogger, createSilentLogger } from "./logger.js";
+import {
+  createPluginRuntime,
+  loadPlugins,
+  type PluginRuntime,
+} from "./plugin-runtime.js";
 import type {
   AggregatedMetric,
   AggregatedMetrics,
@@ -25,7 +30,9 @@ import type {
   Metric,
   Mode,
   Report,
+  ReportCtx,
   ReportMeta,
+  RunCtx,
   RunReport,
 } from "./types.js";
 
@@ -81,6 +88,10 @@ export async function runEngine(input: EngineRunOptions): Promise<Report> {
   const startedAt = new Date().toISOString();
   const startedAtMs = Date.now();
 
+  const plugins = loadPlugins(opts.plugins ?? []);
+  const pluginRuntime = createPluginRuntime({ plugins, driver, logger });
+  await pluginRuntime.setup();
+
   const runReports: RunReport[] = [];
   const frameNodes: Record<string, FrameNode> = {};
   let browserVersion = driver.browserVersion;
@@ -92,9 +103,50 @@ export async function runEngine(input: EngineRunOptions): Promise<Report> {
     browserVersion = pageCtx.browserVersion || browserVersion;
     browserSource = pageCtx.browserSource;
 
+    const runCtx: RunCtx = {
+      runIndex: i,
+      driver: { id: driver.id },
+      page: { id: `page:${String(i)}` },
+      emit: () => undefined,
+      logger,
+      state: new Map<string, unknown>(),
+      cdp: pageCtx.rootSession,
+      async evaluateInPage<T = unknown>(expression: string): Promise<T | undefined> {
+        try {
+          const result = (await pageCtx.rootSession.send("Runtime.evaluate", {
+            expression,
+            returnByValue: true,
+            awaitPromise: true,
+          })) as { result?: { value?: unknown }; exceptionDetails?: unknown };
+          if (result.exceptionDetails) return undefined;
+          return result.result?.value as T | undefined;
+        } catch (err) {
+          logger.debug("engine: evaluateInPage failed", {
+            error: err instanceof Error ? err.message : String(err),
+          });
+          return undefined;
+        }
+      },
+      audit(audit) {
+        pluginRuntime.emitAudit(pluginRuntime.activePluginId.id, audit);
+      },
+      setData(data) {
+        pluginRuntime.setPluginData(pluginRuntime.activePluginId.id, data);
+      },
+      recordCapabilityUse(capability) {
+        pluginRuntime.recordCapabilityUse(pluginRuntime.activePluginId.id, capability, "run");
+      },
+    };
+
     try {
+      await pluginRuntime.beforeNavigate(runCtx);
       const navStartMs = Date.now();
       await pageCtx.goto(opts.url);
+      await pluginRuntime.onNavigate(runCtx, {
+        url: opts.url,
+        frameId: ROOT_FRAME_ID,
+        type: "initial",
+      });
       try {
         await pageCtx.waitForLoadIdle(LOAD_IDLE_TIMEOUT_MS);
       } catch (err) {
@@ -103,6 +155,8 @@ export async function runEngine(input: EngineRunOptions): Promise<Report> {
           error: err instanceof Error ? err.message : String(err),
         });
       }
+      await pluginRuntime.onLoad(runCtx);
+      await pluginRuntime.onIdle(runCtx);
 
       const rootCtx: CollectorContext = {
         logger,
@@ -140,7 +194,8 @@ export async function runEngine(input: EngineRunOptions): Promise<Report> {
         frameResults[f.frameId] = await finalizeAll(f.handles);
       }
 
-      runReports.push(buildRunReport(i, rootFinal));
+      const transformedMetrics = await applyOnMetric(rootFinal.metrics, runCtx, pluginRuntime);
+      runReports.push(buildRunReport(i, { ...rootFinal, metrics: transformedMetrics }));
 
       if (i === 0) {
         frameNodes[ROOT_FRAME_ID] = {
@@ -181,6 +236,10 @@ export async function runEngine(input: EngineRunOptions): Promise<Report> {
 
   const aggregated = aggregateRuns(runReports);
   const durationMs = Date.now() - startedAtMs;
+
+  const reportCtx: ReportCtx = { logger };
+  await pluginRuntime.beforeReport(reportCtx);
+
   const meta = buildMeta({
     opts,
     runs,
@@ -190,19 +249,36 @@ export async function runEngine(input: EngineRunOptions): Promise<Report> {
     browserSource,
     startedAt,
     durationMs,
+    pluginCapabilityUses: pluginRuntime.capabilityUses,
   });
 
-  const report: Report = {
+  let report: Report = {
     schemaVersion: "1.0.0",
     meta,
     runs: runReports,
     aggregated,
     frames: { root: ROOT_FRAME_ID, nodes: frameNodes } satisfies FrameTree,
-    audits: [],
+    audits: [...pluginRuntime.audits],
     artifacts: {},
-    pluginData: {},
+    pluginData: { ...pluginRuntime.pluginData },
   };
+
+  report = await pluginRuntime.onReport(reportCtx, report);
+  await pluginRuntime.teardown();
   return report;
+}
+
+async function applyOnMetric(
+  metrics: Readonly<Record<string, Metric>>,
+  runCtx: RunCtx,
+  pluginRuntime: PluginRuntime,
+): Promise<Record<string, Metric>> {
+  if (pluginRuntime.plugins.length === 0) return { ...metrics };
+  const out: Record<string, Metric> = {};
+  for (const [name, metric] of Object.entries(metrics)) {
+    out[name] = await pluginRuntime.onMetric(runCtx, metric);
+  }
+  return out;
 }
 
 async function installCollectorsOn(
@@ -327,11 +403,25 @@ interface BuildMetaInput {
   browserSource: "bundled" | "system" | "extension-host";
   startedAt: string;
   durationMs: number;
+  pluginCapabilityUses: ReadonlyArray<{
+    pluginId: string;
+    capability: string;
+    when: string;
+  }>;
 }
 
 function buildMeta(input: BuildMetaInput): ReportMeta {
-  const { opts, runs, mode, headless, browserVersion, browserSource, startedAt, durationMs } =
-    input;
+  const {
+    opts,
+    runs,
+    mode,
+    headless,
+    browserVersion,
+    browserSource,
+    startedAt,
+    durationMs,
+    pluginCapabilityUses,
+  } = input;
   return {
     url: opts.url,
     startedAt,
@@ -353,7 +443,11 @@ function buildMeta(input: BuildMetaInput): ReportMeta {
       knownDeltas: headless === "headless" ? { inp: "synthetic-input" } : {},
     },
     emulation: opts.emulation ?? false,
-    pluginCapabilityUses: [],
+    pluginCapabilityUses: pluginCapabilityUses.map((u) => ({
+      pluginId: u.pluginId,
+      capability: u.capability as import("./types.js").PluginCapability,
+      when: u.when,
+    })),
     measurementId: typeof randomUUID === "function" ? randomUUID() : `m_${String(Date.now())}`,
   };
 }

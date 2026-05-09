@@ -83,14 +83,22 @@ importers:
         version: 2.1.9(@types/node@22.19.18)
 
   packages/plugins-builtin:
-    dependencies:
+    devDependencies:
       '@ohmyperf/core':
         specifier: workspace:*
         version: link:../core
-    devDependencies:
+      '@ohmyperf/driver-playwright':
+        specifier: workspace:*
+        version: link:../driver-playwright
       axe-core:
         specifier: 'catalog:'
         version: 4.11.4
+      playwright:
+        specifier: 'catalog:'
+        version: 1.59.1
+      vitest:
+        specifier: 'catalog:'
+        version: 2.1.9(@types/node@22.19.18)
       web-vitals:
         specifier: 'catalog:'
         version: 4.2.4
@@ -127,6 +135,9 @@ importers:
       '@ohmyperf/driver-playwright':
         specifier: workspace:*
         version: link:../../packages/driver-playwright
+      '@ohmyperf/plugins-builtin':
+        specifier: workspace:*
+        version: link:../../packages/plugins-builtin
       playwright:
         specifier: 'catalog:'
         version: 1.59.1
