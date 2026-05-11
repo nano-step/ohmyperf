@@ -1,8 +1,20 @@
 # OhMyPerf
 
-> **Status**: 🌱 Greenfield. Currently in deep design (OpenSpec v1 MVP proposal). No production code yet.
+> **Status**: P0 + P2 + P3 + P4 + v1.1 (MCP) all working MVPs across **5 surfaces**.
 > **License**: Apache-2.0
 > **Plan**: see [`openspec/changes/add-ohmyperf-mvp/`](./openspec/changes/add-ohmyperf-mvp/) and [`openspec/project.md`](./openspec/project.md).
+
+## Surfaces
+
+| # | Surface | Package | Status |
+|---|---|---|---|
+| 1 | **CLI** | [`@ohmyperf/cli`](apps/cli/) | ✅ `ohmyperf run/diff/share/doctor/list-plugins/install-browser` |
+| 2 | **npm SDK** | [`@ohmyperf/core`](packages/core/) + drivers + plugins + reporters | ✅ 45-export API contract, frozen |
+| 3 | **Chrome extension** | [`apps/extension-chrome/`](apps/extension-chrome/) | ✅ MV3, `chrome.debugger`, Load-Unpacked ready |
+| 4 | **Website** | [`apps/website/`](apps/website/) | ✅ landing + drag-drop `/viewer` (static deploy ready) |
+| 5 | **VSCode extension** | [`apps/ide-vscode/`](apps/ide-vscode/) | ✅ command palette + webview |
+| 6 | **MCP server** | [`apps/mcp-server/`](apps/mcp-server/) | ✅ `measure` + `diff` tools (replaces v1.1 JetBrains) |
+| 7 | **Share-server** | [`packages/share-server/`](packages/share-server/) | ✅ Hono on Cloudflare Workers or Node + filesystem |
 
 A next-generation, plugin-driven web performance measurement platform that measures **real machines via real browsers** and achieves **~99% iframe-coverage accuracy** via Chrome DevTools Protocol cross-origin OOPIF attachment.
 

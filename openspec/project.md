@@ -12,7 +12,7 @@ A next-generation, plugin-driven web performance measurement platform that measu
 | **CI ergonomics** | Lighthouse-CI exists but synthetic | Two-mode runtime: `real` (variance honest) + `ci-stable` (calibrated CPU + fixed network) |
 | **Scenario flows** | Custom userflows (limited DSL) | Full TypeScript scenarios using Playwright `page` API |
 | **Plugin model** | Audit-API only, internal | Plugins for metrics, audits, reporters, transports, collectors |
-| **Surfaces** | Web only (PSI), CLI (LH), DevTools panel | npm SDK, CLI, Website, Chrome extension, VSCode extension |
+| **Surfaces** | Web only (PSI), CLI (LH), DevTools panel | npm SDK, CLI, Website, Chrome extension, VSCode extension, MCP server (AI agents) |
 | **Sharing** | PSI URL (public, ephemeral) | Hosted shareable links + static viewer + self-host backend |
 
 ## Architecture (one-line)
