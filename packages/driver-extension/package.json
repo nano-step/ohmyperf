@@ -22,7 +22,14 @@
     "build": "tsc -b",
     "typecheck": "tsc -b",
     "lint": "eslint src",
+    "test": "vitest run --passWithNoTests",
     "clean": "rimraf dist .turbo *.tsbuildinfo"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@ohmyperf/core": "workspace:*",
+    "vitest": "catalog:"
+  },
+  "peerDependencies": {
+    "@ohmyperf/core": "workspace:*"
+  }
 }

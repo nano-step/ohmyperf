@@ -14,11 +14,18 @@
     }
   },
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsc -b && node scripts/bundle-extension.mjs",
     "typecheck": "tsc -b",
     "lint": "eslint src",
-    "clean": "rimraf dist .turbo *.tsbuildinfo"
+    "test": "vitest run --passWithNoTests",
+    "clean": "rimraf dist .turbo extension-dist *.tsbuildinfo"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@ohmyperf/core": "workspace:*",
+    "@ohmyperf/driver-extension": "workspace:*",
+    "@ohmyperf/viewer": "workspace:*",
+    "esbuild": "^0.24.0",
+    "vitest": "catalog:"
+  },
   "private": true
 }

@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "OhMyPerf",
+  "version": "0.0.0",
+  "description": "Real-machine, real-browser web performance measurement via chrome.debugger.",
+  "permissions": ["debugger", "storage", "activeTab"],
+  "host_permissions": ["<all_urls>"],
+  "action": {
+    "default_title": "Measure performance on this tab"
+  },
+  "background": {
+    "service_worker": "background.bundle.js",
+    "type": "module"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["viewer.html", "viewer.bundle.js"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "minimum_chrome_version": "116"
+}
