@@ -4,6 +4,7 @@ import { doctorCommand } from "./commands/doctor.js";
 import { listPluginsCommand } from "./commands/list-plugins.js";
 import { installBrowserCommand } from "./commands/install-browser.js";
 import { diffCommand } from "./commands/diff.js";
+import { shareCommand } from "./commands/share.js";
 
 export const main = defineCommand({
   meta: {
@@ -15,6 +16,7 @@ export const main = defineCommand({
   subCommands: {
     run: runCommand,
     diff: diffCommand,
+    share: shareCommand,
     doctor: doctorCommand,
     "list-plugins": listPluginsCommand,
     "install-browser": installBrowserCommand,

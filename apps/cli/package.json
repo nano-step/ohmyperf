@@ -33,6 +33,7 @@
     "@ohmyperf/reporter-html": "workspace:*",
     "@ohmyperf/reporter-json": "workspace:*",
     "@ohmyperf/reporter-markdown": "workspace:*",
+    "@ohmyperf/share-client": "workspace:*",
     "@ohmyperf/viewer": "workspace:*",
     "citty": "catalog:",
     "playwright": "catalog:",

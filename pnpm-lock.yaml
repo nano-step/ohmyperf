@@ -12,6 +12,9 @@ catalogs:
     citty:
       specifier: ^0.1.6
       version: 0.1.6
+    hono:
+      specifier: ^4.6.14
+      version: 4.12.18
     playwright:
       specifier: ^1.49.1
       version: 1.59.1
@@ -74,6 +77,9 @@ importers:
       '@ohmyperf/reporter-markdown':
         specifier: workspace:*
         version: link:../../packages/reporter-markdown
+      '@ohmyperf/share-client':
+        specifier: workspace:*
+        version: link:../../packages/share-client
       '@ohmyperf/viewer':
         specifier: workspace:*
         version: link:../../packages/viewer
@@ -177,9 +183,29 @@ importers:
 
   packages/reporter-trace: {}
 
-  packages/share-client: {}
+  packages/share-client:
+    devDependencies:
+      '@ohmyperf/core':
+        specifier: workspace:*
+        version: link:../core
+      vitest:
+        specifier: 'catalog:'
+        version: 2.1.9(@types/node@22.19.18)
 
-  packages/share-server: {}
+  packages/share-server:
+    devDependencies:
+      '@ohmyperf/core':
+        specifier: workspace:*
+        version: link:../core
+      '@ohmyperf/viewer':
+        specifier: workspace:*
+        version: link:../viewer
+      hono:
+        specifier: 'catalog:'
+        version: 4.12.18
+      vitest:
+        specifier: 'catalog:'
+        version: 2.1.9(@types/node@22.19.18)
 
   packages/trace-utils: {}
 
@@ -1333,6 +1359,10 @@ packages:
   hasown@2.0.3:
     resolution: {integrity: sha512-ej4AhfhfL2Q2zpMmLo7U1Uv9+PyhIZpgQLGT1F9miIGmiCJIoCgSmczFdrc97mWT4kVY72KA+WnnhJ5pghSvSg==}
     engines: {node: '>= 0.4'}
+
+  hono@4.12.18:
+    resolution: {integrity: sha512-RWzP96k/yv0PQfyXnWjs6zot20TqfpfsNXhOnev8d1InAxubW93L11/oNUc3tQqn2G0bSdAOBpX+2uDFHV7kdQ==}
+    engines: {node: '>=16.9.0'}
 
   ignore@5.3.2:
     resolution: {integrity: sha512-hsBTNUqQTDwkWtcdYI2i06Y/nUBEsNEDJKjWdigLvegy8kDuJAS8uRlpkkcQpyEXL0Z/pjDy5HBmMjRCJ2gq+g==}
@@ -3152,6 +3182,8 @@ snapshots:
   hasown@2.0.3:
     dependencies:
       function-bind: 1.1.2
+
+  hono@4.12.18: {}
 
   ignore@5.3.2: {}
 

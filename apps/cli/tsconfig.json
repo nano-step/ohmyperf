@@ -11,6 +11,7 @@
     { "path": "../../packages/reporter-html" },
     { "path": "../../packages/reporter-json" },
     { "path": "../../packages/reporter-markdown" },
+    { "path": "../../packages/share-client" },
     { "path": "../../packages/viewer" }
   ],
   "include": ["src/**/*"],

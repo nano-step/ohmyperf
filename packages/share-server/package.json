@@ -1,15 +1,23 @@
 {
   "name": "@ohmyperf/share-server",
   "version": "0.0.0-pre",
-  "description": "Hono backend for shareable links. CF Workers + R2 + D1; Hono+S3+Postgres for self-host.",
+  "description": "Hono backend for shareable links. Runs on Cloudflare Workers (R2 + D1) or Node (S3-compatible + SQLite).",
   "license": "Apache-2.0",
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "./dist/node.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./node": {
+      "types": "./dist/node.d.ts",
+      "import": "./dist/node.js"
+    },
+    "./workers": {
+      "types": "./dist/workers.d.ts",
+      "import": "./dist/workers.js"
     }
   },
   "files": [
@@ -22,7 +30,19 @@
     "build": "tsc -b",
     "typecheck": "tsc -b",
     "lint": "eslint src",
+    "test": "vitest run --passWithNoTests",
+    "start:node": "node dist/node.js",
     "clean": "rimraf dist .turbo *.tsbuildinfo"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@ohmyperf/core": "workspace:*",
+    "@ohmyperf/viewer": "workspace:*",
+    "hono": "catalog:",
+    "vitest": "catalog:"
+  },
+  "peerDependencies": {
+    "@ohmyperf/core": "workspace:*",
+    "@ohmyperf/viewer": "workspace:*",
+    "hono": "catalog:"
+  }
 }
