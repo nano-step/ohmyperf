@@ -1,0 +1,41 @@
+{
+  "name": "@ohmyperf/mcp-server",
+  "version": "0.0.0-pre",
+  "description": "MCP (Model Context Protocol) server exposing the ohmyperf engine as 'measure' and 'diff' tools for AI agents (Claude / OpenCode / Cursor / Cline / Continue).",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "bin": {
+    "ohmyperf-mcp": "./bin/ohmyperf-mcp.mjs"
+  },
+  "files": [
+    "dist",
+    "bin",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "typecheck": "tsc -b",
+    "lint": "eslint src",
+    "test": "vitest run --passWithNoTests",
+    "clean": "rimraf dist .turbo *.tsbuildinfo"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "@ohmyperf/core": "workspace:*",
+    "@ohmyperf/driver-playwright": "workspace:*",
+    "@ohmyperf/plugins-builtin": "workspace:*",
+    "@ohmyperf/reporter-json": "workspace:*",
+    "vitest": "catalog:",
+    "zod": "catalog:"
+  }
+}

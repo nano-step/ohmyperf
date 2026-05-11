@@ -22,6 +22,7 @@
     { "path": "./apps/website" },
     { "path": "./apps/extension-chrome" },
     { "path": "./apps/ide-vscode" },
+    { "path": "./apps/mcp-server" },
     { "path": "./tests/oopif-corpus" }
   ]
 }
