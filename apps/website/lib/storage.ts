@@ -10,6 +10,14 @@ export interface StoredReport {
   report: Report;
 }
 
+export interface ReportSummary {
+  id: string;
+  url: string;
+  createdAt: number;
+  mode: 'real' | 'ci-stable';
+  sizeBytes: number;
+}
+
 export interface StoredJob {
   id: string;
   url: string;
@@ -140,6 +148,50 @@ async function evictOldest(db: IDBPDatabase<OmoDB>, count: number): Promise<void
 
 async function countReports(db: IDBPDatabase<OmoDB>): Promise<number> {
   return db.count('reports');
+}
+
+export async function listReportsPage(opts: {
+  cursorKey?: number;
+  limit?: number;
+  mode?: 'real' | 'ci-stable';
+  urlSubstring?: string;
+}): Promise<{ items: ReportSummary[]; nextCursor: number | null }> {
+  const db = await getDb();
+  const tx = db.transaction('reports', 'readonly');
+  const idx = tx.store.index('by-createdAt');
+  const range = opts.cursorKey != null
+    ? IDBKeyRange.upperBound(opts.cursorKey, true) : undefined;
+  const limit = opts.limit ?? 20;
+  const items: ReportSummary[] = [];
+  const needle = opts.urlSubstring?.toLowerCase();
+  let cursor = await idx.openCursor(range, 'prev');
+  while (cursor && items.length < limit) {
+    const v = cursor.value;
+    const passMode = !opts.mode || v.mode === opts.mode;
+    const passUrl = !needle || v.url.toLowerCase().includes(needle);
+    if (passMode && passUrl) {
+      items.push({
+        id: v.id,
+        url: v.url,
+        createdAt: v.createdAt,
+        mode: v.mode,
+        sizeBytes: v.sizeBytes,
+      });
+    }
+    cursor = await cursor.continue();
+  }
+  return {
+    items,
+    nextCursor: items.length === limit ? (items[items.length - 1]?.createdAt ?? null) : null,
+  };
+}
+
+export async function deleteReports(ids: string[]): Promise<void> {
+  if (ids.length === 0) return;
+  const db = await getDb();
+  const tx = db.transaction('reports', 'readwrite');
+  await Promise.all(ids.map((id) => tx.store.delete(id)));
+  await tx.done;
 }
 
 export async function saveJob(job: StoredJob): Promise<void> {

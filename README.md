@@ -42,7 +42,7 @@
 | 1 | **CLI** | [`@ohmyperf/cli`](apps/cli/) | `ohmyperf run https://example.com` |
 | 2 | **npm SDK** | [`@ohmyperf/core`](packages/core/) | `import { runEngine } from "@ohmyperf/core"` |
 | 3 | **Chrome extension** | [`apps/extension-chrome/`](apps/extension-chrome/) | Load unpacked → click toolbar icon |
-| 4 | **Website** | [`apps/website/`](apps/website/) | Drop `report.json` on `/viewer` |
+| 4 | **Website (SPA)** | [`apps/website/`](apps/website/) | `pnpm --filter @ohmyperf/website dev` → measure at `/measure`, view at `/viewer`, history at `/report`. Static export to CF Pages. _(Legacy static landing superseded by this Next.js SPA.)_ |
 | 5 | **VSCode extension** | [`apps/ide-vscode/`](apps/ide-vscode/) | `Cmd+Shift+P` → `OhMyPerf: Measure URL` |
 | 6 | **MCP server** | [`apps/mcp-server/`](apps/mcp-server/) | `tools/measure({ url })` from any MCP client |
 | 7 | **Share-server** | [`packages/share-server/`](packages/share-server/) | Cloudflare Workers or `node dist/node.js` |

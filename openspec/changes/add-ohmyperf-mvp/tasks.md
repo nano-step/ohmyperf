@@ -120,7 +120,7 @@ Phased delivery aligned with the design's 5-phase plan. Each task is independent
 
 ## 10. P2 — Static website + Chrome extension MVP
 
-- [ ] 10.1 Build `apps/website/` landing page (Astro or Next.js): value proposition, CTAs, Lighthouse score ≥ 90 on mobile for all 4 categories.
+- [x] 10.1 ~~Build `apps/website/` landing page (Astro or Next.js): value proposition, CTAs, Lighthouse score ≥ 90 on mobile for all 4 categories.~~ — **SUPERSEDED** by `add-measurement-spa` (Next.js 15 SPA with `/measure`, `/viewer`, `/report` routes; static export to CF Pages).
 - [ ] 10.2 Build the static drag-drop viewer at `/viewer` reusing `packages/viewer/`.
 - [ ] 10.3 Build `apps/extension-chrome/` MV3 skeleton with the documented permission set.
 - [ ] 10.4 Implement `chrome.debugger`-backed CDP driver (`@ohmyperf/driver-extension`).

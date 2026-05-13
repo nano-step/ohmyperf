@@ -1,15 +1,23 @@
 'use client';
 
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import { SiteHeader } from '@/components/layout/site-header';
 import { ReportViewer } from '@/components/viewer/report-viewer';
 import { CwvGauge } from '@/components/metrics/cwv-gauge';
-import { listReports, deleteReport, clearAllReports, getReport } from '@/lib/storage';
-import type { StoredReport } from '@/lib/storage';
-import { shortenUrl } from '@/lib/format';
+import { EmptyState } from '@/components/empty-state';
+import { ReportHistoryList } from '@/components/report/report-history-list';
+import { ReportHistoryToolbar, type ModeFilter } from '@/components/report/report-history-toolbar';
+import {
+  listReportsPage,
+  deleteReports,
+  deleteReport,
+  getReport,
+  type ReportSummary,
+  type StoredReport,
+} from '@/lib/storage';
 import type { Report } from '@ohmyperf/core';
 
 function ReportContent() {
@@ -42,16 +50,13 @@ function SingleReport({ id }: { id: string }) {
     return (
       <>
         <SiteHeader />
-        <main className="mx-auto max-w-3xl px-6 py-12 text-center">
-          <p className="text-lg font-medium mb-2">Report not found</p>
-          <p className="text-sm text-muted-foreground mb-4 font-mono">{id}</p>
-          <p className="text-sm text-muted-foreground mb-6">
-            Reports are stored locally in your browser and may have been cleared.
-          </p>
-          <div className="flex gap-3 justify-center">
-            <Link href="/report" className="text-sm underline underline-offset-4 hover:text-foreground transition-colors">All reports</Link>
-            <Link href="/" className="text-sm underline underline-offset-4 hover:text-foreground transition-colors">Measure a URL</Link>
-          </div>
+        <main className="mx-auto max-w-3xl px-6 py-12">
+          <EmptyState
+            title="Report not found"
+            description="Reports are stored locally in your browser and may have been cleared."
+            ctaLabel="All reports"
+            ctaHref="/report"
+          />
         </main>
       </>
     );
@@ -79,75 +84,147 @@ function ReportDisplay({ report }: { report: Report }) {
 }
 
 function ReportHistory() {
-  const [reports, setReports] = useState<StoredReport[] | null>(null);
+  const [items, setItems] = useState<ReportSummary[] | null>(null);
+  const [nextCursor, setNextCursor] = useState<number | null>(null);
+  const [query, setQuery] = useState('');
+  const [mode, setMode] = useState<ModeFilter>('all');
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [showConfirm, setShowConfirm] = useState(false);
+  const confirmRef = useRef<HTMLDialogElement>(null);
+
+  const load = useCallback(async (q: string, m: ModeFilter, reset: boolean) => {
+    const opts: Parameters<typeof listReportsPage>[0] = { limit: 20 };
+    if (q) opts.urlSubstring = q;
+    if (m !== 'all') opts.mode = m;
+    const result = await listReportsPage(opts);
+    if (reset) {
+      setItems(result.items);
+      setSelected(new Set());
+    } else {
+      setItems((prev) => [...(prev ?? []), ...result.items]);
+    }
+    setNextCursor(result.nextCursor);
+  }, []);
 
   useEffect(() => {
-    listReports(100).then(setReports).catch(() => setReports([]));
-  }, []);
+    load(query, mode, true).catch(() => setItems([]));
+  }, [load, query, mode]);
+
+  const loadMore = async () => {
+    if (!nextCursor) return;
+    const opts: Parameters<typeof listReportsPage>[0] = { cursorKey: nextCursor, limit: 20 };
+    if (query) opts.urlSubstring = query;
+    if (mode !== 'all') opts.mode = mode;
+    const result = await listReportsPage(opts);
+    setItems((prev) => [...(prev ?? []), ...result.items]);
+    setNextCursor(result.nextCursor);
+  };
 
   const handleDelete = async (id: string) => {
     await deleteReport(id);
-    setReports((prev) => prev?.filter((r) => r.id !== id) ?? []);
+    setItems((prev) => prev?.filter((r) => r.id !== id) ?? []);
+    setSelected((prev) => { const s = new Set(prev); s.delete(id); return s; });
     toast.success('Report deleted.');
   };
 
-  const handleClearAll = async () => {
-    await clearAllReports();
-    setReports([]);
-    toast.success('All reports cleared.');
+  const handleToggleSelect = (id: string) => {
+    setSelected((prev) => {
+      const s = new Set(prev);
+      if (s.has(id)) s.delete(id); else s.add(id);
+      return s;
+    });
   };
+
+  const handleBulkDeleteConfirm = () => {
+    setShowConfirm(true);
+    setTimeout(() => confirmRef.current?.showModal?.(), 0);
+  };
+
+  const handleBulkDelete = async () => {
+    const ids = [...selected];
+    await deleteReports(ids);
+    setItems((prev) => prev?.filter((r) => !selected.has(r.id)) ?? []);
+    setSelected(new Set());
+    setShowConfirm(false);
+    toast.success(`${ids.length} report${ids.length > 1 ? 's' : ''} deleted.`);
+  };
+
+  const handleQueryChange = (q: string) => setQuery(q);
+  const handleModeChange = (m: ModeFilter) => setMode(m);
 
   return (
     <>
       <SiteHeader />
       <main className="mx-auto max-w-3xl px-6 py-12">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-semibold">Report History</h1>
-          {reports && reports.length > 0 && (
-            <button
-              onClick={handleClearAll}
-              className="text-sm text-muted-foreground hover:text-destructive transition-colors"
-            >
-              Clear all
-            </button>
-          )}
-        </div>
+        <h1 className="text-2xl font-semibold mb-6">Report History</h1>
 
-        {reports === null ? (
+        <ReportHistoryToolbar
+          query={query}
+          onQueryChange={handleQueryChange}
+          mode={mode}
+          onModeChange={handleModeChange}
+          selectedCount={selected.size}
+          onBulkDelete={handleBulkDeleteConfirm}
+        />
+
+        {items === null ? (
           <div className="text-muted-foreground text-sm">Loading…</div>
-        ) : reports.length === 0 ? (
-          <div className="rounded-lg border border-dashed border-border p-12 text-center text-muted-foreground">
-            <p className="text-sm">No reports yet.</p>
-            <Link href="/" className="mt-4 inline-block text-sm underline underline-offset-4 hover:text-foreground transition-colors">
-              Measure a URL
-            </Link>
-          </div>
+        ) : items.length === 0 ? (
+          <EmptyState
+            title="No reports yet — measure your first URL."
+            ctaLabel="Measure a URL"
+            ctaHref="/measure"
+          />
         ) : (
-          <ul className="space-y-3">
-            {reports.map((r) => (
-              <li key={r.id} className="rounded-lg border bg-card p-4 flex items-center justify-between gap-4">
-                <div className="min-w-0">
-                  <Link href={`/report/?id=${encodeURIComponent(r.id)}`} className="text-sm font-medium hover:underline truncate block">
-                    {shortenUrl(r.url)}
-                  </Link>
-                  <div className="flex gap-3 mt-1 text-xs text-muted-foreground">
-                    <span>{r.mode}</span>
-                    <span>{new Date(r.createdAt).toLocaleString()}</span>
-                    <span>{(r.sizeBytes / 1024).toFixed(1)} KB</span>
-                  </div>
-                </div>
-                <button
-                  onClick={() => handleDelete(r.id)}
-                  className="shrink-0 text-xs text-muted-foreground hover:text-destructive transition-colors"
-                  aria-label={`Delete report for ${r.url}`}
-                >
-                  Delete
-                </button>
-              </li>
-            ))}
-          </ul>
+          <>
+            <ReportHistoryList
+              items={items}
+              selected={selected}
+              onToggleSelect={handleToggleSelect}
+              onDelete={handleDelete}
+            />
+            {nextCursor && (
+              <button
+                onClick={loadMore}
+                className="mt-6 w-full rounded-md border px-4 py-2 text-sm hover:bg-muted transition-colors"
+              >
+                Load more
+              </button>
+            )}
+          </>
         )}
       </main>
+
+      {showConfirm && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="confirm-title"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+        >
+          <div className="bg-background rounded-lg border p-6 max-w-sm w-full mx-4 space-y-4">
+            <h2 id="confirm-title" className="text-base font-semibold">
+              Delete {selected.size} report{selected.size > 1 ? 's' : ''}?
+            </h2>
+            <p className="text-sm text-muted-foreground">This action cannot be undone.</p>
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={() => setShowConfirm(false)}
+                className="px-4 py-2 text-sm rounded-md border hover:bg-muted transition-colors"
+                autoFocus
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleBulkDelete}
+                className="px-4 py-2 text-sm rounded-md bg-destructive text-destructive-foreground hover:opacity-90 transition-opacity"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

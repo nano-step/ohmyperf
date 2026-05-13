@@ -1,0 +1,33 @@
+name: website-budgets
+
+on:
+  pull_request:
+    paths:
+      - 'apps/website/**'
+      - 'packages/viewer/**'
+      - 'scripts/bundle-budgets.json'
+      - 'scripts/check-bundle-budgets.mjs'
+  push:
+    branches: [main]
+
+jobs:
+  budget:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm --filter @ohmyperf/website build
+
+      - run: node scripts/check-bundle-budgets.mjs

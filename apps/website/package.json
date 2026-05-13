@@ -14,6 +14,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "next lint --max-warnings=0",
     "test": "vitest run --passWithNoTests",
+    "test:a11y": "playwright test tests/a11y.spec.ts",
     "test:smoke": "playwright test",
     "clean": "rimraf .next out .turbo *.tsbuildinfo node_modules/.cache"
   },
@@ -41,6 +42,7 @@
     "zustand": "catalog:"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.1",
     "@next/bundle-analyzer": "15.1.4",
     "@playwright/test": "catalog:",
     "@tailwindcss/postcss": "4.0.0-beta.8",

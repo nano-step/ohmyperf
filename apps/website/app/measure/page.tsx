@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useCallback } from 'react';
+import { Suspense, useCallback, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { UrlForm } from '@/components/measure/url-form';
@@ -9,7 +9,7 @@ import { ProgressStream } from '@/components/measure/progress-stream';
 import { ErrorState } from '@/components/measure/error-state';
 import { SiteHeader } from '@/components/layout/site-header';
 import { useStore } from '@/lib/store';
-import { submitMeasure, streamJob, RunnerClientError } from '@/lib/runner-client';
+import { submitMeasure, streamJob, RunnerClientError, type StreamHandle } from '@/lib/runner-client';
 import { saveReport, saveJob } from '@/lib/storage';
 import type { MeasureRequest } from '@ohmyperf/shared-types';
 
@@ -19,6 +19,12 @@ function MeasureContent() {
   const url = searchParams.get('url') ?? '';
 
   const { backend, currentJob, setJobSubmitting, setJobStreaming, appendJobEvent, setJobDone, setJobError, setJobCancelled, setJobIdle, prependReport } = useStore();
+  const streamHandleRef = useRef<StreamHandle | null>(null);
+
+  const handleCancel = useCallback(() => {
+    streamHandleRef.current?.cancel();
+    streamHandleRef.current = null;
+  }, []);
 
   const handleMeasure = useCallback(async (measureUrl: string, options?: Partial<MeasureRequest>) => {
     if (backend.kind === 'none') {
@@ -63,6 +69,7 @@ function MeasureContent() {
       jobId,
       (event) => { appendJobEvent(event); },
     );
+    streamHandleRef.current = handle;
 
     try {
       const report = await handle.done;
@@ -86,10 +93,13 @@ function MeasureContent() {
       const message = err instanceof Error ? err.message : String(err);
       if (code === 'runner/cancelled') {
         setJobCancelled();
+        await saveJob({ id: jobId, url: measureUrl, status: 'cancelled', startedAt: Date.now() });
       } else {
         setJobError(code, message, jobId);
         await saveJob({ id: jobId, url: measureUrl, status: 'error', startedAt: Date.now(), error: message });
       }
+    } finally {
+      streamHandleRef.current = null;
     }
   }, [backend, setJobSubmitting, setJobStreaming, appendJobEvent, setJobDone, setJobError, setJobCancelled, prependReport, router]);
 
@@ -111,11 +121,22 @@ function MeasureContent() {
 
         <div className="mt-8">
           {currentJob.phase === 'streaming' && (
-            <ProgressStream
-              events={currentJob.events}
-              runIndex={currentJob.runIndex}
-              totalRuns={currentJob.totalRuns}
-            />
+            <div className="space-y-3">
+              <ProgressStream
+                events={currentJob.events}
+                runIndex={currentJob.runIndex}
+                totalRuns={currentJob.totalRuns}
+              />
+              <div className="flex justify-end">
+                <button
+                  onClick={handleCancel}
+                  className="text-sm text-muted-foreground hover:text-destructive transition-colors underline underline-offset-2"
+                  aria-label="Cancel measurement"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
           )}
           {currentJob.phase === 'submitting' && (
             <div className="rounded-lg border bg-card p-6 text-sm text-muted-foreground animate-pulse">
