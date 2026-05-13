@@ -11,6 +11,8 @@ catalog:
   "source-map": ^0.7.4
   "citty": ^0.1.6
   "hono": ^4.6.14
+  "@hono/node-server": ^1.19.14
+  "ipaddr.js": ^1.9.1
   zod: ^3.24.1
   vitest: ^2.1.8
   vite: ^6.0.7

@@ -1,0 +1,33 @@
+{
+  "name": "@ohmyperf/runner",
+  "version": "0.0.0-pre",
+  "private": true,
+  "description": "Local Docker self-host HTTP runner. Wraps @ohmyperf/core + driver-playwright behind Hono.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/server.js",
+  "scripts": {
+    "build": "tsc -b",
+    "dev": "node --watch --experimental-strip-types --no-warnings src/server.ts",
+    "start": "node dist/server.js",
+    "typecheck": "tsc -b",
+    "lint": "eslint src",
+    "test": "vitest run --passWithNoTests",
+    "clean": "rimraf dist .turbo *.tsbuildinfo"
+  },
+  "dependencies": {
+    "@hono/node-server": "catalog:",
+    "@ohmyperf/core": "workspace:*",
+    "@ohmyperf/driver-playwright": "workspace:*",
+    "@ohmyperf/plugins-builtin": "workspace:*",
+    "@ohmyperf/shared-types": "workspace:*",
+    "hono": "catalog:",
+    "ipaddr.js": "catalog:",
+    "playwright": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "vitest": "catalog:"
+  }
+}

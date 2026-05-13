@@ -1,0 +1,28 @@
+services:
+  runner:
+    build:
+      context: ../..
+      dockerfile: apps/runner/Dockerfile
+    image: ohmyperf-runner:dev
+    container_name: ohmyperf-runner
+    restart: unless-stopped
+    init: true
+    ports:
+      - "127.0.0.1:5174:5174"
+    environment:
+      OHMYPERF_RUNNER_BIND: "0.0.0.0"
+      OHMYPERF_RUNNER_PORT: "5174"
+      OHMYPERF_RUNNER_CORS_ORIGINS: "https://ohmyperf.dev,http://localhost:3000,http://127.0.0.1:3000"
+      OHMYPERF_RUNNER_ALLOW_PRIVATE: "0"
+      OHMYPERF_RUNNER_RATE_LIMIT: "10"
+      OHMYPERF_RUNNER_CONCURRENCY: "1"
+    healthcheck:
+      test:
+        - "CMD"
+        - "node"
+        - "-e"
+        - "fetch('http://127.0.0.1:5174/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s

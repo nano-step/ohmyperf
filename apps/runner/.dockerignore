@@ -1,0 +1,14 @@
+**/node_modules
+**/dist
+**/.turbo
+**/*.tsbuildinfo
+**/coverage
+.git
+.gitignore
+.DS_Store
+**/*.log
+apps/runner/dist
+apps/runner/.dockerignore
+apps/runner/Dockerfile
+apps/runner/Dockerfile.slim
+apps/runner/docker-compose.yml

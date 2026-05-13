@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist"
+  },
+  "references": [
+    { "path": "../../packages/core" },
+    { "path": "../../packages/driver-playwright" },
+    { "path": "../../packages/plugins-builtin" },
+    { "path": "../../packages/shared-types" }
+  ],
+  "include": ["src/**/*"],
+  "exclude": ["dist", "node_modules", "**/*.test.ts"]
+}
