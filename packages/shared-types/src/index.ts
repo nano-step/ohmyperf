@@ -160,3 +160,133 @@ export type ExtensionResponse =
   | { readonly type: "ohmyperf/error"; readonly code: ErrorCode; readonly message: string };
 
 export type ExtensionPortMessage = ProgressEvent;
+
+// Phase δ — Extension bridge envelopes (externally_connectable).
+// PROTOCOL_VERSION is bumped only on breaking changes; bridge rejects mismatched majors.
+
+export const PROTOCOL_VERSION = 1 as const;
+export type ProtocolVersion = typeof PROTOCOL_VERSION;
+
+export interface BaseEnvelope {
+  readonly protocolVersion: ProtocolVersion;
+}
+
+export type BridgeErrorCode =
+  | "extension/invalid-request"
+  | "extension/unsupported-runs"
+  | "extension/self-measurement-refused"
+  | "extension/devtools-attached"
+  | "extension/target-tab-closed"
+  | "extension/debugger-detached"
+  | "extension/tab-create-failed"
+  | "extension/engine-error"
+  | "extension/cancelled"
+  | "extension/internal";
+
+export interface BridgeError {
+  readonly code: BridgeErrorCode;
+  readonly message: string;
+  readonly retriable: boolean;
+}
+
+export type BridgeCapability =
+  | "single-run"
+  | "real-mode"
+  | "ci-stable-mode"
+  | "progress-port-v1";
+
+export interface PingRequest extends BaseEnvelope {
+  readonly type: "ohmyperf/ping";
+}
+export interface PingResponse extends BaseEnvelope {
+  readonly type: "ohmyperf/ping/response";
+  readonly ok: true;
+  readonly version: string;
+  readonly capabilities: ReadonlyArray<BridgeCapability>;
+}
+
+export interface BridgeMeasureRequest extends BaseEnvelope {
+  readonly type: "ohmyperf/measure";
+  readonly url: string;
+  readonly runs: 1;
+  readonly mode: "real" | "ci-stable";
+  readonly cacheMode?: CacheMode;
+  readonly includeTrace?: boolean;
+}
+export interface MeasureAck extends BaseEnvelope {
+  readonly type: "ohmyperf/measure/ack";
+  readonly ok: true;
+  readonly jobId: string;
+  readonly portName: string;
+}
+
+export interface CancelRequest extends BaseEnvelope {
+  readonly type: "ohmyperf/cancel";
+  readonly jobId: string;
+}
+export interface CancelResponse extends BaseEnvelope {
+  readonly type: "ohmyperf/cancel/response";
+  readonly ok: boolean;
+}
+
+export interface BridgeErrorResponse extends BaseEnvelope {
+  readonly type: "ohmyperf/error";
+  readonly ok: false;
+  readonly error: BridgeError;
+}
+
+export type BridgeRequestEnvelope = PingRequest | BridgeMeasureRequest | CancelRequest;
+export type BridgeResponseEnvelope =
+  | PingResponse
+  | MeasureAck
+  | CancelResponse
+  | BridgeErrorResponse;
+
+export type PortEvent =
+  | { readonly protocolVersion: ProtocolVersion; readonly type: "queued"; readonly jobId: string; readonly ts: number }
+  | {
+      readonly protocolVersion: ProtocolVersion;
+      readonly type: "run-start";
+      readonly jobId: string;
+      readonly runIndex: 0;
+      readonly totalRuns: 1;
+      readonly ts: number;
+    }
+  | {
+      readonly protocolVersion: ProtocolVersion;
+      readonly type: "navigation";
+      readonly jobId: string;
+      readonly runIndex: 0;
+      readonly phase: NavigationPhase;
+      readonly ts: number;
+    }
+  | {
+      readonly protocolVersion: ProtocolVersion;
+      readonly type: "metric";
+      readonly jobId: string;
+      readonly runIndex: 0;
+      readonly name: string;
+      readonly value: number;
+      readonly ts: number;
+    }
+  | {
+      readonly protocolVersion: ProtocolVersion;
+      readonly type: "run-complete";
+      readonly jobId: string;
+      readonly runIndex: 0;
+      readonly ts: number;
+    }
+  | {
+      readonly protocolVersion: ProtocolVersion;
+      readonly type: "complete";
+      readonly jobId: string;
+      readonly report: import("@ohmyperf/core").Report;
+      readonly ts: number;
+    }
+  | {
+      readonly protocolVersion: ProtocolVersion;
+      readonly type: "error";
+      readonly jobId: string;
+      readonly error: BridgeError;
+      readonly ts: number;
+    };
