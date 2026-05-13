@@ -19,19 +19,9 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['lucide-react'],
   },
-  webpack(config, { isServer, webpack }) {
+  webpack(config, { isServer }) {
     if (!isServer) {
       config.resolve.fallback = { ...config.resolve.fallback, process: false };
-      config.plugins.push(
-        new webpack.DefinePlugin({
-          'process.env.NEXT_PUBLIC_EXTENSION_ID': JSON.stringify(
-            process.env.NEXT_PUBLIC_EXTENSION_ID ?? '',
-          ),
-          'process.env.NEXT_PUBLIC_RUNNER_PORT': JSON.stringify(
-            process.env.NEXT_PUBLIC_RUNNER_PORT ?? '5174',
-          ),
-        }),
-      );
     }
     return config;
   },
