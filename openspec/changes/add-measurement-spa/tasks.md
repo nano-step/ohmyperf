@@ -99,7 +99,7 @@ Phased delivery. Each task independently verifiable. Order de-risks downstream p
 
 ## ζ. Archive & promote
 
-- [ ] ζ.1 Run `openspec validate add-measurement-spa --strict`.
-- [ ] ζ.2 After all phases green: `openspec archive add-measurement-spa`.
-- [ ] ζ.3 Specs promoted to `openspec/specs/measurement-spa/`.
-- [ ] ζ.4 Update root README surface list one more time post-archive.
+- [x] ζ.1 Run `openspec validate add-measurement-spa --strict` — DONE manually; openspec CLI not installed (`@fivetwofive/openspec`, `openspec` packages 404 on npm). Manual validation in [VALIDATION.md](./VALIDATION.md): 4 artifacts present, 12 requirements, 32 scenarios, 3 packages typecheck clean, build outputs all present.
+- [ ] ζ.2 `openspec archive add-measurement-spa` — DEFERRED to user (per user's "ζ archive sau" decision; archive is irreversible per Sisyphus safety rules). Instructions in [VALIDATION.md](./VALIDATION.md).
+- [ ] ζ.3 Specs promoted to `openspec/specs/measurement-spa/` — DEFERRED (part of ζ.2).
+- [ ] ζ.4 Update root README surface list one more time post-archive — DEFERRED (part of ζ.2).
