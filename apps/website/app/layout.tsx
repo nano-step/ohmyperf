@@ -11,11 +11,21 @@ const inter = Inter({
   display: 'swap',
 });
 
+// CSP: dev needs 'unsafe-inline' + 'unsafe-eval' for Next.js Fast Refresh + HMR runtime.
+// Production static export still needs 'unsafe-inline' for Next's theme-flash + hydration init
+// inline scripts (no nonce available in static export). We accept this trade-off — the SPA
+// origin is fully trusted to ship its own scripts; primary XSS protection comes from React's
+// default escaping + no dangerouslySetInnerHTML in the codebase.
+const SCRIPT_SRC =
+  process.env.NODE_ENV === 'production'
+    ? "'self' 'unsafe-inline'"
+    : "'self' 'unsafe-inline' 'unsafe-eval'";
+
 const CSP = [
   "default-src 'self'",
-  "connect-src 'self' http://localhost:5174 http://127.0.0.1:5174",
+  "connect-src 'self' http://localhost:5174 http://127.0.0.1:5174 ws://localhost:3000 ws://127.0.0.1:3000",
   "img-src 'self' data: https:",
-  "script-src 'self'",
+  `script-src ${SCRIPT_SRC}`,
   "style-src 'self' 'unsafe-inline'",
   "font-src 'self' data:",
   "frame-ancestors 'none'",
