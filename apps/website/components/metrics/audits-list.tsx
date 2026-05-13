@@ -21,8 +21,8 @@ export function AuditsList({ audits }: Props) {
           </tr>
         </thead>
         <tbody>
-          {sorted.map((a) => (
-            <tr key={a.id} className="border-t">
+          {sorted.map((a, i) => (
+            <tr key={`${a.id}-${i}`} className="border-t">
               <td className="px-3 py-2">
                 <span className={`inline-block px-1.5 py-0.5 rounded text-xs font-medium ${a.passed ? 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300'}`}>
                   {a.passed ? 'PASS' : 'FAIL'}

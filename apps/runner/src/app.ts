@@ -50,7 +50,7 @@ export function createApp(env: AppEnv): Hono<{ Variables: AppVariables }> {
     cors({
       origin: (origin) => (env.config.corsOrigins.includes(origin) ? origin : null),
       allowMethods: ["GET", "POST", "DELETE", "OPTIONS"],
-      allowHeaders: ["Content-Type", "Accept", "Last-Event-ID", "x-request-id"],
+      allowHeaders: ["Content-Type", "Accept", "Last-Event-ID", "x-request-id", "Cache-Control"],
       exposeHeaders: ["x-request-id"],
       maxAge: 600,
     }),
