@@ -35,6 +35,11 @@ function getErrorInfo(code: AnyErrorCode, message: string): ErrorInfo {
       return { title: 'Rate Limit Exceeded', guidance: 'Too many measurements. Wait a minute and try again.' };
     case 'runner/network-error':
       return { title: 'Runner Offline', guidance: 'Cannot reach the local runner. Make sure it is running: docker compose up -d.' };
+    case 'runner/browser-missing':
+      return {
+        title: 'Browser Not Installed',
+        guidance: 'The runner needs Playwright Chromium. Run this in the project root:\n\n  pnpm exec playwright install chromium\n\nThen retry the measurement (no need to restart the runner).',
+      };
     case 'internal/error':
       return { title: 'Internal Error', guidance: 'An unexpected error occurred. See the message and DevTools Console for details.' };
     case 'persist/failed':
@@ -74,7 +79,7 @@ export function ErrorState({ code, message, onRetry }: Props) {
         <span className="text-red-500 mt-0.5 text-lg">✕</span>
         <div className="flex-1">
           <p className="font-semibold text-red-900 dark:text-red-300">{info.title}</p>
-          <p className="text-sm text-red-700 dark:text-red-400 mt-0.5">{info.guidance}</p>
+          <p className="text-sm text-red-700 dark:text-red-400 mt-0.5 whitespace-pre-line">{info.guidance}</p>
           <p className="text-xs text-red-500 dark:text-red-500 mt-1 font-mono">
             <code>code: {String(code)}</code>
           </p>

@@ -21,6 +21,16 @@ export function errorEnvelope(
 export function classifyEngineError(err: unknown): { code: ErrorCode; message: string } {
   const message = err instanceof Error ? err.message : String(err);
   const lower = message.toLowerCase();
+  if (
+    lower.includes("executable doesn't exist") ||
+    lower.includes("executable does not exist") ||
+    lower.includes("browserType.launch") && lower.includes("playwright install")
+  ) {
+    return {
+      code: "runner/browser-missing",
+      message: "Playwright Chromium is not installed. Run: pnpm exec playwright install chromium",
+    };
+  }
   if (lower.includes("timeout") || lower.includes("timed out")) {
     return { code: "navigation/timeout", message };
   }

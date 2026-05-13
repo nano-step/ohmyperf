@@ -113,6 +113,7 @@ export type ErrorCode =
   | "rate-limit/exceeded"
   | "validation/bad-request"
   | "internal/error"
+  | "runner/browser-missing"
   | "extension/devtools-attached"
   | "extension/target-tab-closed"
   | "extension/self-measurement-refused"
