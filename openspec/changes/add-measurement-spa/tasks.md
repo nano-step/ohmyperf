@@ -66,17 +66,17 @@ Phased delivery. Each task independently verifiable. Order de-risks downstream p
 
 ## δ. Extension bridge
 
-- [ ] δ.1 Update `apps/extension-chrome/static/manifest.json` per D9: add `externally_connectable.matches`, add `"tabs"` permission, keep all existing keys.
-- [ ] δ.2 Implement `apps/extension-chrome/src/messaging.ts` — typed message envelopes; import from `packages/shared-types`.
-- [ ] δ.3 Implement `chrome.runtime.onMessageExternal` handler in background.ts: `ohmyperf/ping` → respond `{ ok, version }`; `ohmyperf/measure` → validate (runs ≤ 1, URL allowed), open new tab via `chrome.tabs.create({ active: false })`, attach debugger, run engine, stream events back via port.
-- [ ] δ.4 Implement port-based progress streaming: extension `chrome.runtime.connect` from SPA → bidirectional stream until job done/cancel/error.
-- [ ] δ.5 Implement same-tab refusal: if `request.url` host matches current tab's host (`ohmyperf.dev`), refuse with error code `'extension/self-measurement-refused'`.
-- [ ] δ.6 Implement DevTools-open detection: if `chrome.debugger.attach` fails with `"Another debugger is already attached"`, emit `error` event with code `'extension/devtools-attached'`; SPA shows "Close DevTools on target tab" guidance with Retry button.
-- [ ] δ.7 Implement `chrome.tabs.onRemoved` listener — if target tab closed mid-measurement, abort cleanly AND emit `error` event `{ code: 'extension/target-tab-closed', message }` to the port subscriber so SPA can render guidance.
-- [ ] δ.8 Update `apps/website/lib/extension-bridge.ts`: typed `chrome.runtime.sendMessage` + `chrome.runtime.connect` wrappers; clamp runs ≤ 1 with user-facing tooltip.
-- [ ] δ.9 Parity test: run identical fixture URL through (a) extension path and (b) runner path. Assert `Report` shapes match (allow numerical variance within CoV bound). **Verify** `Report.meta.browser.source` literals per `packages/core/src/types.ts:135`: extension path → `"extension-host"`, runner path → `"bundled"` (NOT `"extension"` / `"playwright"`). CWV CoV bound: 30% for v1 single-run.
-- [ ] δ.10 Update `apps/extension-chrome/README.md` with externally_connectable note and CWS re-review timeline guidance.
-- [ ] δ.11 Acceptance: install unpacked extension → SPA detects → measure single URL via extension → identical Report (modulo run-to-run variance) as runner path.
+- [x] δ.1 Update `apps/extension-chrome/static/manifest.json` per D9: add `externally_connectable.matches`, add `"tabs"` permission, keep all existing keys.
+- [x] δ.2 Implement typed bridge envelopes in `packages/shared-types/src/index.ts` (PROTOCOL_VERSION=1, PingRequest/Response, BridgeMeasureRequest, MeasureAck, CancelRequest/Response, BridgeErrorResponse, PortEvent union, BridgeError, BridgeErrorCode, BridgeCapability). Consolidated into `index.ts` rather than `messaging.ts` to avoid double-import — see REVIEW.md δ.2.
+- [x] δ.3 Implement `chrome.runtime.onMessageExternal` handler in background.ts: `ohmyperf/ping` → respond `{ ok, version, capabilities }`; `ohmyperf/measure` → validate (runs===1, http(s), not self), open new tab via `chrome.tabs.create({ active: false, openerTabId })`, attach debugger, run engine, stream events back via port.
+- [x] δ.4 Implement port-based progress streaming: extension `chrome.runtime.onConnectExternal` → name regex `ohmyperf/job/<jobId>` → replay last-50 buffer → subscribe live until job done/cancel/error. MV3 SW stays alive while port + chrome.debugger active (documented inline).
+- [x] δ.5 Same-tab refusal via `exactUrlMatch` (R10: origin + pathname + search, no eTLD+1 heuristic) → `extension/self-measurement-refused`.
+- [x] δ.6 DevTools-open detection: `mapEngineError()` pattern-matches `/another debugger|already attached/i` → emits `extension/devtools-attached` (retriable=true).
+- [x] δ.7 `chrome.tabs.onRemoved` listener scoped per job's `targetTabId`; emits `extension/target-tab-closed` (retriable=true) and tears down the job idempotently.
+- [x] δ.8 `apps/website/lib/extension-bridge.ts` created with `ping`/`startMeasure`/`cancelJob`/`streamPort` typed wrappers; runs > 1 throw `ExtensionBridgeError(code='extension/unsupported-runs')`. PROTOCOL_VERSION sanity check in `backend-detector.ts`.
+- [x] δ.9 Parity test file `apps/extension-chrome/tests/parity.test.ts` written with three assertions (`extension-host` vs `bundled`, CoV ≤ 30%) but `describe.skip()`'d — extension E2E deferred to manual smoke per phase-delta-extension.md §M. See REVIEW.md δ.1.
+- [x] δ.10 Updated `apps/extension-chrome/README.md` with externally_connectable details, CWS re-review timeline (T-14 days), and per-permission CWS justification copy.
+- [ ] δ.11 Acceptance: install unpacked extension → SPA detects → measure single URL via extension → identical Report (modulo run-to-run variance) as runner path. (Deferred to manual smoke — no Chromium binary in sandbox; build + handler-grep verified.)
 
 ## ε. History + polish + dogfood + docs
 

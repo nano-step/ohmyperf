@@ -203,3 +203,35 @@ The integration suite injects a fake `EngineRunner` via `JobStore({ engineRunner
 | `/report` | ~110 KB | 250 KB | ✅ PASS |
 | `/viewer` | ~109 KB | N/A | N/A |
 
+
+---
+
+## Phase δ implementation notes (Sisyphus, 2026-05-13)
+
+### Decisions and deviations
+
+1. **Extension E2E test deferred to manual smoke** (per phase-delta-extension.md §M). Playwright extension-loading via `chromium.launchPersistentContext({ args: ['--load-extension=...'] })` is flaky in CI (frequent SW timing issues; Chromium binary install ~120MB). The parity test file `apps/extension-chrome/tests/parity.test.ts` is written with all three assertions but `describe.skip()`'d. Manual smoke: load unpacked extension → run identical fixture URL via (a) toolbar click and (b) SPA bridge → assert `Report.meta.browser.source === "extension-host"` and CWV CoV ≤ 30%.
+
+2. **`packages/shared-types` extended in-place rather than split into `bridge.ts`** — spec §B suggests `packages/shared-types/src/bridge.ts` as a separate file, but the existing `index.ts` already aggregates wire-protocol types (ProgressEvent, MeasureRequest, ErrorEnvelope, etc.). Splitting would force two import lines for every consumer. All new types appended to `index.ts` under the `// Phase δ — Extension bridge envelopes` banner. PROTOCOL_VERSION is the single source of truth.
+
+3. **`BridgeMeasureRequest` renamed from `MeasureRequest` in spec §B** — the existing `MeasureRequest` (runner contract) already exists in `index.ts`. To avoid a name collision and a breaking rename, the bridge envelope is `BridgeMeasureRequest`. Likewise `BridgeRequestEnvelope`, `BridgeResponseEnvelope`, `BridgeErrorResponse`. The capabilities, codes, and PROTOCOL_VERSION constant are exactly as spec'd.
+
+4. **`exactUrlMatch` semantics**: compares `origin + pathname + search` (excluding `hash`), per R10. No eTLD+1 heuristic; user can measure subdomains/sibling paths of the SPA origin if they really want to. Self-measurement refusal fires only on exact-URL match.
+
+5. **DevTools detection regex**: case-insensitive `/another debugger|already attached/i` in `mapEngineError`. Chrome's wording is "Another debugger is already attached" but documentation isn't authoritative; the broader pattern catches future variants.
+
+6. **Replay buffer = last 50 events, applied per job**: events emitted before port connect are buffered; new connection receives them in-order before live events. On port disconnect (network blip, SPA closes tab), job continues — single-run is ~10–15s so reconnect coverage is the simpler path versus suspending the engine.
+
+7. **MV3 SW lifecycle**: documented inline in background.ts banner. Single-run path + connected port + active chrome.debugger attachment keeps the SW alive well past the 30s idle threshold. Multi-run via `chrome.offscreen` is deferred to v1.5 (Q3 decision).
+
+8. **Tab create with `openerTabId` + `active: false` + `pinned: false`**: new tab opens in the SPA's window, adjacent to the SPA tab, in the background. R1 (Q1) decision honored. Tab is NOT auto-closed after measurement (deferred to Phase ε per §J).
+
+9. **`extension-bridge.ts` AsyncIterable pattern**: SPA consumes events via `for await (const ev of bridge.streamPort(name).events)`. Drains queue first, then awaits next, terminates on `complete`/`error`/`cancelled` or port disconnect. `close()` is idempotent.
+
+10. **`backend-detector.ts` updated**: ping request now carries `protocolVersion: PROTOCOL_VERSION`, and detection requires the response's `protocolVersion` to match. Older or mismatched extensions are treated as "no extension detected" → falls back to runner.
+
+### Build verification (Phase δ)
+- `pnpm --filter @ohmyperf/shared-types build`: PASS
+- `pnpm --filter @ohmyperf/extension-chrome build`: PASS (bundle contains `onMessageExternal` + `onConnectExternal`)
+- `pnpm --filter @ohmyperf/website typecheck`: PASS
+
