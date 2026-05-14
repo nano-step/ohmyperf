@@ -20,8 +20,8 @@ onlyBuiltDependencies:
   - "playwright"
 
 catalog:
-  playwright: ^1.49.1
-  "@playwright/test": ^1.49.1
+  playwright: 1.60.0
+  "@playwright/test": 1.60.0
   "web-vitals": ^4.2.4
   "axe-core": ^4.10.2
   "source-map": ^0.7.4
