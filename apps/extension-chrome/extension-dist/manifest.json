@@ -3,8 +3,15 @@
   "name": "OhMyPerf",
   "version": "0.0.0",
   "description": "Real-machine, real-browser web performance measurement via chrome.debugger.",
-  "permissions": ["debugger", "storage", "activeTab", "tabs"],
-  "host_permissions": ["<all_urls>"],
+  "permissions": [
+    "debugger",
+    "storage",
+    "activeTab",
+    "tabs"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
   "externally_connectable": {
     "matches": [
       "https://ohmyperf.dev/*",
@@ -22,9 +29,15 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["viewer.html", "viewer.bundle.js"],
-      "matches": ["<all_urls>"]
+      "resources": [
+        "viewer.html",
+        "viewer.bundle.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
     }
   ],
-  "minimum_chrome_version": "116"
+  "minimum_chrome_version": "116",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjhyfCKZz8pqnZHbwBcS46nlmYbDixo96ySKAcoYAeY++tOf8MbJKqq/8BBRAjk08q+U/luZJ7ZN3KFtnyRYoMfmP4H71bMPObcH3IYm+oMW33givdQB+gA55USHqB/kZJAVXbo5d1XI1PU4Tu5pkBusxH/+Jn8vaFMbB2iHZqajcJ8iMO9Pel60CaIIT85dVU0GT8pCyCQj9hjIXST9XLVO9QHN0QXBxRS5bsMArXJVSo1MYYyW6WndldSRfesBH+Yixr4yQOC/5ykQ2pNbc5AjaNUcCd5MX8fsjYP05H/LO0xdjDOGHuRaQr5PyXFtnClXXywS8aX1/dDf26E1XXwIDAQAB"
 }

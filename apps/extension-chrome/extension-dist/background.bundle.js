@@ -47,7 +47,7 @@ function mergeCollectorResults(results) {
   return merged;
 }
 
-// extension-dist/_stubs/node-stub.mjs
+// .build-cache/stubs/node-stub.mjs
 var randomUUID = () => Math.random().toString(36).slice(2) + Date.now().toString(36);
 var arch = () => "browser";
 var platform = () => "browser";
