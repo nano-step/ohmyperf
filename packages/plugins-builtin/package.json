@@ -3,6 +3,9 @@
   "version": "0.0.0-pre",
   "description": "Built-in plugins: cwv, axe, lh-audits (vendored), seo, best-practices.",
   "license": "Apache-2.0",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -37,15 +40,14 @@
     "test": "vitest run --passWithNoTests",
     "clean": "rimraf dist .turbo *.tsbuildinfo"
   },
+  "peerDependencies": {
+    "@ohmyperf/core": "workspace:*"
+  },
   "devDependencies": {
     "@ohmyperf/core": "workspace:*",
     "@ohmyperf/driver-playwright": "workspace:*",
     "axe-core": "catalog:",
     "playwright": "catalog:",
-    "vitest": "catalog:",
-    "web-vitals": "catalog:"
-  },
-  "peerDependencies": {
-    "@ohmyperf/core": "workspace:*"
+    "vitest": "catalog:"
   }
 }

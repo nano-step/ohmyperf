@@ -3,6 +3,9 @@
   "version": "0.0.0-pre",
   "description": "CSV reporter (long format, per-metric-per-run).",
   "license": "Apache-2.0",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -24,10 +27,10 @@
     "lint": "eslint src",
     "clean": "rimraf dist .turbo *.tsbuildinfo"
   },
-  "devDependencies": {
+  "peerDependencies": {
     "@ohmyperf/core": "workspace:*"
   },
-  "peerDependencies": {
+  "devDependencies": {
     "@ohmyperf/core": "workspace:*"
   }
 }

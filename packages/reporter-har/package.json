@@ -3,6 +3,9 @@
   "version": "0.0.0-pre",
   "description": "HTTP Archive (HAR) reporter with redaction applied.",
   "license": "Apache-2.0",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

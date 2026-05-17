@@ -41,6 +41,16 @@ export interface MetricAttribution {
   readonly source?: string;
   readonly cause?: string;
   readonly frameId?: string;
+  readonly subparts?: Readonly<Record<string, number>>;
+  readonly interactionType?: "pointer" | "keyboard";
+  readonly longestScript?: {
+    readonly url?: string;
+    readonly invoker?: string;
+    readonly duration: number;
+    readonly subpart: "input-delay" | "processing" | "presentation";
+  };
+  readonly previousRect?: { readonly x: number; readonly y: number; readonly width: number; readonly height: number };
+  readonly currentRect?: { readonly x: number; readonly y: number; readonly width: number; readonly height: number };
 }
 
 export interface Metric {
@@ -175,6 +185,7 @@ export interface RunReport {
   readonly metrics: Readonly<Record<string, Metric>>;
   readonly resources: readonly Resource[];
   readonly longTasks: readonly LongTask[];
+  readonly runtime?: Readonly<Record<string, number>>;
   readonly memory?: {
     readonly jsHeapUsedBytes: number;
     readonly jsHeapTotalBytes: number;

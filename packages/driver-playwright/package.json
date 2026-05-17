@@ -3,6 +3,9 @@
   "version": "0.0.0-pre",
   "description": "Playwright Driver implementation. Wraps newCDPSession() for Chromium-deep work.",
   "license": "Apache-2.0",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -33,13 +36,13 @@
     "test": "vitest run",
     "clean": "rimraf dist .turbo *.tsbuildinfo"
   },
+  "peerDependencies": {
+    "@ohmyperf/core": "workspace:*",
+    "playwright": "catalog:"
+  },
   "devDependencies": {
     "@ohmyperf/core": "workspace:*",
     "playwright": "catalog:",
     "vitest": "catalog:"
-  },
-  "peerDependencies": {
-    "@ohmyperf/core": "workspace:*",
-    "playwright": "catalog:"
   }
 }

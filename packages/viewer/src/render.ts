@@ -47,6 +47,7 @@ export function renderReportHtml(report: Report, opts: RenderViewerOptions = {})
   ${renderHeader(report)}
   ${renderUnstableBanner(report)}
   ${renderTiles(report)}
+  ${renderAttribution(report)}
   ${renderAudits(report.audits)}
   ${renderResources(report)}
   ${renderFrameTree(report)}
@@ -109,6 +110,48 @@ function renderTiles(report: Report): string {
 <div class="tiles">
 ${tiles}
 </div>`;
+}
+
+function renderAttribution(report: Report): string {
+  const firstRun = report.runs[0];
+  if (!firstRun) return "";
+  const entries = Object.entries(firstRun.metrics).filter(([, m]) => m.attribution);
+  if (entries.length === 0) return "";
+  const blocks = entries.map(([name, metric]) => {
+    const a = metric.attribution;
+    if (!a) return "";
+    const rows: string[] = [];
+    if (a.element) rows.push(`<dt>Element</dt><dd class="mono">${escapeHtml(a.element)}</dd>`);
+    if (a.url) rows.push(`<dt>Resource</dt><dd class="mono">${escapeHtml(a.url)}</dd>`);
+    if (a.interactionType) rows.push(`<dt>Interaction</dt><dd>${escapeHtml(a.interactionType)}</dd>`);
+    if (a.cause) rows.push(`<dt>Cause</dt><dd>${escapeHtml(a.cause)}</dd>`);
+    if (a.frameId) rows.push(`<dt>Frame</dt><dd class="mono">${escapeHtml(a.frameId)}</dd>`);
+    if (a.subparts) {
+      const parts = Object.entries(a.subparts)
+        .map(([k, v]) => `${escapeHtml(k)}=${escapeHtml(v.toFixed(0))}ms`)
+        .join(" · ");
+      rows.push(`<dt>Sub-parts</dt><dd>${parts}</dd>`);
+    }
+    if (a.longestScript) {
+      const ls = a.longestScript;
+      const detail = [
+        ls.url ?? "(anonymous)",
+        ls.invoker ?? "",
+        `${ls.duration.toFixed(0)}ms`,
+        `in ${ls.subpart}`,
+      ]
+        .filter(Boolean)
+        .join(" · ");
+      rows.push(`<dt>Longest script</dt><dd class="mono">${escapeHtml(detail)}</dd>`);
+    }
+    if (rows.length === 0) return "";
+    return `<div class="panel">
+    <h3>${escapeHtml(name.toUpperCase())} attribution</h3>
+    <dl class="meta">${rows.join("\n      ")}</dl>
+  </div>`;
+  }).filter(Boolean);
+  if (blocks.length === 0) return "";
+  return blocks.join("\n");
 }
 
 function renderTile(

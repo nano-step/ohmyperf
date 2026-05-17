@@ -13,7 +13,7 @@
     "url": "https://github.com/ohmyperf/ohmyperf/issues"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.0.0"
   },
   "packageManager": "pnpm@10.33.3",
   "type": "module",

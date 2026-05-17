@@ -339,6 +339,10 @@ importers:
         version: 2.1.9(@types/node@22.19.18)(lightningcss@1.32.0)
 
   packages/core:
+    dependencies:
+      web-vitals:
+        specifier: 'catalog:'
+        version: 4.2.4
     devDependencies:
       '@microsoft/api-extractor':
         specifier: ^7.49.1
@@ -385,9 +389,6 @@ importers:
       vitest:
         specifier: 'catalog:'
         version: 2.1.9(@types/node@22.19.18)(lightningcss@1.32.0)
-      web-vitals:
-        specifier: 'catalog:'
-        version: 4.2.4
 
   packages/reporter-csv:
     devDependencies:

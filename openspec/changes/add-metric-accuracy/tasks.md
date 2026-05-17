@@ -2,50 +2,50 @@
 
 ## A0. Pre-flight — node version + schema defense
 
-- [ ] A0.1 Bump root `package.json` `engines.node` to `">=22.0.0"`. Add same `engines` field to all publishable workspace packages (`@ohmyperf/core`, `@ohmyperf/cli`, `@ohmyperf/share-client`, etc.).
-- [ ] A0.2 Update `.github/workflows/ci.yml` matrix: replace any Node 20 entry with Node 22. Add Node 24 (current latest) as a parallel matrix.
-- [ ] A0.3 In `apps/website/components/viewer/report-viewer.tsx` (and CLI HTML reporter `packages/viewer/src/render.ts`), audit every `report.metrics.X.attribution.Y` and `report.runs[].longTasks[].attribution.Y` access; ensure defensive `?.` chain for fields A2 / B will add. Goal: a v1.0 Report rendered by v1.1+ viewer never throws on missing optional fields.
-- [ ] A0.4 Move `"web-vitals": "catalog:"` from `devDependencies` to `dependencies` in `packages/plugins-builtin/package.json` (verified 2026-05-17 currently in devDependencies, line 47). `pnpm install`; `pnpm api:check --filter @ohmyperf/plugins-builtin` clean. **A1.2 depends on this — fix BEFORE A1.2 starts.** (§0 reconcile no longer owns this — moved to A direct ownership for clarity.)
+- [x] A0.1 Bump root `package.json` `engines.node` to `">=22.0.0"`. Add same `engines` field to all publishable workspace packages (`@ohmyperf/core`, `@ohmyperf/cli`, `@ohmyperf/share-client`, etc.).
+- [x] A0.2 Update `.github/workflows/ci.yml` matrix: replace any Node 20 entry with Node 22. Add Node 24 (current latest) as a parallel matrix.
+- [x] A0.3 In `apps/website/components/viewer/report-viewer.tsx` (and CLI HTML reporter `packages/viewer/src/render.ts`), audit every `report.metrics.X.attribution.Y` and `report.runs[].longTasks[].attribution.Y` access; ensure defensive `?.` chain for fields A2 / B will add. Goal: a v1.0 Report rendered by v1.1+ viewer never throws on missing optional fields.
+- [x] A0.4 Move `"web-vitals": "catalog:"` from `devDependencies` to `dependencies` in `packages/plugins-builtin/package.json` (verified 2026-05-17 currently in devDependencies, line 47). `pnpm install`; `pnpm api:check --filter @ohmyperf/plugins-builtin` clean. **A1.2 depends on this — fix BEFORE A1.2 starts.** (§0 reconcile no longer owns this — moved to A direct ownership for clarity.)
 
 ## A1. INP correctness fix
 
-- [ ] A1.1 Add `web-vitals` to `packages/plugins-builtin` `dependencies` (already declared but verify version matches `^4.2.4` from workspace catalog).
-- [ ] A1.2 Bundle `web-vitals/attribution` entry into the inline script via a build-time esbuild script (`packages/plugins-builtin/scripts/bundle-web-vitals.mjs`). Use `--bundle --format=iife --globalName=webVitals --target=es2020` against the EXPLICIT `web-vitals/attribution` subpath (NOT bare `web-vitals` — that pulls the basic build and bloats from ~4KB to ~30KB). Output the bundled IIFE as a string constant `WEB_VITALS_ATTRIBUTION_SRC` committed into `cwv-inline-script.ts`. Assert gzip size ≤ 5KB via the bundle script.
-- [ ] A1.3 In `cwv-inline-script.ts`, replace the custom INP `PerformanceObserver('event')` with `onINP(callback, { reportAllChanges: true })` from web-vitals/attribution. Same for `onLCP`, `onCLS`, `onFCP`, `onTTFB` (replacing the existing custom PerformanceObservers).
-- [ ] A1.4 Each web-vitals callback writes `{ name, value, rating, attribution }` into the existing `window.__ohmyperfCwv` object (same shape the host already polls). NO new `Runtime.addBinding` channel — the host's `readSnapshot()` polls via `Runtime.evaluate(JSON.stringify(window.__ohmyperfCwv))` per the established collector pattern.
-- [ ] A1.5 Update `cwv-collector.ts` `readSnapshot()` to recognize the new payload shape and map to `Metric` + populate `Metric.attribution`. Backward compat: if `attribution` is absent (legacy injected script), continue with just `value`.
+- [x] A1.1 Add `web-vitals` to `packages/plugins-builtin` `dependencies` (already declared but verify version matches `^4.2.4` from workspace catalog).
+- [x] A1.2 Bundle `web-vitals/attribution` entry into the inline script via a build-time esbuild script (`packages/plugins-builtin/scripts/bundle-web-vitals.mjs`). Use `--bundle --format=iife --globalName=webVitals --target=es2020` against the EXPLICIT `web-vitals/attribution` subpath (NOT bare `web-vitals` — that pulls the basic build and bloats from ~4KB to ~30KB). Output the bundled IIFE as a string constant `WEB_VITALS_ATTRIBUTION_SRC` committed into `cwv-inline-script.ts`. Assert gzip size ≤ 5KB via the bundle script.
+- [x] A1.3 In `cwv-inline-script.ts`, replace the custom INP `PerformanceObserver('event')` with `onINP(callback, { reportAllChanges: true })` from web-vitals/attribution. Same for `onLCP`, `onCLS`, `onFCP`, `onTTFB` (replacing the existing custom PerformanceObservers).
+- [x] A1.4 Each web-vitals callback writes `{ name, value, rating, attribution }` into the existing `window.__ohmyperfCwv` object (same shape the host already polls). NO new `Runtime.addBinding` channel — the host's `readSnapshot()` polls via `Runtime.evaluate(JSON.stringify(window.__ohmyperfCwv))` per the established collector pattern.
+- [x] A1.5 Update `cwv-collector.ts` `readSnapshot()` to recognize the new payload shape and map to `Metric` + populate `Metric.attribution`. Backward compat: if `attribution` is absent (legacy injected script), continue with just `value`.
 
 ## A2. Attribution population
 
-- [ ] A2.1 Extend `MetricAttribution` type in `packages/core/src/types.ts`:
+- [x] A2.1 Extend `MetricAttribution` type in `packages/core/src/types.ts`:
   - `subparts?: Record<string, number>` (e.g. `{ ttfb: 380, loadDelay: 60, loadDuration: 540, renderDelay: 420 }` for LCP)
   - `interactionType?: 'pointer' | 'keyboard'` (INP only)
   - `longestScript?: { url?: string, invoker?: string, duration: number, subpart: 'input-delay' | 'processing' | 'presentation' }` (INP only)
   - `previousRect?: { x: number, y: number, width: number, height: number }` (CLS only)
   - `currentRect?: { x: number, y: number, width: number, height: number }` (CLS only)
-- [ ] A2.2 Map LCP `LCPAttribution` → `MetricAttribution`:
+- [x] A2.2 Map LCP `LCPAttribution` → `MetricAttribution`:
   - `element` ← `target` (CSS selector)
   - `url` ← `url`
   - `subparts` ← `{ ttfb: timeToFirstByte, loadDelay: resourceLoadDelay, loadDuration: resourceLoadDuration, renderDelay: elementRenderDelay }`
-- [ ] A2.3 Map INP `INPAttribution` → `MetricAttribution`:
+- [x] A2.3 Map INP `INPAttribution` → `MetricAttribution`:
   - `element` ← `interactionTarget`
   - `interactionType` ← `interactionType`
   - `subparts` ← `{ inputDelay, processing: processingDuration, presentation: presentationDelay }`
   - `longestScript` ← `{ url: longestScript.entry.invoker, invoker: longestScript.entry.invokerType, duration: longestScript.intersectingDuration, subpart: longestScript.subpart }` (when present)
-- [ ] A2.4 Map CLS `CLSAttribution` → `MetricAttribution`:
+- [x] A2.4 Map CLS `CLSAttribution` → `MetricAttribution`:
   - `element` ← `largestShiftTarget`
   - `previousRect` ← `largestShiftSource.previousRect` (DOMRectReadOnly → plain object)
   - `currentRect` ← `largestShiftSource.currentRect`
   - `cause` ← derive from `loadState` ('dom-interactive' | 'dom-content-loaded' | 'load' → mapped strings)
-- [ ] A2.5 Wire CLS frame-resize attribution: `Page.frameResized` does NOT exist in CDP. Instead, walk the web-vitals CLS `largestShiftEntry.sources[]` array (each source has a `node` reference). If a source's `node` is an `HTMLIFrameElement`, populate `attribution.cause = "frame-resize"` and `attribution.frameId = <the iframe's CDP frameId>`. Frame ID lookup: maintain a `WeakMap<HTMLIFrameElement, frameId>` populated from the existing `Target.attachedToTarget` flow.
-- [ ] A2.6 Update `packages/viewer/src/render.ts` (HTML reporter) to surface `attribution.element`, `attribution.subparts`, `attribution.longestScript` when present — backward compatible (existing reports without attribution still render).
+- [x] A2.5 Wire CLS frame-resize attribution: `Page.frameResized` does NOT exist in CDP. Instead, walk the web-vitals CLS `largestShiftEntry.sources[]` array (each source has a `node` reference). If a source's `node` is an `HTMLIFrameElement`, populate `attribution.cause = "frame-resize"` and `attribution.frameId = <the iframe's CDP frameId>`. Frame ID lookup: maintain a `WeakMap<HTMLIFrameElement, frameId>` populated from the existing `Target.attachedToTarget` flow.
+- [x] A2.6 Update `packages/viewer/src/render.ts` (HTML reporter) to surface `attribution.element`, `attribution.subparts`, `attribution.longestScript` when present — backward compatible (existing reports without attribution still render).
 
 ## A3. Runtime breakdown from Performance.getMetrics
 
-- [ ] A3.1 In `loading-collector.ts`, replace the discarded call with `const metrics = await session.send("Performance.getMetrics")`. **Timing gate**: call AFTER the existing idle-await (same gate the CWV collector uses for finalize). `Performance.getMetrics` returns cumulative counters; calling pre-idle returns near-zero values and produces garbage data. Filter to the canonical set: `ScriptDuration`, `TaskDuration`, `LayoutDuration`, `RecalcStyleDuration`, `V8CompileDuration`, `LayoutCount`, `RecalcStyleCount`, `NodeCount`.
-- [ ] A3.2 Emit each as a `Metric` with name prefix `runtime.` (e.g. `runtime.scriptDuration`).
-- [ ] A3.3 Add `RunReport.runtime?: Record<string, number>` for the aggregated view (keep raw entries in `metrics[]` as well).
-- [ ] A3.4 Update `MetricTiles` in `apps/website/components/viewer/report-viewer.tsx` to NOT render `runtime.*` metrics in the headline grid (they're for the Diagnostics section in Track B; only add the data here).
+- [x] A3.1 In `loading-collector.ts`, replace the discarded call with `const metrics = await session.send("Performance.getMetrics")`. **Timing gate**: call AFTER the existing idle-await (same gate the CWV collector uses for finalize). `Performance.getMetrics` returns cumulative counters; calling pre-idle returns near-zero values and produces garbage data. Filter to the canonical set: `ScriptDuration`, `TaskDuration`, `LayoutDuration`, `RecalcStyleDuration`, `V8CompileDuration`, `LayoutCount`, `RecalcStyleCount`, `NodeCount`.
+- [x] A3.2 Emit each as a `Metric` with name prefix `runtime.` (e.g. `runtime.scriptDuration`).
+- [x] A3.3 Add `RunReport.runtime?: Record<string, number>` for the aggregated view (keep raw entries in `metrics[]` as well).
+- [x] A3.4 Update `MetricTiles` in `apps/website/components/viewer/report-viewer.tsx` to NOT render `runtime.*` metrics in the headline grid (they're for the Diagnostics section in Track B; only add the data here).
 
 ## A4. Lighthouse parity test harness
 

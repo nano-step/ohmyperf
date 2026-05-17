@@ -22,12 +22,12 @@ jobs:
           - ubuntu-24.04
           - ubuntu-22.04
           - windows-2022
-        node: ["20.x", "22.x"]
+        node: ["22.x", "24.x"]
         exclude:
           - os: macos-13
-            node: "22.x"
+            node: "24.x"
           - os: ubuntu-22.04
-            node: "22.x"
+            node: "24.x"
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4

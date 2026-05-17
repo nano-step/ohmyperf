@@ -3,6 +3,9 @@
   "version": "0.0.0-pre",
   "description": "Upload/fetch shareable reports; runs the redaction pipeline before upload.",
   "license": "Apache-2.0",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -25,11 +28,11 @@
     "test": "vitest run --passWithNoTests",
     "clean": "rimraf dist .turbo *.tsbuildinfo"
   },
+  "peerDependencies": {
+    "@ohmyperf/core": "workspace:*"
+  },
   "devDependencies": {
     "@ohmyperf/core": "workspace:*",
     "vitest": "catalog:"
-  },
-  "peerDependencies": {
-    "@ohmyperf/core": "workspace:*"
   }
 }

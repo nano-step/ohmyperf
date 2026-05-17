@@ -3,6 +3,9 @@
   "version": "0.0.0-pre",
   "description": "Hono backend for shareable links. Runs on Cloudflare Workers (R2 + D1) or Node (S3-compatible + SQLite).",
   "license": "Apache-2.0",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "type": "module",
   "main": "./dist/node.js",
   "types": "./dist/index.d.ts",
@@ -34,15 +37,15 @@
     "start:node": "node dist/node.js",
     "clean": "rimraf dist .turbo *.tsbuildinfo"
   },
+  "peerDependencies": {
+    "@ohmyperf/core": "workspace:*",
+    "@ohmyperf/viewer": "workspace:*",
+    "hono": "catalog:"
+  },
   "devDependencies": {
     "@ohmyperf/core": "workspace:*",
     "@ohmyperf/viewer": "workspace:*",
     "hono": "catalog:",
     "vitest": "catalog:"
-  },
-  "peerDependencies": {
-    "@ohmyperf/core": "workspace:*",
-    "@ohmyperf/viewer": "workspace:*",
-    "hono": "catalog:"
   }
 }

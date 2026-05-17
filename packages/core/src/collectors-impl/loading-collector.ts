@@ -31,6 +31,17 @@ const TRACKED_LIFECYCLE = new Set([
   "firstContentfulPaint",
 ]);
 
+const RUNTIME_METRIC_MAP: Record<string, { metricName: string; unit: Metric["unit"] }> = {
+  ScriptDuration: { metricName: "runtime.scriptDuration", unit: "ms" },
+  TaskDuration: { metricName: "runtime.taskDuration", unit: "ms" },
+  LayoutDuration: { metricName: "runtime.layoutDuration", unit: "ms" },
+  RecalcStyleDuration: { metricName: "runtime.recalcStyleDuration", unit: "ms" },
+  V8CompileDuration: { metricName: "runtime.v8CompileDuration", unit: "ms" },
+  LayoutCount: { metricName: "runtime.layoutCount", unit: "count" },
+  RecalcStyleCount: { metricName: "runtime.recalcStyleCount", unit: "count" },
+  NodeCount: { metricName: "runtime.nodeCount", unit: "count" },
+};
+
 export const loadingCollectorFactory: CollectorFactory = {
   id: "ohmyperf.loading",
   requires: [],
@@ -89,7 +100,19 @@ export const loadingCollectorFactory: CollectorFactory = {
         }
 
         try {
-          await session.send("Performance.getMetrics");
+          const perf = (await session.send("Performance.getMetrics")) as PerformanceGetMetricsResult | undefined;
+          const entries = perf?.metrics ?? [];
+          for (const entry of entries) {
+            const mapped = RUNTIME_METRIC_MAP[entry.name];
+            if (!mapped) continue;
+            if (!Number.isFinite(entry.value)) continue;
+            const value = mapped.unit === "ms" ? entry.value * 1000 : entry.value;
+            metrics[mapped.metricName] = {
+              name: mapped.metricName,
+              value,
+              unit: mapped.unit,
+            };
+          }
         } catch (err) {
           ctx.logger.debug("loading-collector: Performance.getMetrics failed", {
             error: errMessage(err),

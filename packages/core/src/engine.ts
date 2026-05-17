@@ -357,7 +357,13 @@ async function finalizeAll(handles: ReadonlyArray<CollectorHandle>): Promise<Col
 }
 
 function buildRunReport(runIndex: number, rootFinal: CollectorResult): RunReport {
-  return {
+  const runtime: Record<string, number> = {};
+  for (const [name, m] of Object.entries(rootFinal.metrics)) {
+    if (name.startsWith("runtime.")) {
+      runtime[name.slice("runtime.".length)] = m.value;
+    }
+  }
+  const base: RunReport = {
     runIndex,
     cold: runIndex === 0,
     metrics: rootFinal.metrics,
@@ -365,6 +371,7 @@ function buildRunReport(runIndex: number, rootFinal: CollectorResult): RunReport
     longTasks: rootFinal.longTasks,
     meta: {},
   };
+  return Object.keys(runtime).length > 0 ? { ...base, runtime } : base;
 }
 
 const UNSTABLE_COV_THRESHOLD = 0.2;

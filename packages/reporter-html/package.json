@@ -3,6 +3,9 @@
   "version": "0.0.0-pre",
   "description": "Self-contained HTML reporter; embeds @ohmyperf/viewer output + the inert Report payload.",
   "license": "Apache-2.0",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -25,13 +28,13 @@
     "test": "vitest run --passWithNoTests",
     "clean": "rimraf dist .turbo *.tsbuildinfo"
   },
+  "peerDependencies": {
+    "@ohmyperf/core": "workspace:*",
+    "@ohmyperf/viewer": "workspace:*"
+  },
   "devDependencies": {
     "@ohmyperf/core": "workspace:*",
     "@ohmyperf/viewer": "workspace:*",
     "vitest": "catalog:"
-  },
-  "peerDependencies": {
-    "@ohmyperf/core": "workspace:*",
-    "@ohmyperf/viewer": "workspace:*"
   }
 }

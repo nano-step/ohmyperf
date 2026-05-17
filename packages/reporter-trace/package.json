@@ -3,6 +3,9 @@
   "version": "0.0.0-pre",
   "description": "Chrome trace .json.gz reporter (loadable in chrome://tracing).",
   "license": "Apache-2.0",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

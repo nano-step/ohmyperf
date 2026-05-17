@@ -3,6 +3,9 @@
   "version": "0.0.0-pre",
   "description": "Engine, types, plugin runtime. Reentrant. Public API frozen at 1.0.0-stable end of P0.",
   "license": "Apache-2.0",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -23,12 +26,17 @@
     "NOTICE"
   ],
   "scripts": {
+    "prebuild": "node scripts/bundle-web-vitals.mjs",
     "build": "tsc -b",
+    "pretypecheck": "node scripts/bundle-web-vitals.mjs",
     "typecheck": "tsc -b",
     "lint": "eslint src",
     "test": "vitest run",
     "api:check": "api-extractor run --local --verbose",
-    "clean": "rimraf dist .turbo etc/*.api.md temp *.tsbuildinfo"
+    "clean": "rimraf dist .turbo etc/*.api.md temp *.tsbuildinfo src/generated"
+  },
+  "dependencies": {
+    "web-vitals": "catalog:"
   },
   "devDependencies": {
     "vitest": "catalog:",
