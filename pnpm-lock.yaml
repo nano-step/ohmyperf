@@ -343,6 +343,9 @@ importers:
 
   packages/core:
     dependencies:
+      '@ohmyperf/trace-utils':
+        specifier: workspace:*
+        version: link:../trace-utils
       web-vitals:
         specifier: 'catalog:'
         version: 4.2.4

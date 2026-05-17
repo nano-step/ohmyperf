@@ -2,27 +2,27 @@
 
 ## B1. Trace collection + long-task attribution
 
-- [ ] B1.1 Vendor Lighthouse 13's `core/lib/tracehouse/main-thread-tasks.js` + `getAttributableURLForTask` into `packages/trace-utils/vendor/`. Pin a specific SHA from `googlechrome/lighthouse` and record it. Update root `NOTICE` file with Apache-2.0 attribution. Do NOT vendor `@paulirish/trace_engine` — too large, too fast-moving.
-- [ ] B1.2 Implement `parseTrace(events): MainThreadTask[]` in `packages/trace-utils/src/index.ts` by re-exporting / lightly adapting the vendored Lighthouse code.
-- [ ] B1.3 Implement `attributeTask(task, jsURLs): { url?, invoker? }` — port `getAttributableURLForTask` from the vendored Lighthouse source.
-- [ ] B1.4 Add `trace-collector.ts` to `packages/core/src/collectors-impl/` using the collector framework's `create`/`finalize` lifecycle (NOT plugin `onSetup`/`onIdle` hooks — those are for plugins, this is engine-built-in):
+- [x] B1.1 Vendor Lighthouse 13's `core/lib/tracehouse/main-thread-tasks.js` + `getAttributableURLForTask` into `packages/trace-utils/vendor/`. Pin a specific SHA from `googlechrome/lighthouse` and record it. Update root `NOTICE` file with Apache-2.0 attribution. Do NOT vendor `@paulirish/trace_engine` — too large, too fast-moving.
+- [x] B1.2 Implement `parseTrace(events): MainThreadTask[]` in `packages/trace-utils/src/index.ts` by re-exporting / lightly adapting the vendored Lighthouse code.
+- [x] B1.3 Implement `attributeTask(task, jsURLs): { url?, invoker? }` — port `getAttributableURLForTask` from the vendored Lighthouse source.
+- [x] B1.4 Add `trace-collector.ts` to `packages/core/src/collectors-impl/` using the collector framework's `create`/`finalize` lifecycle (NOT plugin `onSetup`/`onIdle` hooks — those are for plugins, this is engine-built-in):
   - In `create(session, ctx)`: `await session.send('Tracing.start', { categories: '...', transferMode: 'ReturnAsStream' })` BEFORE the engine's navigate.
   - In `finalize()`: `await session.send('Tracing.end')`, listen for `Tracing.tracingComplete` event with `stream` handle.
   - Read stream via `IO.read` chunks; track cumulative bytes. Warn-log at 25MB; HARD REFUSE at 100MB (emit `error: 'trace-too-large'`, fall back to existing PerformanceObserver-based long-tasks for this run).
   - JSON parse synchronously (V8 handles 100MB in ~1s — no worker thread needed).
   - Hand parsed events to `parseTrace`. Map each task ≥ 50ms to a `LongTaskEntry` with `attributionRich: { url, invoker, frameId }`.
-- [ ] B1.5 Update `LongTaskEntry` type in `types.ts`:
+- [x] B1.5 Update `LongTaskEntry` type in `types.ts`:
   - **ADD** sibling field `attributionRich?: { url?: string, invoker?: string, frameId: string }` (optional).
   - **DO NOT MODIFY** the existing `attribution: string` field (that would break the frozen 1.0 API).
   - Reader pattern in viewer: `const a = lt.attributionRich ?? { invoker: lt.attribution }; const url = a.url; const invoker = a.invoker;`
-- [ ] B1.6 Gate behind `MeasureOptions.collectTrace` (default: `true` for SPA + extension, `false` for `ohmyperf run` unless `--collect-trace`).
-- [ ] B1.7 Thread `collectTrace` flag through: `apps/runner/src/runner.ts` (request → engine), `apps/cli/src/commands/run.ts` (CLI `--collect-trace`), `apps/extension-chrome/src/background.ts` (bridge), `apps/mcp-server/src/server.ts` (MCP measure tool definition — single file, no `tools/` directory), `packages/driver-playwright/src/index.ts` + `packages/driver-extension/src/index.ts` (driver capability flag). Each one is a 1-2 line plumbing change but they're easy to miss.
-- [ ] B1.8 Bypass tracing entirely when `mode: "ci-stable"` is active in the engine's calibration phase — calibration measures a fixed-source JS loop and trace overhead would pollute the throttle-rate computation.
-- [ ] B1.9 Trace artifact storage in SPA: when SPA receives a Report with `artifacts.traceRef`, store the trace blob in a SEPARATE IndexedDB store `report-artifacts` (keyed by report id), NOT inline in the report record. The artifact counts toward the existing 200MB total IndexedDB quota (measurement-spa contract R119-140) and is evicted with the parent report. Without this, a single 100MB trace can blow the 200MB total cap. Update `apps/website/lib/storage.ts` schema to v2 (idb upgrade callback adds the new store).
+- [x] B1.6 Gate behind `MeasureOptions.collectTrace` (default: `true` for SPA + extension, `false` for `ohmyperf run` unless `--collect-trace`).
+- [x] B1.7 Thread `collectTrace` flag through: `apps/runner/src/runner.ts` (request → engine), `apps/cli/src/commands/run.ts` (CLI `--collect-trace`), `apps/extension-chrome/src/background.ts` (bridge), `apps/mcp-server/src/server.ts` (MCP measure tool definition — single file, no `tools/` directory), `packages/driver-playwright/src/index.ts` + `packages/driver-extension/src/index.ts` (driver capability flag). Each one is a 1-2 line plumbing change but they're easy to miss.
+- [x] B1.8 Bypass tracing entirely when `mode: "ci-stable"` is active in the engine's calibration phase — calibration measures a fixed-source JS loop and trace overhead would pollute the throttle-rate computation.
+- [x] B1.9 Trace artifact storage in SPA: when SPA receives a Report with `artifacts.traceRef`, store the trace blob in a SEPARATE IndexedDB store `report-artifacts` (keyed by report id), NOT inline in the report record. The artifact counts toward the existing 200MB total IndexedDB quota (measurement-spa contract R119-140) and is evicted with the parent report. Without this, a single 100MB trace can blow the 200MB total cap. Update `apps/website/lib/storage.ts` schema to v2 (idb upgrade callback adds the new store).
 
 ## B2. Render-blocking opportunity computation
 
-- [ ] B2.1 Add `render-blocking-collector.ts`:
+- [x] B2.1 Add `render-blocking-collector.ts`:
   - Subscribe to existing resource entries (no new CDP calls).
   - **Time-base alignment**: `cwv-collector` returns FCP as `DOMHighResTimeStamp` (ms since navStart). `resource-collector` returns `responseAt` as CDP `MonotonicTime` (seconds since arbitrary epoch). These DO NOT subtract directly. Concrete formula (use exactly):
     ```ts
@@ -33,7 +33,7 @@
     `mainDocReq` is the `Network.requestWillBeSent` event whose `requestId` matches the page's main document; capture it at the start of the run and store on the collector context.
   - For each `renderBlocking: true` resource, compute `wastedMs` per the formula above.
   - Emit a single `Opportunity` named `render-blocking-resources` with `details.items[]` sorted by `wastedMs DESC`.
-- [ ] B2.2 Add `Opportunity` type to `types.ts`:
+- [x] B2.2 Add `Opportunity` type to `types.ts`:
   ```ts
   interface Opportunity {
     id: string;
@@ -45,7 +45,7 @@
     items: ReadonlyArray<{ url: string; wastedMs?: number; wastedBytes?: number }>;
   }
   ```
-- [ ] B2.3 Add `RunReport.opportunities: ReadonlyArray<Opportunity>` and `Report.opportunities` (aggregated across runs by `id`).
+- [x] B2.3 Add `RunReport.opportunities: ReadonlyArray<Opportunity>` and `Report.opportunities` (aggregated across runs by `id`).
 
 ## B3. Third-party impact plugin
 

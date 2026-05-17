@@ -208,7 +208,7 @@ export async function handleActionClick(tab: ChromeTab): Promise<void> {
     };
 
     const report = await runEngine({
-      opts: { url, runs: 1, mode: "real" },
+      opts: { url, runs: 1, mode: "real", collectTrace: true },
       driver,
       adapter,
     });
@@ -634,7 +634,7 @@ async function runMeasurement(job: ActiveJob): Promise<void> {
     };
 
     report = await runEngine({
-      opts: { url: job.request.url, runs: 1, mode: job.request.mode },
+      opts: { url: job.request.url, runs: 1, mode: job.request.mode, collectTrace: true },
       driver,
       adapter,
     });

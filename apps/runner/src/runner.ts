@@ -11,6 +11,8 @@ export type EngineRunner = (
 
 export const executeJob: EngineRunner = async (job, emit) => {
   const { url, runs = 5, mode = "real", headless = "headless" } = job.request;
+  const collectTrace =
+    (job.request as { collectTrace?: boolean }).collectTrace ?? true;
 
   let currentRunIndex = 0;
 
@@ -90,6 +92,7 @@ export const executeJob: EngineRunner = async (job, emit) => {
       runs,
       mode,
       headless,
+      collectTrace,
       plugins: [cwvPlugin(), axePlugin()],
     },
     driver,

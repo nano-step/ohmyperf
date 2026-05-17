@@ -116,6 +116,25 @@ export interface LongTask {
   readonly startTime: number;
   readonly duration: number;
   readonly attribution: string;
+  readonly attributionRich?: {
+    readonly url?: string;
+    readonly invoker?: string;
+    readonly frameId: string;
+  };
+}
+
+export interface Opportunity {
+  readonly id: string;
+  readonly title: string;
+  readonly description?: string;
+  readonly metric: "lcp" | "fcp" | "tbt" | "inp" | "cls";
+  readonly wastedMs?: number;
+  readonly wastedBytes?: number;
+  readonly items: ReadonlyArray<{
+    readonly url: string;
+    readonly wastedMs?: number;
+    readonly wastedBytes?: number;
+  }>;
 }
 
 export interface AuditResult {
@@ -185,6 +204,7 @@ export interface RunReport {
   readonly metrics: Readonly<Record<string, Metric>>;
   readonly resources: readonly Resource[];
   readonly longTasks: readonly LongTask[];
+  readonly opportunities?: ReadonlyArray<Opportunity>;
   readonly runtime?: Readonly<Record<string, number>>;
   readonly memory?: {
     readonly jsHeapUsedBytes: number;
@@ -206,6 +226,7 @@ export interface Report {
   readonly aggregated: AggregatedMetrics;
   readonly frames: FrameTree;
   readonly audits: readonly AuditResult[];
+  readonly opportunities?: ReadonlyArray<Opportunity>;
   readonly budgets?: readonly BudgetEvaluation[];
   readonly artifacts: {
     readonly traceRef?: ArtifactRef;
@@ -398,4 +419,5 @@ export interface MeasureOptions {
   readonly calibration?: {
     readonly recalibrate?: boolean;
   };
+  readonly collectTrace?: boolean;
 }

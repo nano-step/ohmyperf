@@ -36,7 +36,8 @@
     "clean": "rimraf dist .turbo etc/*.api.md temp *.tsbuildinfo src/generated"
   },
   "dependencies": {
-    "web-vitals": "catalog:"
+    "web-vitals": "catalog:",
+    "@ohmyperf/trace-utils": "workspace:*"
   },
   "devDependencies": {
     "vitest": "catalog:",

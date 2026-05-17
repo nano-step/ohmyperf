@@ -36,6 +36,7 @@ interface MeasureInput {
   mode?: "real" | "ci-stable";
   plugins?: ReadonlyArray<"cwv" | "axe" | "custom-metric-example">;
   browserPath?: string;
+  collectTrace?: boolean;
 }
 
 interface DiffInput {
@@ -250,6 +251,7 @@ async function measure(input: MeasureInput): Promise<Report> {
       runs: input.runs ?? 3,
       mode: input.mode ?? "real",
       plugins,
+      ...(input.collectTrace ? { collectTrace: true } : {}),
     },
     driver,
     adapter,

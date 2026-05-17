@@ -104,6 +104,11 @@ export const runCommand = defineCommand({
       description: "Force re-run of the calibration benchmark (ignores 24h cache). Only meaningful with --mode ci-stable.",
       default: false,
     },
+    "collect-trace": {
+      type: "boolean",
+      description: "Capture a CDP Tracing.start trace and use it for long-task attribution. Disabled by default in CLI to keep runs lean; SPA + extension enable by default.",
+      default: false,
+    },
     budget: {
       type: "string",
       description: "Repeatable budget metric=threshold (e.g. lcp=2500); reserved for v0 acceptance",
@@ -187,6 +192,7 @@ export const runCommand = defineCommand({
           headless: args.headless ? "headless" : "headful",
           plugins,
           ...(args.recalibrate ? { calibration: { recalibrate: true } } : {}),
+          ...(args["collect-trace"] ? { collectTrace: true } : {}),
         },
         driver,
         adapter,

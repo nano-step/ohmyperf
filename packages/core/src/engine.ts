@@ -11,7 +11,9 @@ import {
 import { cwvCollectorFactory } from "./collectors-impl/cwv-collector.js";
 import { loadingCollectorFactory } from "./collectors-impl/loading-collector.js";
 import { longTaskCollectorFactory } from "./collectors-impl/longtask-collector.js";
+import { computeRenderBlockingOpportunity } from "./collectors-impl/render-blocking.js";
 import { resourceCollectorFactory } from "./collectors-impl/resource-collector.js";
+import { createTraceCollector } from "./collectors-impl/trace-collector.js";
 import { applyEmulation, calibrate, type CalibrationResult } from "./calibration.js";
 import { createConsoleLogger, createSilentLogger } from "./logger.js";
 import {
@@ -28,9 +30,11 @@ import type {
   FrameTree,
   HeadlessMode,
   Logger,
+  LongTask,
   MeasureOptions,
   Metric,
   Mode,
+  Opportunity,
   Report,
   ReportCtx,
   ReportMeta,
@@ -181,6 +185,20 @@ export async function runEngine(input: EngineRunOptions): Promise<Report> {
         await applyEmulation(pageCtx.rootSession, calibration, logger);
       }
 
+      const traceEnabled = opts.collectTrace === true && mode !== "ci-stable";
+      const traceCollector = traceEnabled
+        ? createTraceCollector(pageCtx.rootSession, logger)
+        : undefined;
+      if (traceCollector) {
+        try {
+          await traceCollector.start();
+        } catch (err) {
+          logger.debug("engine: Tracing.start failed; continuing without trace", {
+            error: err instanceof Error ? err.message : String(err),
+          });
+        }
+      }
+
       await pageCtx.goto(opts.url);
       await pluginRuntime.onNavigate(runCtx, {
         url: opts.url,
@@ -218,8 +236,34 @@ export async function runEngine(input: EngineRunOptions): Promise<Report> {
         frameResults[f.frameId] = await finalizeAll(f.handles);
       }
 
+      let traceLongTasks: ReadonlyArray<LongTask> = [];
+      if (traceCollector) {
+        try {
+          const result = await traceCollector.collect();
+          traceLongTasks = result.longTasks;
+        } catch (err) {
+          logger.debug("engine: trace collection failed", {
+            error: err instanceof Error ? err.message : String(err),
+          });
+        }
+      }
+
+      const mergedLongTasks: ReadonlyArray<LongTask> =
+        traceLongTasks.length > 0 ? traceLongTasks : rootFinal.longTasks;
+
+      const fcpValue = rootFinal.metrics["fcp"]?.value;
+      const renderBlockingOpp = computeRenderBlockingOpportunity(rootFinal.resources, fcpValue);
+      const opportunities: Opportunity[] = renderBlockingOpp ? [renderBlockingOpp] : [];
+
       const transformedMetrics = await applyOnMetric(rootFinal.metrics, runCtx, pluginRuntime);
-      runReports.push(buildRunReport(i, { ...rootFinal, metrics: transformedMetrics }));
+      runReports.push(
+        buildRunReport(i, {
+          ...rootFinal,
+          metrics: transformedMetrics,
+          longTasks: mergedLongTasks,
+          opportunities,
+        }),
+      );
 
       if (i === 0) {
         frameNodes[ROOT_FRAME_ID] = {
@@ -279,6 +323,8 @@ export async function runEngine(input: EngineRunOptions): Promise<Report> {
     calibration,
   });
 
+  const reportOpportunities = aggregateOpportunities(runReports);
+
   let report: Report = {
     schemaVersion: "1.0.0",
     meta,
@@ -288,6 +334,7 @@ export async function runEngine(input: EngineRunOptions): Promise<Report> {
     audits: [...pluginRuntime.audits],
     artifacts: {},
     pluginData: { ...pluginRuntime.pluginData },
+    ...(reportOpportunities.length > 0 ? { opportunities: reportOpportunities } : {}),
   };
 
   report = await pluginRuntime.onReport(reportCtx, report);
@@ -356,7 +403,10 @@ async function finalizeAll(handles: ReadonlyArray<CollectorHandle>): Promise<Col
   return mergeCollectorResults(results);
 }
 
-function buildRunReport(runIndex: number, rootFinal: CollectorResult): RunReport {
+function buildRunReport(
+  runIndex: number,
+  rootFinal: CollectorResult & { opportunities?: ReadonlyArray<Opportunity> },
+): RunReport {
   const runtime: Record<string, number> = {};
   for (const [name, m] of Object.entries(rootFinal.metrics)) {
     if (name.startsWith("runtime.")) {
@@ -371,7 +421,24 @@ function buildRunReport(runIndex: number, rootFinal: CollectorResult): RunReport
     longTasks: rootFinal.longTasks,
     meta: {},
   };
-  return Object.keys(runtime).length > 0 ? { ...base, runtime } : base;
+  const out: Mutable<RunReport> = { ...base };
+  if (Object.keys(runtime).length > 0) out.runtime = runtime;
+  if (rootFinal.opportunities && rootFinal.opportunities.length > 0) {
+    out.opportunities = rootFinal.opportunities;
+  }
+  return out;
+}
+
+type Mutable<T> = { -readonly [K in keyof T]: T[K] };
+
+function aggregateOpportunities(runs: ReadonlyArray<RunReport>): ReadonlyArray<Opportunity> {
+  const byId = new Map<string, Opportunity>();
+  for (const r of runs) {
+    for (const opp of r.opportunities ?? []) {
+      if (!byId.has(opp.id)) byId.set(opp.id, opp);
+    }
+  }
+  return Array.from(byId.values());
 }
 
 const UNSTABLE_COV_THRESHOLD = 0.2;

@@ -28,6 +28,13 @@ export interface StoredJob {
   error?: string;
 }
 
+export interface StoredArtifact {
+  reportId: string;
+  kind: 'trace' | 'screenshot' | 'har';
+  sizeBytes: number;
+  blob: Blob;
+}
+
 interface OmoDB extends DBSchema {
   reports: {
     key: string;
@@ -38,10 +45,15 @@ interface OmoDB extends DBSchema {
     key: string;
     value: StoredJob;
   };
+  'report-artifacts': {
+    key: [string, string];
+    value: StoredArtifact;
+    indexes: { 'by-reportId': string };
+  };
 }
 
 const DB_NAME = 'ohmyperf';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 const MAX_BYTES = 200 * 1024 * 1024;
 const EVICT_FRACTION = 0.25;
 
@@ -50,11 +62,19 @@ let dbPromise: Promise<IDBPDatabase<OmoDB>> | null = null;
 function getDb(): Promise<IDBPDatabase<OmoDB>> {
   if (!dbPromise) {
     dbPromise = openDB<OmoDB>(DB_NAME, DB_VERSION, {
-      upgrade(db) {
-        const store = db.createObjectStore('reports', { keyPath: 'id' });
-        store.createIndex('by-createdAt', 'createdAt');
-        store.createIndex('by-url', 'url');
-        db.createObjectStore('jobs', { keyPath: 'id' });
+      upgrade(db, oldVersion) {
+        if (oldVersion < 1) {
+          const store = db.createObjectStore('reports', { keyPath: 'id' });
+          store.createIndex('by-createdAt', 'createdAt');
+          store.createIndex('by-url', 'url');
+          db.createObjectStore('jobs', { keyPath: 'id' });
+        }
+        if (oldVersion < 2) {
+          const artifacts = db.createObjectStore('report-artifacts', {
+            keyPath: ['reportId', 'kind'],
+          });
+          artifacts.createIndex('by-reportId', 'reportId');
+        }
       },
     });
   }
