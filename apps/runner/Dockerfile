@@ -21,7 +21,7 @@ RUN pnpm install --frozen-lockfile --ignore-scripts --filter @ohmyperf/runner...
 RUN pnpm --filter @ohmyperf/runner... build
 RUN pnpm --filter @ohmyperf/runner deploy --prod --legacy /out
 
-FROM mcr.microsoft.com/playwright:v1.59.1-jammy AS runtime
+FROM mcr.microsoft.com/playwright:v1.60.0-jammy AS runtime
 
 ENV NODE_ENV=production \
     OHMYPERF_RUNNER_BIND=0.0.0.0 \
