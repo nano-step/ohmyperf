@@ -48,7 +48,7 @@ export default function LandingPage() {
               <span className="text-sm font-medium">Install the CLI</span>
               <span className="ml-auto text-xs bg-muted px-2 py-0.5 rounded-full">CLI</span>
             </div>
-            <pre className="rounded-md bg-muted p-3 text-xs overflow-x-auto"><code>{`npm i -g @ohmyperf/cli\nohmyperf install-browser\nohmyperf run https://example.com`}</code></pre>
+            <pre tabIndex={0} role="region" aria-label="CLI install commands" className="rounded-md bg-muted p-3 text-xs overflow-x-auto focus-visible:outline-2 focus-visible:outline-ring"><code>{`npm i -g @ohmyperf/cli\nohmyperf install-browser\nohmyperf run https://example.com`}</code></pre>
             <p className="text-xs text-muted-foreground mt-2">Requires Node.js 20+ on macOS, Linux, or Windows.</p>
           </div>
           <div className="rounded-lg border border-border bg-card p-4">
@@ -68,14 +68,14 @@ export default function LandingPage() {
               <span className="text-sm font-medium">Self-hosted runner</span>
               <span className="ml-auto text-xs bg-muted px-2 py-0.5 rounded-full">Docker</span>
             </div>
-            <pre className="rounded-md bg-muted p-3 text-xs overflow-x-auto"><code>{`git clone github.com/ohmyperf/ohmyperf\ndocker compose -f apps/runner/docker-compose.yml up`}</code></pre>
+            <pre tabIndex={0} role="region" aria-label="Self-hosted runner commands" className="rounded-md bg-muted p-3 text-xs overflow-x-auto focus-visible:outline-2 focus-visible:outline-ring"><code>{`git clone github.com/ohmyperf/ohmyperf\ndocker compose -f apps/runner/docker-compose.yml up`}</code></pre>
           </div>
         </section>
 
         <section className="mb-16">
           <h2 className="text-2xl font-semibold mb-4">Drop an existing report</h2>
           <p className="text-muted-foreground">
-            Already have a <code className="text-sm bg-muted px-1 rounded">report.json</code>?{' '}
+            Already have a <code className="text-sm bg-muted text-foreground px-1 rounded">report.json</code>?{' '}
             <a href="/viewer/" className="underline underline-offset-4 hover:text-foreground transition-colors">Open the drag-drop viewer</a>{' '}
             — no upload, runs entirely in your browser, zero network requests.
           </p>

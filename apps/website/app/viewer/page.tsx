@@ -65,7 +65,7 @@ export default function ViewerPage() {
         <h1 className="text-2xl font-semibold mb-2">Report Viewer</h1>
         <p className="text-muted-foreground mb-8">
           Drop a{' '}
-          <code className="text-sm bg-muted px-1 rounded">report.json</code>{' '}
+          <code className="text-sm bg-muted text-foreground px-1 rounded">report.json</code>{' '}
           file to view it locally. No upload — runs entirely in your browser.
         </p>
 
