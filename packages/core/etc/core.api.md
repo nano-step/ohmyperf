@@ -521,6 +521,10 @@ export interface MeasureOptions {
     // (undocumented)
     readonly cacheMode?: "warm" | "cold-only" | "include-cold";
     // (undocumented)
+    readonly calibration?: {
+        readonly recalibrate?: boolean;
+    };
+    // (undocumented)
     readonly driver?: DriverRef;
     // (undocumented)
     readonly emulation?: EmulationConfig | false;
@@ -578,11 +582,36 @@ export interface MetricAttribution {
     // (undocumented)
     readonly cause?: string;
     // (undocumented)
+    readonly currentRect?: {
+        readonly x: number;
+        readonly y: number;
+        readonly width: number;
+        readonly height: number;
+    };
+    // (undocumented)
     readonly element?: string;
     // (undocumented)
     readonly frameId?: string;
     // (undocumented)
+    readonly interactionType?: "pointer" | "keyboard";
+    // (undocumented)
+    readonly longestScript?: {
+        readonly url?: string;
+        readonly invoker?: string;
+        readonly duration: number;
+        readonly subpart: "input-delay" | "processing" | "presentation";
+    };
+    // (undocumented)
+    readonly previousRect?: {
+        readonly x: number;
+        readonly y: number;
+        readonly width: number;
+        readonly height: number;
+    };
+    // (undocumented)
     readonly source?: string;
+    // (undocumented)
+    readonly subparts?: Readonly<Record<string, number>>;
     // (undocumented)
     readonly target?: string;
     // (undocumented)
@@ -989,6 +1018,8 @@ export interface RunReport {
     readonly resources: readonly Resource[];
     // (undocumented)
     readonly runIndex: number;
+    // (undocumented)
+    readonly runtime?: Readonly<Record<string, number>>;
 }
 
 // @public (undocumented)

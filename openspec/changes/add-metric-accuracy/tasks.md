@@ -64,31 +64,31 @@
 
 ## A5. OOPIF corpus expansion (9 new fixtures + metric assertions)
 
-- [ ] A5.1 Add `tests/oopif-corpus/fixtures/bfcache.html` — page that navigates away and back via `history.back()` after 500ms. Expect: same metrics on restore (RestoreEvent attribution).
-- [ ] A5.2 Add `tests/oopif-corpus/fixtures/prerender.html` — `<script type="speculationrules">{"prerender":[{"source":"list","urls":["/target.html"]}]}</script>` + manual navigation trigger.
-- [ ] A5.3 Add `tests/oopif-corpus/fixtures/sw-precache.html` — registers a Service Worker that precaches via `caches.addAll`. Assert second-visit metrics differ.
-- [ ] A5.4 Add `tests/oopif-corpus/fixtures/spa-soft-nav.html` — uses `history.pushState` after first paint; assert engine collects metrics for both navigations OR documents that soft-nav is out of scope.
-- [ ] A5.5 Add `tests/oopif-corpus/fixtures/popup.html` — `window.open(target, '_blank')`; assert the popup is or is not attached per the engine's `attachPopups` flag.
-- [ ] A5.6 Add `tests/oopif-corpus/fixtures/worker.html` — dedicated worker with a 100ms busy loop; assert long-tasks on main thread DO NOT include the worker's task.
-- [ ] A5.7 Add `tests/oopif-corpus/fixtures/iframe-resize-causes-parent-shift.html` — iframe that changes its own height after 500ms; assert CLS attribution emits `cause: "frame-resize"` with the iframe's frameId.
-- [ ] A5.8 Add `tests/oopif-corpus/fixtures/fenced-frame.html` — `<fencedframe src="...">`; assert engine does NOT attempt to attach (FF target is gated) and emits `frameNode.tags` including `"fenced-frame"`.
-- [ ] A5.9 Add `tests/oopif-corpus/fixtures/5xx-error.html` — fixture whose server returns 503; assert engine still emits a Report with a known `error` field shape (graceful degradation).
-- [ ] A5.10 Add metric-availability assertions to each fixture's `expectations.ts`: which metrics MUST be present, which CAN be missing, which MUST have attribution populated. Decide file layout: shared `tests/oopif-corpus/expectations.ts` with one exported map keyed by fixture name (NOT per-fixture file). Add a `runFixture(name)` helper that table-drives all 13 fixtures from a single test.
-- [ ] A5.11 Document Chromium feature flags required for `bfcache.html`, `prerender.html`, `fenced-frame.html` in `playwright.config.ts` (or per-test `launchOptions.args`).
-- [ ] A5.12 Acceptance: `pnpm test --filter @ohmyperf/oopif-corpus` green with 13 fixtures.
+- [x] A5.1 Add `tests/oopif-corpus/fixtures/bfcache.html` — page that navigates away and back via `history.back()` after 500ms. Expect: same metrics on restore (RestoreEvent attribution).
+- [x] A5.2 Add `tests/oopif-corpus/fixtures/prerender.html` — `<script type="speculationrules">{"prerender":[{"source":"list","urls":["/target.html"]}]}</script>` + manual navigation trigger.
+- [x] A5.3 Add `tests/oopif-corpus/fixtures/sw-precache.html` — registers a Service Worker that precaches via `caches.addAll`. Assert second-visit metrics differ.
+- [x] A5.4 Add `tests/oopif-corpus/fixtures/spa-soft-nav.html` — uses `history.pushState` after first paint; assert engine collects metrics for both navigations OR documents that soft-nav is out of scope.
+- [x] A5.5 Add `tests/oopif-corpus/fixtures/popup.html` — `window.open(target, '_blank')`; assert the popup is or is not attached per the engine's `attachPopups` flag.
+- [x] A5.6 Add `tests/oopif-corpus/fixtures/worker.html` — dedicated worker with a 100ms busy loop; assert long-tasks on main thread DO NOT include the worker's task.
+- [x] A5.7 Add `tests/oopif-corpus/fixtures/iframe-resize-causes-parent-shift.html` — iframe that changes its own height after 500ms; assert CLS attribution emits `cause: "frame-resize"` with the iframe's frameId.
+- [x] A5.8 Add `tests/oopif-corpus/fixtures/fenced-frame.html` — `<fencedframe src="...">`; assert engine does NOT attempt to attach (FF target is gated) and emits `frameNode.tags` including `"fenced-frame"`.
+- [x] A5.9 Add `tests/oopif-corpus/fixtures/5xx-error.html` — fixture whose server returns 503; assert engine still emits a Report with a known `error` field shape (graceful degradation).
+- [x] A5.10 Add metric-availability assertions to each fixture's `expectations.ts`: which metrics MUST be present, which CAN be missing, which MUST have attribution populated. Decide file layout: shared `tests/oopif-corpus/expectations.ts` with one exported map keyed by fixture name (NOT per-fixture file). Add a `runFixture(name)` helper that table-drives all 13 fixtures from a single test.
+- [x] A5.11 Document Chromium feature flags required for `bfcache.html`, `prerender.html`, `fenced-frame.html` in `playwright.config.ts` (or per-test `launchOptions.args`).
+- [x] A5.12 Acceptance: `pnpm test --filter @ohmyperf/oopif-corpus` green with 13 fixtures.
 
 ## A6. API freeze + docs
 
-- [ ] A6.1 Run `pnpm api:check` on `@ohmyperf/core`. The `MetricAttribution` extension is additive; api-extractor should pass without breakage.
-- [ ] A6.2 Update `packages/core/etc/core.api.md` snapshot.
-- [ ] A6.3 Update `README.md` "Accuracy" section: replace marketing claims with concrete "TBT within ±5% of Lighthouse on fixtures X/Y/Z" + link to parity test.
-- [ ] A6.4 Add `docs/accuracy.md` explaining the parity methodology, known deltas (e.g. headless vs headed paint timing), and how to reproduce locally.
-- [ ] A6.5 If a generated JSON schema exists for the Report (`schemas/report.schema.json` or generated via `ts-json-schema-generator`), regenerate it and diff against the previous version. Verify it's additive-only (no `-` lines for existing properties). If no schema exists, this is a gap — flag for v1.1 schema-generation track.
+- [x] A6.1 Run `pnpm api:check` on `@ohmyperf/core`. The `MetricAttribution` extension is additive; api-extractor should pass without breakage.
+- [x] A6.2 Update `packages/core/etc/core.api.md` snapshot.
+- [x] A6.3 Update `README.md` "Accuracy" section: replace marketing claims with concrete "TBT within ±5% of Lighthouse on fixtures X/Y/Z" + link to parity test.
+- [x] A6.4 Add `docs/accuracy.md` explaining the parity methodology, known deltas (e.g. headless vs headed paint timing), and how to reproduce locally.
+- [x] A6.5 If a generated JSON schema exists for the Report (`schemas/report.schema.json` or generated via `ts-json-schema-generator`), regenerate it and diff against the previous version. Verify it's additive-only (no `-` lines for existing properties). If no schema exists, this is a gap — flag for v1.1 schema-generation track.
 
 ## A7. Acceptance
 
-- [ ] A7.1 INP regression test: known fixture with 3 button clicks at 250ms each → assert INP value matches `web-vitals/attribution` reference within ±2ms.
-- [ ] A7.2 Lighthouse parity test green on all 3 fixtures.
-- [ ] A7.3 OOPIF corpus 13/13 green.
-- [ ] A7.4 Real-page smoke: re-measure `https://blog.thnkandgrow.com/` (the γ.18 fixture) and verify Report now contains: LCP `attribution.element` (CSS selector), LCP `attribution.subparts.{ttfb,loadDelay,loadDuration,renderDelay}`, third-party attribution stays empty (Track B).
-- [ ] A7.5 `pnpm typecheck && pnpm lint && pnpm test && pnpm test:parity` all green.
+- [x] A7.1 INP regression test: known fixture with 3 button clicks at 250ms each → assert INP value matches `web-vitals/attribution` reference within ±2ms.
+- [x] A7.2 Lighthouse parity test green on all 3 fixtures.
+- [x] A7.3 OOPIF corpus 13/13 green.
+- [x] A7.4 Real-page smoke: re-measure `https://blog.thnkandgrow.com/` (the γ.18 fixture) and verify Report now contains: LCP `attribution.element` (CSS selector), LCP `attribution.subparts.{ttfb,loadDelay,loadDuration,renderDelay}`, third-party attribution stays empty (Track B).
+- [x] A7.5 `pnpm typecheck && pnpm lint && pnpm test && pnpm test:parity` all green.

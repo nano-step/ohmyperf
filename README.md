@@ -30,6 +30,7 @@
 | **CWV numbers** | Inflated by synthetic throttle | Match what users actually experience |
 | **Cross-origin iframes** | Network-only — opaque inside | Per-frame `CDPSession` via `Target.setAutoAttach({flatten:true})` |
 | **CI reproducibility** | Lighthouse-CI exists but synthetic | Two modes: `real` (honest variance) + `ci-stable` (CPU calibration + Fast 4G throttle) |
+| **Accuracy** | Authoritative, internal | LCP/FCP/TTFB ±10% vs Lighthouse 13.x ([validated](docs/accuracy.md)); INP/CLS via official `web-vitals/attribution` |
 | **Regression detection** | Threshold gates (flake-prone) | Mann-Whitney U significance test with per-metric noise floors |
 | **Plugin model** | Audit-API only, internal | Every metric, audit, reporter is a plugin |
 | **Sharing** | PSI URL (public, ephemeral) | Hosted shareable links + static viewer + self-host backend |
