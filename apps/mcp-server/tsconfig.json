@@ -6,9 +6,11 @@
   },
   "references": [
     { "path": "../../packages/core" },
+    { "path": "../../packages/design-tokens" },
     { "path": "../../packages/driver-playwright" },
     { "path": "../../packages/plugins-builtin" },
     { "path": "../../packages/reporter-deck" },
+    { "path": "../../packages/reporter-html" },
     { "path": "../../packages/reporter-json" },
     { "path": "../../packages/reporter-markdown" }
   ],

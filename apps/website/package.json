@@ -21,6 +21,7 @@
   "dependencies": {
     "@hookform/resolvers": "3.10.0",
     "@ohmyperf/core": "workspace:*",
+    "@ohmyperf/design-tokens": "workspace:*",
     "@ohmyperf/shared-types": "workspace:*",
     "@ohmyperf/viewer": "workspace:*",
     "class-variance-authority": "0.7.1",

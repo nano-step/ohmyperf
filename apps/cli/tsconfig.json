@@ -6,6 +6,7 @@
   },
   "references": [
     { "path": "../../packages/core" },
+    { "path": "../../packages/design-tokens" },
     { "path": "../../packages/driver-playwright" },
     { "path": "../../packages/plugins-builtin" },
     { "path": "../../packages/reporter-csv" },

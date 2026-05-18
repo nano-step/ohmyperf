@@ -43,6 +43,7 @@
     "@ohmyperf/reporter-junit": "workspace:*",
     "@ohmyperf/reporter-markdown": "workspace:*",
     "@ohmyperf/share-client": "workspace:*",
+    "@ohmyperf/design-tokens": "workspace:*",
     "@ohmyperf/viewer": "workspace:*",
     "citty": "catalog:",
     "playwright": "catalog:",

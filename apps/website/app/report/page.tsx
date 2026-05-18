@@ -10,6 +10,8 @@ import { CwvGauge } from '@/components/metrics/cwv-gauge';
 import { InsightsSection } from '@/components/insights/insights-section';
 import { ShareButton } from '@/components/report/share-button';
 import { ExportMenu } from '@/components/report/export-menu';
+import { StylePicker } from '@/components/report/style-picker';
+import { BrandStyleInjector } from '@/components/report/brand-style-injector';
 import { EmptyState } from '@/components/empty-state';
 import { ReportHistoryList } from '@/components/report/report-history-list';
 import { ReportHistoryToolbar, type ModeFilter } from '@/components/report/report-history-toolbar';
@@ -73,7 +75,9 @@ function ReportDisplay({ report }: { report: Report }) {
     <>
       <SiteHeader />
       <main className="mx-auto max-w-5xl px-6 py-8 space-y-8">
+        <BrandStyleInjector />
         <div className="sticky top-0 z-10 -mx-6 px-6 py-3 bg-background/90 backdrop-blur border-b flex items-center justify-end gap-2">
+          <StylePicker />
           <ShareButton report={report} />
           <ExportMenu report={report} />
         </div>

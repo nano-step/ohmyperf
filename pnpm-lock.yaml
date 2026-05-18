@@ -86,6 +86,9 @@ importers:
       '@ohmyperf/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@ohmyperf/design-tokens':
+        specifier: workspace:*
+        version: link:../../packages/design-tokens
       '@ohmyperf/driver-playwright':
         specifier: workspace:*
         version: link:../../packages/driver-playwright
@@ -173,6 +176,9 @@ importers:
       '@ohmyperf/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@ohmyperf/design-tokens':
+        specifier: workspace:*
+        version: link:../../packages/design-tokens
       '@ohmyperf/driver-playwright':
         specifier: workspace:*
         version: link:../../packages/driver-playwright
@@ -182,6 +188,9 @@ importers:
       '@ohmyperf/reporter-deck':
         specifier: workspace:*
         version: link:../../packages/reporter-deck
+      '@ohmyperf/reporter-html':
+        specifier: workspace:*
+        version: link:../../packages/reporter-html
       '@ohmyperf/reporter-json':
         specifier: workspace:*
         version: link:../../packages/reporter-json
@@ -240,6 +249,9 @@ importers:
       '@ohmyperf/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@ohmyperf/design-tokens':
+        specifier: workspace:*
+        version: link:../../packages/design-tokens
       '@ohmyperf/reporter-markdown':
         specifier: workspace:*
         version: link:../../packages/reporter-markdown

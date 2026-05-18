@@ -18,6 +18,7 @@ import {
   thirdPartiesPlugin,
 } from "@ohmyperf/plugins-builtin";
 import { writeCsvReport } from "@ohmyperf/reporter-csv";
+import { BRAND_IDS, isBrandId, type BrandId } from "@ohmyperf/design-tokens";
 import { writeDeckReport } from "@ohmyperf/reporter-deck";
 import { writeHtmlReport } from "@ohmyperf/reporter-html";
 import { writeJsonReport } from "@ohmyperf/reporter-json";
@@ -65,6 +66,11 @@ export const runCommand = defineCommand({
       type: "string",
       description: "Comma-separated formats (json, html, deck, markdown, junit, csv)",
       default: "json,html,deck",
+    },
+    style: {
+      type: "string",
+      description: "Visual style for HTML + deck artifacts: calibre (default), linear-app, stripe, vercel",
+      default: "calibre",
     },
     "browser-path": {
       type: "string",
@@ -161,6 +167,21 @@ export const runCommand = defineCommand({
       process.exit(EXIT_CODES.invalidUsage);
     }
 
+    const styleArg = String(args.style ?? "calibre");
+    if (!isBrandId(styleArg)) {
+      logger.error(
+        `--style not valid: '${styleArg}' (valid: ${BRAND_IDS.join(", ")})`,
+      );
+      process.exit(EXIT_CODES.invalidUsage);
+    }
+    const style: BrandId = styleArg;
+    const hasHtmlReporter = formats.includes("html") || formats.includes("deck");
+    if (!hasHtmlReporter && style !== "calibre") {
+      logger.warn(
+        `--style=${style} is a no-op when no HTML reporter is selected (formats: ${formats.join(",")})`,
+      );
+    }
+
     if (args.budget !== undefined && runs === 1 && !args["allow-single-run"]) {
       logger.error(
         "--budget refused with --runs=1 (variance flake risk). Pass --allow-single-run to override.",
@@ -222,11 +243,11 @@ export const runCommand = defineCommand({
       written.json = await writeJsonReport(report, String(args.output));
     }
     if (formats.includes("html")) {
-      written.html = await writeHtmlReport(report, String(args.output));
+      written.html = await writeHtmlReport(report, String(args.output), { style });
     }
     if (formats.includes("deck")) {
       try {
-        written.deck = await writeDeckReport(report, String(args.output));
+        written.deck = await writeDeckReport(report, String(args.output), { style });
       } catch (deckErr) {
         const msg = deckErr instanceof Error ? deckErr.message : String(deckErr);
         logger.warn(`deck reporter failed (non-fatal): ${msg}`);

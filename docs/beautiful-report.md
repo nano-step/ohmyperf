@@ -133,6 +133,56 @@ The interactive `/report` route, the static `report.html`, and the slide `report
 
 The deck uses the **Swiss International** layout grammar (16-column grid, large display type, single accent stripe per slide) but overrides the Swiss skill's locked palettes (Klein Blue / Lemon / Mint / Safety Orange) to the Calibre tokens. Documented as an intentional override in [`packages/reporter-deck/README.md`](../packages/reporter-deck/README.md).
 
+## Brand styles (Open Design integration, v1.0)
+
+Reports can be rendered in 4 visual brand styles:
+
+| ID | Display | Preferred | Light | Dark | Source |
+|---|---|---|---|---|---|
+| `calibre` | Calibre | light | ✓ | ✓ | OhMyPerf authored (default) |
+| `linear-app` | Linear | dark | ✓ | ✓ | Vendored from open-design (Apache-2.0) |
+| `stripe` | Stripe | light | ✓ | ✗ | Vendored from open-design (Apache-2.0) |
+| `vercel` | Vercel | light | ✓ | ✓ | Vendored from open-design (Apache-2.0) |
+
+### CLI
+
+```bash
+ohmyperf run https://example.com --style=linear-app
+ohmyperf list-styles                  # discover available styles
+```
+
+The `--style` flag applies to `html` + `deck` reporters. With `--format=json` only it's a no-op (warning printed).
+
+### MCP
+
+```text
+list_styles                                              → returns BRAND_MANIFEST
+generate_html_report reportPath=... style=stripe         → writes <reportsDir>/html/<id>.html
+generate_deck reportPath=... style=vercel                → writes <reportsDir>/decks/<id>.html
+```
+
+Tool count: 12 (was 10 in MCP v2 Phase 2).
+
+### Website
+
+The `/report/<id>` route has a **Style** picker in the toolbar. Selected style:
+- Updates URL query (`?style=linear-app`)
+- Persists to `localStorage["ohmyperf:style"]`
+- Re-renders the live preview via CSS-only swap (no React tree rebuild)
+- Applies to "Download as HTML" / "Download as deck" exports
+
+### Architecture
+
+- Calibre lives in `@ohmyperf/design-tokens/src/index.ts` (authored source)
+- Vendored brands at `packages/design-tokens/brands/<id>/{tokens.css,bridge.css,README.md}`
+- `bridge.css` aliases open-design (`--bg`, `--fg`, `--accent`, ...) onto ohmyperf (`--color-*`) namespace
+- Charts use `data-status` / `data-donut-slice` / `data-bar` attributes; CSS selectors provide palette per brand
+- Deck is light-locked; brands contribute only `--color-accent-*` via an overlay
+- `pnpm sync:open-design` re-vendors from pinned `UPSTREAM_SHA`
+- All 4 brands × all 4 accent tokens pass WCAG-AA contrast gate (≥3:1)
+- Apache-2.0 attribution lives in `NOTICE` per brand + visible footer suffix on rendered artifacts
+- Visual regression baselines at `tests/visual-regression/baselines/` (gated on ubuntu-CI)
+
 ## What's NOT here (v1.0 scope decisions)
 
 | Feature | Why deferred | When to expect |

@@ -3,6 +3,7 @@ import { runCommand } from "./commands/run.js";
 import { doctorCommand } from "./commands/doctor.js";
 import { initCommand } from "./commands/init.js";
 import { listPluginsCommand } from "./commands/list-plugins.js";
+import { listStylesCommand } from "./commands/list-styles.js";
 import { installBrowserCommand } from "./commands/install-browser.js";
 import { diffCommand } from "./commands/diff.js";
 import { shareCommand } from "./commands/share.js";
@@ -21,6 +22,7 @@ export const main = defineCommand({
     doctor: doctorCommand,
     init: initCommand,
     "list-plugins": listPluginsCommand,
+    "list-styles": listStylesCommand,
     "install-browser": installBrowserCommand,
   },
 });

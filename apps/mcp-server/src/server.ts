@@ -24,7 +24,9 @@ import {
   customMetricExamplePlugin,
   thirdPartiesPlugin,
 } from "@ohmyperf/plugins-builtin";
+import { BRAND_IDS, BRAND_MANIFEST, isBrandId, type BrandId } from "@ohmyperf/design-tokens";
 import { writeDeckReport } from "@ohmyperf/reporter-deck";
+import { writeHtmlReport } from "@ohmyperf/reporter-html";
 import { writeJsonReport } from "@ohmyperf/reporter-json";
 import { renderMarkdown } from "@ohmyperf/reporter-markdown";
 import {
@@ -251,7 +253,56 @@ export function createOhmyperfMcpServer(opts: McpServerOptions = {}): Server {
               type: "string",
               description: "Override the deck title (default: 'OhMyPerf — <hostname>').",
             },
+            style: {
+              type: "string",
+              enum: ["calibre", "linear-app", "stripe", "vercel"],
+              default: "calibre",
+              description:
+                "Visual brand style. Defaults to 'calibre'. Call 'list_styles' to discover available brands + their manifests.",
+            },
           },
+        },
+      },
+      {
+        name: "generate_html_report",
+        description:
+          "Render a saved report as a single-file HTML viewer (Calibre or open-design brand style, hero + CWV traffic-light + third-parties donut + audits tables). WRITES TO DISK AND RETURNS THE PATH — same file-writing pattern as 'generate_deck' to avoid response-token overflow. Lives at <reportsDir>/html/<measurementId>.html. Open in any browser; dark mode follows prefers-color-scheme.",
+        inputSchema: {
+          type: "object",
+          properties: {
+            reportPath: { type: "string", description: "Filesystem path to report.json" },
+            uri: { type: "string", description: "Resource URI like 'ohmyperf://reports/<file>.json'" },
+            outputDir: {
+              type: "string",
+              description: "Override the output directory (default: <reportsDir>/html/).",
+            },
+            title: {
+              type: "string",
+              description: "Override the viewer title (default: 'OhMyPerf — <hostname>').",
+            },
+            style: {
+              type: "string",
+              enum: ["calibre", "linear-app", "stripe", "vercel"],
+              default: "calibre",
+              description: "Visual brand style. Defaults to 'calibre'.",
+            },
+            theme: {
+              type: "string",
+              enum: ["light", "dark", "system"],
+              default: "system",
+              description:
+                "Theme override. 'system' uses the brand's preferred theme. Unsupported (brand, theme) pairs fall back to the brand's preferred theme with a warning.",
+            },
+          },
+        },
+      },
+      {
+        name: "list_styles",
+        description:
+          "List available visual brand styles (BrandId + BrandManifest metadata). Use this to discover valid 'style' values for 'generate_deck' and 'generate_html_report' without consulting docs.",
+        inputSchema: {
+          type: "object",
+          properties: {},
         },
       },
       {
@@ -467,18 +518,62 @@ export function createOhmyperfMcpServer(opts: McpServerOptions = {}): Server {
         ? resolve(args["outputDir"])
         : join(reportsDir, "decks");
       const title = typeof args["title"] === "string" ? args["title"] : undefined;
+      const style = parseStyleArg(args["style"]);
       const fileName = `${report.meta.measurementId}.html`;
       const result = await writeDeckReport(report, outputDir, {
         fileName,
+        style,
         ...(title ? { title } : {}),
       });
       return {
         content: [
           {
             type: "text",
-            text: `Wrote deck to ${result.path} (${String(result.bytes)} bytes). Open in a browser, navigate via ArrowLeft/Right, ⌘P → Save as PDF for stakeholder distribution.`,
+            text: `Wrote deck to ${result.path} (${String(result.bytes)} bytes, style=${style}). Open in a browser, navigate via ArrowLeft/Right, ⌘P → Save as PDF for stakeholder distribution.`,
           },
-          { type: "text", text: JSON.stringify(result, null, 2) },
+          { type: "text", text: JSON.stringify({ ...result, style }, null, 2) },
+        ],
+      };
+    }
+
+    if (name === "generate_html_report") {
+      const path = resolveReportRef(reportsDir, args);
+      const report = await loadReport(path);
+      const outputDir = typeof args["outputDir"] === "string" && args["outputDir"]
+        ? resolve(args["outputDir"])
+        : join(reportsDir, "html");
+      const title = typeof args["title"] === "string" ? args["title"] : undefined;
+      const style = parseStyleArg(args["style"]);
+      const themeRaw = typeof args["theme"] === "string" ? args["theme"] : "system";
+      const theme: "light" | "dark" | "system" =
+        themeRaw === "light" || themeRaw === "dark" ? themeRaw : "system";
+      const fileName = `${report.meta.measurementId}.html`;
+      const result = await writeHtmlReport(report, outputDir, {
+        fileName,
+        style,
+        theme,
+        ...(title ? { title } : {}),
+      });
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Wrote HTML viewer to ${result.path} (${String(result.bytes)} bytes, style=${style}, theme=${theme}). Open in any browser.`,
+          },
+          { type: "text", text: JSON.stringify({ ...result, style, theme }, null, 2) },
+        ],
+      };
+    }
+
+    if (name === "list_styles") {
+      const summary = BRAND_IDS.map((id) => {
+        const m = BRAND_MANIFEST[id];
+        return `  ${id.padEnd(12)} ${m.displayName.padEnd(8)} preferred=${m.preferredTheme} light=${m.supportsLight ? "✓" : "✗"} dark=${m.supportsDark ? "✓" : "✗"}`;
+      }).join("\n");
+      return {
+        content: [
+          { type: "text", text: `4 visual brand styles available:\n${summary}` },
+          { type: "text", text: JSON.stringify(BRAND_MANIFEST, null, 2) },
         ],
       };
     }
@@ -758,6 +853,11 @@ function parseInsightName(raw: unknown): InsightName {
     );
   }
   return raw as InsightName;
+}
+
+function parseStyleArg(raw: unknown): BrandId {
+  if (isBrandId(raw)) return raw;
+  return "calibre";
 }
 
 function parseLimit(raw: unknown, fallback: number): number {
