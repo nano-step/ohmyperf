@@ -296,6 +296,10 @@ export function createOhmyperfMcpServer(opts: McpServerOptions = {}): Server {
               default: false,
               description: "Capture trace for the new point (adds ~5-20MB).",
             },
+            browserPath: {
+              type: "string",
+              description: "Override the Chromium binary path (same as 'measure').",
+            },
             historyLimit: {
               type: "integer",
               minimum: 5,
@@ -351,6 +355,10 @@ export function createOhmyperfMcpServer(opts: McpServerOptions = {}): Server {
               type: "array",
               items: { type: "string", enum: PLUGIN_IDS as unknown as string[] },
               default: ["cwv"],
+            },
+            browserPath: {
+              type: "string",
+              description: "Override the Chromium binary path (same as 'measure').",
             },
             track: {
               type: "boolean",
