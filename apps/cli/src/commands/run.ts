@@ -18,13 +18,14 @@ import {
   thirdPartiesPlugin,
 } from "@ohmyperf/plugins-builtin";
 import { writeCsvReport } from "@ohmyperf/reporter-csv";
+import { writeDeckReport } from "@ohmyperf/reporter-deck";
 import { writeHtmlReport } from "@ohmyperf/reporter-html";
 import { writeJsonReport } from "@ohmyperf/reporter-json";
 import { writeJunitReport } from "@ohmyperf/reporter-junit";
 import { writeMarkdownReport } from "@ohmyperf/reporter-markdown/node";
 import { EXIT_CODES } from "../exit-codes.js";
 
-const SUPPORTED_FORMATS = ["json", "html", "markdown", "junit", "csv"] as const;
+const SUPPORTED_FORMATS = ["json", "html", "deck", "markdown", "junit", "csv"] as const;
 type SupportedFormat = (typeof SUPPORTED_FORMATS)[number];
 
 const DEFAULT_RUNS = 5;
@@ -62,8 +63,8 @@ export const runCommand = defineCommand({
     },
     format: {
       type: "string",
-      description: "Comma-separated formats (json, html)",
-      default: "json,html",
+      description: "Comma-separated formats (json, html, deck, markdown, junit, csv)",
+      default: "json,html,deck",
     },
     "browser-path": {
       type: "string",
@@ -212,6 +213,7 @@ export const runCommand = defineCommand({
     const written: Record<SupportedFormat, { path: string; bytes: number } | undefined> = {
       json: undefined,
       html: undefined,
+      deck: undefined,
       markdown: undefined,
       junit: undefined,
       csv: undefined,
@@ -221,6 +223,14 @@ export const runCommand = defineCommand({
     }
     if (formats.includes("html")) {
       written.html = await writeHtmlReport(report, String(args.output));
+    }
+    if (formats.includes("deck")) {
+      try {
+        written.deck = await writeDeckReport(report, String(args.output));
+      } catch (deckErr) {
+        const msg = deckErr instanceof Error ? deckErr.message : String(deckErr);
+        logger.warn(`deck reporter failed (non-fatal): ${msg}`);
+      }
     }
     if (formats.includes("markdown")) {
       written.markdown = await writeMarkdownReport(report, String(args.output));

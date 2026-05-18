@@ -24,6 +24,7 @@ import {
   customMetricExamplePlugin,
   thirdPartiesPlugin,
 } from "@ohmyperf/plugins-builtin";
+import { writeDeckReport } from "@ohmyperf/reporter-deck";
 import { writeJsonReport } from "@ohmyperf/reporter-json";
 import { renderMarkdown } from "@ohmyperf/reporter-markdown";
 import {
@@ -223,6 +224,32 @@ export function createOhmyperfMcpServer(opts: McpServerOptions = {}): Server {
             title: {
               type: "string",
               description: "Override the H2 title (default: 'OhMyPerf report')",
+            },
+          },
+        },
+      },
+      {
+        name: "generate_deck",
+        description:
+          "Render a saved report as a multi-slide HTML presentation (Calibre palette, Swiss-grid layout, light-locked, print-to-PDF first-class). WRITES THE DECK TO DISK AND RETURNS THE FILE PATH — does NOT return the body inline (decks are ~30-500KB, would overflow MCP response budgets). The file lives at <reportsDir>/decks/<measurementId>.html. Open in a browser, navigate with arrow keys, ⌘P to PDF for stakeholder distribution.",
+        inputSchema: {
+          type: "object",
+          properties: {
+            reportPath: {
+              type: "string",
+              description: "Filesystem path to report.json (alternative to 'uri')",
+            },
+            uri: {
+              type: "string",
+              description: "Resource URI like 'ohmyperf://reports/<file>.json'",
+            },
+            outputDir: {
+              type: "string",
+              description: "Override the output directory (default: <reportsDir>/decks/).",
+            },
+            title: {
+              type: "string",
+              description: "Override the deck title (default: 'OhMyPerf — <hostname>').",
             },
           },
         },
@@ -431,6 +458,29 @@ export function createOhmyperfMcpServer(opts: McpServerOptions = {}): Server {
       const title = typeof args["title"] === "string" ? args["title"] : undefined;
       const md = renderMarkdown(report, title ? { title } : {});
       return { content: [{ type: "text", text: md }] };
+    }
+
+    if (name === "generate_deck") {
+      const path = resolveReportRef(reportsDir, args);
+      const report = await loadReport(path);
+      const outputDir = typeof args["outputDir"] === "string" && args["outputDir"]
+        ? resolve(args["outputDir"])
+        : join(reportsDir, "decks");
+      const title = typeof args["title"] === "string" ? args["title"] : undefined;
+      const fileName = `${report.meta.measurementId}.html`;
+      const result = await writeDeckReport(report, outputDir, {
+        fileName,
+        ...(title ? { title } : {}),
+      });
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Wrote deck to ${result.path} (${String(result.bytes)} bytes). Open in a browser, navigate via ArrowLeft/Right, ⌘P → Save as PDF for stakeholder distribution.`,
+          },
+          { type: "text", text: JSON.stringify(result, null, 2) },
+        ],
+      };
     }
 
     if (name === "list_runs") {

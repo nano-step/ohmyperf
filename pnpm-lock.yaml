@@ -95,6 +95,9 @@ importers:
       '@ohmyperf/reporter-csv':
         specifier: workspace:*
         version: link:../../packages/reporter-csv
+      '@ohmyperf/reporter-deck':
+        specifier: workspace:*
+        version: link:../../packages/reporter-deck
       '@ohmyperf/reporter-html':
         specifier: workspace:*
         version: link:../../packages/reporter-html
@@ -176,6 +179,9 @@ importers:
       '@ohmyperf/plugins-builtin':
         specifier: workspace:*
         version: link:../../packages/plugins-builtin
+      '@ohmyperf/reporter-deck':
+        specifier: workspace:*
+        version: link:../../packages/reporter-deck
       '@ohmyperf/reporter-json':
         specifier: workspace:*
         version: link:../../packages/reporter-json

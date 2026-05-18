@@ -37,6 +37,7 @@
     "@ohmyperf/driver-playwright": "workspace:*",
     "@ohmyperf/plugins-builtin": "workspace:*",
     "@ohmyperf/reporter-csv": "workspace:*",
+    "@ohmyperf/reporter-deck": "workspace:*",
     "@ohmyperf/reporter-html": "workspace:*",
     "@ohmyperf/reporter-json": "workspace:*",
     "@ohmyperf/reporter-junit": "workspace:*",
