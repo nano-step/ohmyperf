@@ -25,6 +25,8 @@
     "test:parity": "turbo run test:parity",
     "license:audit": "node scripts/license-audit.mjs",
     "check:design-tokens": "node scripts/check-design-tokens.mjs",
+    "check:brand-licenses": "node scripts/check-brand-licenses.mjs",
+    "sync:open-design": "node packages/design-tokens/scripts/sync-open-design.mjs --all",
     "api:check": "turbo run api:check",
     "clean": "turbo run clean && rimraf node_modules"
   },

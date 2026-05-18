@@ -68,6 +68,42 @@ tracium-equivalent (Apache-2.0, vendored)
            @ohmyperf/trace-utils. Upstream copyright headers preserved.
 
 --------------------------------------------------------------------------------
+Vendored open-design brand tokens (Apache-2.0)
+--------------------------------------------------------------------------------
+  Project: https://github.com/nexu-io/open-design
+  License: Apache License, Version 2.0
+  Usage:   CSS token files vendored into @ohmyperf/design-tokens/brands/<id>/
+           to power the --style flag (CLI), MCP rendering tool style arg, and
+           website /report brand picker. Vendored copies carry the upstream
+           SPDX-License-Identifier header and a provenance comment citing the
+           pinned upstream snapshot SHA and the local vendor date.
+
+  Brands vendored (3):
+    - linear-app  (vendored from local-vendor-2026-05-18 snapshot)
+    - stripe      (vendored from local-vendor-2026-05-18 snapshot)
+    - vercel      (vendored from local-vendor-2026-05-18 snapshot)
+
+  Transforms applied at vendor time (do NOT alter Apache-2.0 obligations):
+    1. Font stacks reduced to system fallback (ohmyperf single-file
+       offline-portable constraint). Original brand fonts (Inter Variable,
+       Geist, etc.) are referenced by name in the system stack as a
+       lower-priority fallback for environments where they are installed.
+    2. CSS color-mix() calls resolved to static hex (browser back-compat
+       for archived reports). Original expression preserved as a CSS comment
+       adjacent to the resolved value.
+
+  No upstream component HTML, fixture, or prose DESIGN.md content is
+  redistributed. Only tokens.css per vendored brand.
+
+  Brand names (Linear, Stripe, Vercel) are referenced as design-system
+  identifiers, not endorsements. ohmyperf's footer attribution reads
+  "Styled like <brand> via Open Design Library" to avoid implying any
+  affiliation with or endorsement by the brand owners.
+
+  Pinned upstream SHA: see packages/design-tokens/brands/UPSTREAM_SHA
+  Schema digest:       see packages/design-tokens/brands/.schema-digest
+
+--------------------------------------------------------------------------------
 Other Apache-2.0 dependencies
 --------------------------------------------------------------------------------
   citty (UnJS), Hono, Vite, React, Tailwind, source-map (Mozilla), and other

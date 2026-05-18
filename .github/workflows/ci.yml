@@ -45,6 +45,7 @@ jobs:
       - run: pnpm test
       - run: pnpm license:audit
       - run: pnpm check:design-tokens
+      - run: pnpm check:brand-licenses
 
   oopif-corpus:
     name: OOPIF synthetic test corpus
