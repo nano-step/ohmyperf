@@ -24,6 +24,7 @@
     "test:oopif-corpus": "turbo run test:oopif-corpus",
     "test:parity": "turbo run test:parity",
     "license:audit": "node scripts/license-audit.mjs",
+    "check:design-tokens": "node scripts/check-design-tokens.mjs",
     "api:check": "turbo run api:check",
     "clean": "turbo run clean && rimraf node_modules"
   },

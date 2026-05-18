@@ -44,6 +44,7 @@ jobs:
         run: pnpm exec playwright install chromium
       - run: pnpm test
       - run: pnpm license:audit
+      - run: pnpm check:design-tokens
 
   oopif-corpus:
     name: OOPIF synthetic test corpus

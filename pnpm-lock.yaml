@@ -360,6 +360,12 @@ importers:
         specifier: 'catalog:'
         version: 2.1.9(@types/node@22.19.18)(lightningcss@1.32.0)
 
+  packages/design-tokens:
+    devDependencies:
+      vitest:
+        specifier: 'catalog:'
+        version: 2.1.9(@types/node@22.19.18)(lightningcss@1.32.0)
+
   packages/driver-extension:
     devDependencies:
       '@ohmyperf/core':

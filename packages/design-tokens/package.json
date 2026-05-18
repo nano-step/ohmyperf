@@ -1,0 +1,34 @@
+{
+  "name": "@ohmyperf/design-tokens",
+  "version": "0.0.0-pre",
+  "description": "Calibre OKLCH palette tokens shared by viewer + reporter-deck + website. Single source of truth interface; canonical source remains apps/website/app/globals.css.",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "scripts": {
+    "build": "tsc -b && node scripts/emit-css.mjs",
+    "typecheck": "tsc -b",
+    "lint": "eslint src",
+    "test": "vitest run --passWithNoTests",
+    "clean": "rimraf dist .turbo *.tsbuildinfo"
+  },
+  "devDependencies": {
+    "vitest": "catalog:"
+  }
+}
