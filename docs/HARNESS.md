@@ -240,8 +240,30 @@ determines whether user-flow testing and review gate apply.
 | **refactor** (same I/O) | ❌ existing tests pass | ⚠️ self-verify | extract helper, rename internal symbol |
 | **docs** (markdown / comments only) | ❌ | ❌ | README, ADR write-up |
 | **dependency-bump** | ❌ smoke test | ⚠️ self-verify | upgrade library version |
+| **release** (version bump) | ❌ dry-run publish | ✅ | `chore(release): v0.2.0` |
 
 **Combined gate:** Lane × Change Type. Both must pass to proceed.
+
+### Release-type-specific rule (PUMP VERSION)
+
+A `release` commit (any commit that bumps a published package's `version`)
+**MUST** also update `README.md` in the **same** commit if the README
+mentions a pinned version anywhere (install snippets, badges, examples).
+This is non-negotiable — if `npm install @ohmyperf/cli@X.Y.Z` is in the
+README, X.Y.Z must equal the version this commit bumps to.
+
+Enforced by `.github/workflows/publish-stable.yml` guard step that fails
+the workflow if README references the old version. To bypass for a
+genuine generic snippet (e.g. `@latest`), set the README install snippet
+to `npm install @ohmyperf/cli` (no version pin) — the guard accepts that.
+
+Pump-version commit checklist:
+1. Bump `version` in root + every publishable package.json.
+2. Update `README.md` install/example sections if they reference versions.
+3. Update `CHANGELOG.md` with new `## [X.Y.Z] - YYYY-MM-DD` entry.
+4. Run `pnpm -r publish --dry-run --no-git-checks` — must succeed.
+5. Commit message: `chore(release): vX.Y.Z` (signals to `publish-stable.yml`
+   that this is a release commit).
 
 For change types marked **❌ smoke test** instead of E2E:
 - Run a deterministic check that exercises the changed surface (e.g.
