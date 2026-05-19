@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { BRAND_STRUCTURAL_OVERRIDES } from "./structural-overrides.js";
-import { BRAND_IDS } from "@nhonh/design-tokens";
+import { BRAND_IDS } from "@ohmyperf/design-tokens";
 
 describe("BRAND_STRUCTURAL_OVERRIDES", () => {
   it("has an entry for every brand", () => {

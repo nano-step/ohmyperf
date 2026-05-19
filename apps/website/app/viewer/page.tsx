@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { SiteHeader } from '@/components/layout/site-header';
 import { saveReport } from '@/lib/storage';
-import type { Report } from '@nhonh/core';
+import type { Report } from '@ohmyperf/core';
 
 function isValidReport(obj: unknown): obj is Report {
   if (!obj || typeof obj !== 'object') return false;

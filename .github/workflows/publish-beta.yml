@@ -93,7 +93,7 @@ jobs:
               repo: context.repo.repo,
               tag_name: `v${version}`,
               name: `ohmyperf v${version} (beta)`,
-              body: `## Changes\n\n${changelog}\n\n---\n\n**Install:**\n\`\`\`bash\nnpm install -g @nhonh/cli@beta\n\`\`\`\n\nAll \`@nhonh/*\` packages published with tag \`beta\` at this version.`,
+              body: `## Changes\n\n${changelog}\n\n---\n\n**Install:**\n\`\`\`bash\nnpm install -g @ohmyperf/cli@beta\n\`\`\`\n\nAll \`@ohmyperf/*\` packages published with tag \`beta\` at this version.`,
               prerelease: true,
               target_commitish: context.sha,
             });

@@ -4,7 +4,7 @@
 
 ## D0. Pre-flight — package scaffolding + types + non-breaking groundwork
 
-- [ ] D0.1 Create `packages/replay-cache/` workspace package: `package.json` (name `@nhonh/replay-cache`, `engines.node >= 22`, no runtime deps), `tsconfig.json`, `tsup.config.ts` with TWO entry points (`./src/index.ts` and `./src/standalone.ts`), `package.json` `"exports"` with `"."` and `"./standalone"` subpaths, `README.md` stub. Add to `pnpm-workspace.yaml`.
+- [ ] D0.1 Create `packages/replay-cache/` workspace package: `package.json` (name `@ohmyperf/replay-cache`, `engines.node >= 22`, no runtime deps), `tsconfig.json`, `tsup.config.ts` with TWO entry points (`./src/index.ts` and `./src/standalone.ts`), `package.json` `"exports"` with `"."` and `"./standalone"` subpaths, `README.md` stub. Add to `pnpm-workspace.yaml`.
 - [ ] D0.2 Add `eslint-plugin-import` rule `no-restricted-paths` in `packages/replay-cache/.eslintrc.cjs`: `src/standalone.ts` and any file it transitively imports must NOT reference `src/recorder/` or `src/codegen/`. Fails CI on violation.
 - [ ] D0.3 Add `MeasureOptions.replay` sub-object to `packages/core/src/types.ts`: `{ mode: 'record' | 'replay'; source?: string; cacheDir?: string; onCacheMiss?: 'fail' | 'allow-live' | 'allow-empty' | ((url: string) => 'fail' | 'allow-live' | 'allow-empty'); inlineBodyMaxBytes?: number; urlCanonicalize?: { stripQueryRegex?: string }; redactStorageState?: (state: unknown) => unknown }`. All fields optional; engine treats `replay` absent as live mode.
 - [ ] D0.4 Extend `ReportMeta` in `packages/core/src/types.ts`: add `replayMode?: 'live' | 'record' | 'replay'`, `bundleHash?: string`, `swBypassed?: boolean`. Extend `ReportArtifacts`: add `reproduceScriptRef?: string`. All optional, additive. Schema stays `1.0.0`.
@@ -51,7 +51,7 @@
 ## D4. Reproducer codegen + CLI flags + MCP args + report integration
 
 - [ ] D4.1 `packages/replay-cache/src/codegen/fingerprint.ts`: `computeCaptureFingerprint({ bundleHash, calibration, viewport, userAgent, chromiumMajorVersion, nodeMajorVersion }): string` — sha256 hex.
-- [ ] D4.2 `packages/replay-cache/src/codegen/template.ts`: a multi-line string template emitting a TypeScript script. Embeds: `BUNDLE_HASH`, `CAPTURE_FINGERPRINT`, `CACHE_DIR_RELATIVE`, calibration constants object, viewport, UA, headless flag. Imports `chromium` from `playwright`, `attachPlayer` + `loadManifest` from `@nhonh/replay-cache/standalone`. On run: load manifest, recompute fingerprint, compare; on match launch Chromium with calibration, attach player, navigate, dump a fresh `report.json` adjacent to the script.
+- [ ] D4.2 `packages/replay-cache/src/codegen/template.ts`: a multi-line string template emitting a TypeScript script. Embeds: `BUNDLE_HASH`, `CAPTURE_FINGERPRINT`, `CACHE_DIR_RELATIVE`, calibration constants object, viewport, UA, headless flag. Imports `chromium` from `playwright`, `attachPlayer` + `loadManifest` from `@ohmyperf/replay-cache/standalone`. On run: load manifest, recompute fingerprint, compare; on match launch Chromium with calibration, attach player, navigate, dump a fresh `report.json` adjacent to the script.
 - [ ] D4.3 `packages/replay-cache/src/codegen/emit.ts`: `writeReproducer(reportDir, args): Promise<{ scriptPath, configPath }>` — writes `reproduce.ts` and `reproduce.config.json` (containing `{ bundleHash, captureFingerprint, calibration, cacheDirRelative }`). Mode `0644` for both (readable, executable via `pnpm tsx`).
 - [ ] D4.4 Engine integration: after recorder flush, call `writeReproducer(reportDir, { bundleHash, captureFingerprint, calibration, cacheDir, viewport, userAgent, headless })`. Set `report.artifacts.reproduceScriptRef = './reproduce.ts'`.
 - [ ] D4.5 `packages/replay-cache/src/standalone.ts`: minimal entrypoint exporting `attachPlayer(page, cacheDir, opts)`, `loadManifest(cacheDir)`, `verifyFingerprint(expected, computed)`. No imports from `recorder/` or `codegen/`. Tree-shake enforced by D0.2 ESLint rule.
@@ -81,13 +81,13 @@
 
 ## D6. Gates and exit criteria
 
-- [ ] D6.1 `pnpm test --filter @nhonh/replay-cache` — all unit tests green.
+- [ ] D6.1 `pnpm test --filter @ohmyperf/replay-cache` — all unit tests green.
 - [ ] D6.2 `pnpm test:parity --filter replay-variance` — σ_replay < 0.3 × σ_live asserted.
 - [ ] D6.3 `pnpm test:parity --filter replay-hash-cross-machine` — green on ubuntu + macos matrix.
 - [ ] D6.4 `pnpm test:parity --filter reproduce-stability` — 5 invocations within ±30 ms.
 - [ ] D6.5 `pnpm test:parity --filter full-stack-variance` — monotonic σ reduction.
-- [ ] D6.6 `pnpm test --filter @nhonh/replay-cache --grep "bundle-budget"` — 80 KB / 30 KB caps respected.
-- [ ] D6.7 `pnpm test --filter @nhonh/share-client` — `redactStorageState` unit tests green.
+- [ ] D6.6 `pnpm test --filter @ohmyperf/replay-cache --grep "bundle-budget"` — 80 KB / 30 KB caps respected.
+- [ ] D6.7 `pnpm test --filter @ohmyperf/share-client` — `redactStorageState` unit tests green.
 - [ ] D6.8 Existing live-mode `pnpm test:parity --filter lighthouse-parity` (from Track A) — still green (no regression on no-flag runs).
 - [ ] D6.9 `pnpm api:check` — public API surface diff approved (additive only).
 - [ ] D6.10 `pnpm build` — workspace builds clean; viewer + deck bundle budgets unchanged from pre-change baseline (viewer ≤ 200 KB gz, deck ≤ 500 KB gz).

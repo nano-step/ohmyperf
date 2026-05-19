@@ -5,19 +5,19 @@
 These tasks have ZERO dependency on Track A/B engine data. Run immediately after §0 reconcile + user approval.
 
 - [x] C0.1 ~~Install shadcn primitives~~ — **superseded**: chose headless local components instead of pulling 8 Radix-backed shadcn primitives (saves ~30 KB gz on `/report` bundle). `share-button.tsx`, `export-menu.tsx`, popover/alertdialog use raw `<div role="...">` + Tailwind. Trade-off: less polish, more accessible markup we control. `apps/website/components/ui/` stays at the existing 8 primitives (alert, badge, button, card, form, input, label, sonner). If we need richer primitives later (e.g. command palette, combobox), revisit.
-- [x] C0.2 Split `@nhonh/reporter-markdown` for browser-safety:
+- [x] C0.2 Split `@ohmyperf/reporter-markdown` for browser-safety:
   - Move `writeMarkdownReport` (the `fs`-using wrapper) to a new `packages/reporter-markdown/src/node.ts`.
   - Keep `renderMarkdown` (pure string function) in `src/index.ts` with NO `node:fs/promises` / `node:path` imports.
   - Add `"./node"` to `package.json` `exports` map; root `.` only re-exports `renderMarkdown`.
-  - Update CLI `apps/cli/src/commands/run.ts` to `import { writeMarkdownReport } from "@nhonh/reporter-markdown/node"` (was `import { writeMarkdownReport } from "@nhonh/reporter-markdown"`).
+  - Update CLI `apps/cli/src/commands/run.ts` to `import { writeMarkdownReport } from "@ohmyperf/reporter-markdown/node"` (was `import { writeMarkdownReport } from "@ohmyperf/reporter-markdown"`).
   - `pnpm typecheck` clean.
-- [x] C0.3 Verify (not capture) the existing bundle-budget infrastructure: `scripts/bundle-budgets.json` already defines `/report/[[...id]]` at 250 KB. `.github/workflows/website-budgets.yml` runs `scripts/check-bundle-budgets.mjs` on every PR. Action: run `pnpm --filter @nhonh/website analyze` once, record CURRENT actual gzipped size for `/report/[[...id]]` in `docs/measurement-spa-deploy.md` "Bundle baseline 2026-05-XX" section. **The CI gate already exists** — no new workflow step needed.
+- [x] C0.3 Verify (not capture) the existing bundle-budget infrastructure: `scripts/bundle-budgets.json` already defines `/report/[[...id]]` at 250 KB. `.github/workflows/website-budgets.yml` runs `scripts/check-bundle-budgets.mjs` on every PR. Action: run `pnpm --filter @ohmyperf/website analyze` once, record CURRENT actual gzipped size for `/report/[[...id]]` in `docs/measurement-spa-deploy.md` "Bundle baseline 2026-05-XX" section. **The CI gate already exists** — no new workflow step needed.
 - [x] C0.4 Remove `uplot` from `apps/website/package.json` (confirmed unused via `git grep uplot` returning zero hits today). `pnpm install`.
 - [x] C0.5 Reconcile bundle-budget script naming. Verified 2026-05-17: `apps/website/package.json` line 13 invokes `scripts/check-bundle-budget.mjs` (singular) but the canonical CI script is `scripts/check-bundle-budgets.mjs` (plural, referenced by `.github/workflows/website-budgets.yml`). Both files currently exist. Determine which is canonical (likely plural, given CI uses it); update `apps/website/package.json` `analyze:check` script to invoke the plural version; delete the orphan singular file.
 
-## C1. Wire @nhonh/share-client into the SPA
+## C1. Wire @ohmyperf/share-client into the SPA
 
-- [x] C1.1 Add `"@nhonh/share-client": "workspace:*"` AND `"@nhonh/reporter-markdown": "workspace:*"` to `apps/website/package.json` dependencies (markdown needed for Export menu's "Copy as Markdown"); run `pnpm install`.
+- [x] C1.1 Add `"@ohmyperf/share-client": "workspace:*"` AND `"@ohmyperf/reporter-markdown": "workspace:*"` to `apps/website/package.json` dependencies (markdown needed for Export menu's "Copy as Markdown"); run `pnpm install`.
 - [x] C1.2 Add `NEXT_PUBLIC_SHARE_ENDPOINT=` to `apps/website/.env.example` with a comment explaining what it does and the default Workers deploy URL.
 - [x] C1.3 Extend `apps/website/lib/env.ts` to expose `getShareEndpoint(): string | null` reading `process.env.NEXT_PUBLIC_SHARE_ENDPOINT`.
 - [x] C1.4 Document the `redact.ts` browser limitation: `process.env` is polyfilled to `{}` by Next.js in the browser, so `scanEnvSecrets` is a no-op and `ShareSecretLeakError` cannot fire from SPA. Add an inline comment in `share-button.tsx`: `// SPA path: env-secret scan is a no-op (browser has no env). The AlertDialog is defensive for CLI-style usage.`
@@ -43,7 +43,7 @@ These tasks have ZERO dependency on Track A/B engine data. Run immediately after
   - shadcn `DropdownMenu` triggered by `Button` with `Download` icon.
   - Items: "Download JSON", "Download Markdown", "Copy as JSON", "Copy as Markdown".
 - [x] C3.2 "Download JSON" handler: `Blob` + `URL.createObjectURL` + temp `<a>` click + `URL.revokeObjectURL`. Filename `ohmyperf-<reportId>.json`.
-- [x] C3.3 "Download Markdown" handler: `renderMarkdown(report)` from `@nhonh/reporter-markdown` (browser-safe after C0.2 split). Filename `ohmyperf-<reportId>.md`.
+- [x] C3.3 "Download Markdown" handler: `renderMarkdown(report)` from `@ohmyperf/reporter-markdown` (browser-safe after C0.2 split). Filename `ohmyperf-<reportId>.md`.
 - [x] C3.4 "Copy as JSON" handler: `navigator.clipboard.writeText(JSON.stringify(report))` + toast.
 - [x] C3.5 "Copy as Markdown" handler: same with `renderMarkdown(report)` + toast.
 - [x] C3.6 Add `data-testid="export-menu"` for tests.

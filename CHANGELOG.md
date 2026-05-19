@@ -7,32 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1.1] - 2026-05-19
-
-### Fixed
-
-- `@nhonh/cli` and `@nhonh/mcp-server` failed to install with `404 @nhonh/trace-utils@0.0.0-pre not in registry` because `@nhonh/core` had a runtime dependency on `@nhonh/trace-utils`, which was inadvertently marked `private: true` in v0.1.0 (and therefore never published). Publish `@nhonh/trace-utils` as a public package and bump all 15 packages to 0.1.1.
-- `@nhonh/core@0.1.1` now resolves transitive deps cleanly from npm.
-
-### Verified
-
-- `npx --yes @nhonh/cli@0.1.1 --help` succeeds from clean cache (this was the regression that exposed the trace-utils gap).
-
 ## [0.1.0] - 2026-05-19
 
-First public release. 14 `@nhonh/*` packages published to npm.
+First public release. **15 `@ohmyperf/*` packages** published to npm.
+
+> **Scope-decision history (informational):** an interim release was briefly published as `@nhonh/*` (v0.1.0 + v0.1.1, ~30 minutes live) because the `@ohmyperf` npm organization had not yet been created. Both `@nhonh/*` versions were unpublished within the 72-hour window per npm policy; `@ohmyperf` is the canonical scope going forward. `@ohmyperf/trace-utils` (the package whose missing publish caused the @nhonh/v0.1.1 patch) ships as a public dependency from v0.1.0 of `@ohmyperf`.
 
 ### Added
 
-- **`@nhonh/cli`** — CLI binary `ohmyperf` with 8 subcommands (`run`, `diff`, `share`, `doctor`, `init`, `list-plugins`, `list-styles`, `install-browser`). Interactive `@clack/prompts` TUI walk-through when no URL is provided in a TTY. 13 typed exit codes.
-- **`@nhonh/mcp-server`** — MCP server binary `ohmyperf-mcp` exposing 12 tools + 7 prompts for AI coding agents (Claude in OpenCode, Cursor, GitHub Copilot, Claude Desktop). Reports persisted at `~/.ohmyperf-mcp/reports/` and exposed as `ohmyperf://reports/<id>.json` resources.
-- **`@nhonh/core`** — Measurement engine, plugin runtime, pre-flight CPU calibration, Mann-Whitney U non-parametric diff with per-metric noise floors. Schema 1.0.0 frozen.
-- **`@nhonh/driver-playwright`** — Playwright + CDP driver with `Target.setAutoAttach({ flatten: true })` for OOPIF (cross-origin iframe) deep-inspection. ~99% iframe metric coverage.
-- **`@nhonh/plugins-builtin`** — Built-in plugin set: `cwvPlugin` (LCP/INP/CLS subpart attribution), `axePlugin` (accessibility), `thirdPartiesPlugin` (third-party-web v0.29.2 vendor classification), `customMetricExamplePlugin`.
-- **`@nhonh/design-tokens`** — OKLCH-based design tokens + 4 brand systems: `calibre` (default), `linear-app` (dark canvas), `stripe` (light, multi-layer shadows), `vercel` (4-layer shadow + border:none). WCAG-AA contrast gate enforced via `scripts/check-contrast.mjs` in CI.
-- **`@nhonh/viewer`** — Self-contained single-file HTML viewer. Zero CDN, zero external network requests. Embeds report JSON as `<script type="application/json">`, parsed into `window.__OHMYPERF_REPORT__`.
-- **`@nhonh/reporter-{json,html,deck,markdown,junit,csv}`** — 6 reporters: canonical JSON (schema source of truth), self-contained HTML, multi-slide deck (⌘P → PDF first-class), PR-comment-friendly Markdown, JUnit XML (one `<testcase>` per budget threshold), long-format CSV.
-- **`@nhonh/share-client`** — Upload + fetch shareable reports with env-secret redaction before upload. Throws `ShareSecretLeakError` listing leaked env key names if any secret values appear in URLs/headers/query.
+- **`@ohmyperf/cli`** — CLI binary `ohmyperf` with 8 subcommands (`run`, `diff`, `share`, `doctor`, `init`, `list-plugins`, `list-styles`, `install-browser`). Interactive `@clack/prompts` TUI walk-through when no URL is provided in a TTY. 13 typed exit codes.
+- **`@ohmyperf/mcp-server`** — MCP server binary `ohmyperf-mcp` exposing 12 tools + 7 prompts for AI coding agents (Claude in OpenCode, Cursor, GitHub Copilot, Claude Desktop). Reports persisted at `~/.ohmyperf-mcp/reports/` and exposed as `ohmyperf://reports/<id>.json` resources.
+- **`@ohmyperf/core`** — Measurement engine, plugin runtime, pre-flight CPU calibration, Mann-Whitney U non-parametric diff with per-metric noise floors. Schema 1.0.0 frozen.
+- **`@ohmyperf/driver-playwright`** — Playwright + CDP driver with `Target.setAutoAttach({ flatten: true })` for OOPIF (cross-origin iframe) deep-inspection. ~99% iframe metric coverage.
+- **`@ohmyperf/plugins-builtin`** — Built-in plugin set: `cwvPlugin` (LCP/INP/CLS subpart attribution), `axePlugin` (accessibility), `thirdPartiesPlugin` (third-party-web v0.29.2 vendor classification), `customMetricExamplePlugin`.
+- **`@ohmyperf/design-tokens`** — OKLCH-based design tokens + 4 brand systems: `calibre` (default), `linear-app` (dark canvas), `stripe` (light, multi-layer shadows), `vercel` (4-layer shadow + border:none). WCAG-AA contrast gate enforced via `scripts/check-contrast.mjs` in CI.
+- **`@ohmyperf/viewer`** — Self-contained single-file HTML viewer. Zero CDN, zero external network requests. Embeds report JSON as `<script type="application/json">`, parsed into `window.__OHMYPERF_REPORT__`.
+- **`@ohmyperf/reporter-{json,html,deck,markdown,junit,csv}`** — 6 reporters: canonical JSON (schema source of truth), self-contained HTML, multi-slide deck (⌘P → PDF first-class), PR-comment-friendly Markdown, JUnit XML (one `<testcase>` per budget threshold), long-format CSV.
+- **`@ohmyperf/share-client`** — Upload + fetch shareable reports with env-secret redaction before upload. Throws `ShareSecretLeakError` listing leaked env key names if any secret values appear in URLs/headers/query.
 
 ### Measurement features
 
@@ -53,7 +44,7 @@ First public release. 14 `@nhonh/*` packages published to npm.
 
 ### CI / release infrastructure
 
-- 5 GitHub Actions workflows: `ci.yml` (multi-OS matrix: macOS 13/15, Ubuntu 22.04/24.04, Windows 2022; Node 22.x + 24.x), `dogfood.yml` (weekly self-measurement on perf changes), `website-budgets.yml` (bundle budget gate), `publish-beta.yml` (push to `beta` branch → `@nhonh/*@beta`), `publish-stable.yml` (manual workflow_dispatch with conventional-commit semver detection → `@nhonh/*@latest`).
+- 5 GitHub Actions workflows: `ci.yml` (multi-OS matrix: macOS 13/15, Ubuntu 22.04/24.04, Windows 2022; Node 22.x + 24.x), `dogfood.yml` (weekly self-measurement on perf changes), `website-budgets.yml` (bundle budget gate), `publish-beta.yml` (push to `beta` branch → `@ohmyperf/*@beta`), `publish-stable.yml` (manual workflow_dispatch with conventional-commit semver detection → `@ohmyperf/*@latest`).
 - `pnpm@10.33.3` + Turbo monorepo. Apache-2.0 license + NOTICE in every published package.
 
 ### Acknowledgments

@@ -1,6 +1,6 @@
 {
-  "name": "@nhonh/mcp-server",
-  "version": "0.1.1",
+  "name": "@ohmyperf/mcp-server",
+  "version": "0.1.0",
   "description": "MCP (Model Context Protocol) server exposing the ohmyperf engine as 'measure' and 'diff' tools for AI agents (Claude / OpenCode / Cursor / Cline / Continue).",
   "license": "Apache-2.0",
   "engines": {
@@ -72,14 +72,14 @@
   ],
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
-    "@nhonh/core": "workspace:*",
-    "@nhonh/driver-playwright": "workspace:*",
-    "@nhonh/plugins-builtin": "workspace:*",
-    "@nhonh/design-tokens": "workspace:*",
-    "@nhonh/reporter-deck": "workspace:*",
-    "@nhonh/reporter-html": "workspace:*",
-    "@nhonh/reporter-json": "workspace:*",
-    "@nhonh/reporter-markdown": "workspace:*",
+    "@ohmyperf/core": "workspace:*",
+    "@ohmyperf/driver-playwright": "workspace:*",
+    "@ohmyperf/plugins-builtin": "workspace:*",
+    "@ohmyperf/design-tokens": "workspace:*",
+    "@ohmyperf/reporter-deck": "workspace:*",
+    "@ohmyperf/reporter-html": "workspace:*",
+    "@ohmyperf/reporter-json": "workspace:*",
+    "@ohmyperf/reporter-markdown": "workspace:*",
     "zod": "catalog:"
   }
 }

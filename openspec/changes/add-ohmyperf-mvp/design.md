@@ -60,7 +60,7 @@ The synthesis (`.sisyphus/plans/ohmyperf-design-brief.md` outside this repo, kep
 
 ### D2. Driver layering: Playwright primary; raw CDP via `newCDPSession()` for Chromium-deep work
 
-**Pick**: One `Driver` interface with two v1 implementations (`@nhonh/driver-playwright` for Chromium/Firefox/WebKit; `@nhonh/driver-extension` for the Chrome extension surface, using `chrome.debugger`). Drop puppeteer-core for v1 — bring back later via a third Driver if needed. For Chromium-deep work (OOPIF auto-attach, Profiler, Tracing, HeapProfiler), reach through Playwright's `context.newCDPSession(target)` to send raw CDP. Wrap raw CDP calls behind a `cdp-compat` shim so version churn touches one file.
+**Pick**: One `Driver` interface with two v1 implementations (`@ohmyperf/driver-playwright` for Chromium/Firefox/WebKit; `@ohmyperf/driver-extension` for the Chrome extension surface, using `chrome.debugger`). Drop puppeteer-core for v1 — bring back later via a third Driver if needed. For Chromium-deep work (OOPIF auto-attach, Profiler, Tracing, HeapProfiler), reach through Playwright's `context.newCDPSession(target)` to send raw CDP. Wrap raw CDP calls behind a `cdp-compat` shim so version churn touches one file.
 
 **Alternatives considered**:
 - **Pure Playwright (no raw CDP)**: insufficient — `Target.setAutoAttach`, `Profiler.startPreciseCoverage`, `HeapProfiler.takeHeapSnapshot`, and several Performance/Tracing flows aren't exposed at the high level.
@@ -126,7 +126,7 @@ State is keyed by **frameId** (from the parent frame tree), not `targetId`, so c
 
 **Rationale**: 2-click install from Chrome Web Store, `chrome.debugger` IS real CDP including `Target.setAutoAttach` for cross-origin OOPIFs. Trade-offs accepted: Chrome/Edge only on website v1; the yellow "DevTools is debugging…" infobar is always visible (cannot hide); runs in user's current profile (with extensions installed) — document this and recommend a clean-profile window for repeatable measurements.
 
-The extension's CDP capabilities differ subtly from CDP-over-WebSocket; the `@nhonh/driver-extension` package owns the differences, with a synthetic-page test corpus shared with the Playwright driver to keep parity in check.
+The extension's CDP capabilities differ subtly from CDP-over-WebSocket; the `@ohmyperf/driver-extension` package owns the differences, with a synthetic-page test corpus shared with the Playwright driver to keep parity in check.
 
 ### D5. Plugin runtime — in-process, trust = npm trust; reports never re-execute plugin code
 
@@ -210,7 +210,7 @@ A confirmation preview is shown before upload: "12 headers redacted, 3 query par
 
 ```ts
 // scenarios/checkout.ts
-import { defineScenario } from '@nhonh/core';
+import { defineScenario } from '@ohmyperf/core';
 
 export default defineScenario({
   name: 'checkout-flow',
@@ -256,9 +256,9 @@ Run: `ohmyperf scenario ./scenarios/checkout.ts --runs 5`.
 `ohmyperf.config.ts` (the global tool config, not scenarios) is also TS:
 
 ```ts
-import { defineConfig } from '@nhonh/core';
+import { defineConfig } from '@ohmyperf/core';
 export default defineConfig({
-  plugins: ['@nhonh/plugin-cwv', '@nhonh/plugin-axe', './my-plugin'],
+  plugins: ['@ohmyperf/plugin-cwv', '@ohmyperf/plugin-axe', './my-plugin'],
   runs: 5,
   mode: 'ci-stable',
   budgets: { lcp: 2500, cls: 0.1, inp: 200 },
@@ -318,7 +318,7 @@ The five ADRs are recorded in `openspec/adrs/` and are referenced from the relev
 | R4 | Cross-browser parity overpromise | Capability matrix in docs; Firefox/WebKit = CWV-only via web-vitals + observers. |
 | R5 | Hosted backend scope creep → SaaS | Hard line: anonymous, ephemeral, single-report; no team accounts; static viewer fallback always exists. |
 | R6 | Source-map attribution complexity (bundler zoo) | Best-effort; bundler-specific quirks documented; target source-map v3 only. |
-| R7 | `lighthouse` library API churn | Vendor specific audit modules into `@nhonh/plugins-lh-audits`; pin LH version; update on our schedule. |
+| R7 | `lighthouse` library API churn | Vendor specific audit modules into `@ohmyperf/plugins-lh-audits`; pin LH version; update on our schedule. |
 | R8 | Browser binary version drift | Bundle Playwright's Chromium; system Chrome opt-in only for diagnostic mode; report `browser.source`. |
 | R9 | Plugin sandboxing absence | In-process v1 + lockfile SRI; reports never re-execute plugins; sandboxing v2. |
 | R10 | Trademark / domain / npm name conflicts | Day-1 P0 audit (ohmyperf.dev/.com, npm `@ohmyperf`, GitHub org, VSCode/JetBrains marketplaces, EUIPO+USPTO trademark search). Pause if conflict. |

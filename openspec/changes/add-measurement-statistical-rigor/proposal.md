@@ -44,7 +44,7 @@ This is OpenSpec change **#1 of 5 in the v2 series**. It establishes the meta-su
 - **`tests/rigor/ghost-truth-tracking.test.ts`** — Runs OhMyPerf in both modes against the V4 fixture and asserts `|metrics.lcp.corrected.value - 1000| < |lighthouseLcp - 1000|`. Requires Chromium; gated under `pnpm test:rigor:browser`.
 - **`tests/rigor/fingerprint-determinism.test.ts`** — V7: identical `MeasureOptions` + identical versions → byte-identical `captureFingerprint` over 10 runs.
 - **`docs/measurement-rigor.md`** — Methodology explainer: what SPRT does, why p75 vs p75 for CrUX, how ghost runs are paired and what's NOT subtracted, fingerprint contract and `taxonomyVersion` bump policy, reproduction instructions for V1–V7.
-- **Dependency**: `safe-stable-stringify@^2.4.3` added to `@nhonh/core` `dependencies` (~2KB gz, zero transitive deps).
+- **Dependency**: `safe-stable-stringify@^2.4.3` added to `@ohmyperf/core` `dependencies` (~2KB gz, zero transitive deps).
 
 ### Removed
 
@@ -61,7 +61,7 @@ This is OpenSpec change **#1 of 5 in the v2 series**. It establishes the meta-su
 ## Pinned design decisions
 
 - **Sampler-driven pull loop.** `engine.ts:124` for-loop is replaced by `while (sampler.shouldContinue(runs))`. The sampler module lives in `packages/core/src/sampling.ts`. No globals; sampler is constructed per measure call. Reentrant.
-- **CrUX lives in `@nhonh/plugins-builtin`** (CWV precedent). Oracle's initial recommendation was a new `@nhonh/plugin-crux` package; we deviate because a single HTTP call + cache does not justify a new package boundary. Split to standalone package is non-breaking and is a v1.1 option.
+- **CrUX lives in `@ohmyperf/plugins-builtin`** (CWV precedent). Oracle's initial recommendation was a new `@ohmyperf/plugin-crux` package; we deviate because a single HTTP call + cache does not justify a new package boundary. Split to standalone package is non-breaking and is a v1.1 option.
 - **Ghost mode signalled via `RunCtx.mode = 'instrumented' | 'ghost'`.** Collectors branch internally on `ctx.mode`. No duplicated factories; symmetry of code path is required for pairing to be valid.
 - **`PerformanceTimeline` CDP domain for ghost LCP.** `PerformanceTimeline.enable({ eventTypes: ['largest-contentful-paint'] })` causes Chromium to emit `Performance.timelineEventAdded` events natively, with no userland JS injection. This is the baseline against which instrumented LCP overhead is measured.
 - **Welford running variance, no pilot phase.** Floor `σ_min = 5ms` and use prior `σ₀ = 15ms` until n ≥ 5. Avoids wasting the SPRT's whole value on a 3-run warm-up.
@@ -71,7 +71,7 @@ This is OpenSpec change **#1 of 5 in the v2 series**. It establishes the meta-su
 - **Headline metric never mutated.** `metrics.lcp.value` stays raw (instrumented observation). Corrected value lives in `metrics.lcp.corrected = { value, method: 'ghost-paired-median', overheadMs }`. Reporter layer chooses which to surface.
 - **Ghost overhead sanity thresholds**: if `overhead_p50 < 0` or `overhead_p50 > 200ms` → emit `diagnostics.warnings.ghost_anomaly` and DO NOT subtract. Spec'd explicitly so future debuggers know the contract.
 - **`captureFingerprint` covers inputs only.** Inputs: `{ url, calibration: {observedScore, throttleRate}, configHash, ohmyperfVersion, taxonomyVersion }`. CrUX response is excluded (external state breaks determinism). Run-time outputs (metrics, timestamps) are excluded by construction.
-- **`taxonomyVersion = "1.0.0"`** is a new exported constant in `@nhonh/core`. Bumped only when metric names/dimensions change (CWV add/remove/rename). Documented in `docs/measurement-rigor.md`.
+- **`taxonomyVersion = "1.0.0"`** is a new exported constant in `@ohmyperf/core`. Bumped only when metric names/dimensions change (CWV add/remove/rename). Documented in `docs/measurement-rigor.md`.
 - **`safe-stable-stringify`** is the only new runtime dep in core (~2KB gz). Hand-rolling canonical-JSON is a footgun (Map serialization, NaN, numeric keys, `undefined` semantics).
 - **Backward compatibility.** `MeasureOptions.sampling` absent → fixed-N preserved. `opts.ghostRun` absent → no ghost runs. `opts.crux.apiKey` absent (or `OHMYPERF_CRUX_KEY` env unset) → CrUX silently skipped with INFO log. All four features off by default in v1.
 - **Schema 1.0.0 stays frozen.** Every new field optional. `api-extractor` enforced as part of acceptance.
@@ -81,7 +81,7 @@ This is OpenSpec change **#1 of 5 in the v2 series**. It establishes the meta-su
 1. `pnpm typecheck && pnpm lint && pnpm test` green across the workspace.
 2. `pnpm test:rigor` green for V1 (8% shift → SPRT detects at N ∈ [8,12] in ≥60% of 100 trials; fixed N=5 detects in ≤60% — i.e. SPRT strictly improves detection), V2 (null fixture → SPRT terminates `sprt-h0` in ≥80% of 100 trials), V3 (high variance → `stopReason='cap'` cleanly reported), V7 (fingerprint determinism over 10 runs).
 3. `pnpm test:rigor:browser` green for V4 (ground-truth-paint corrected LCP closer to 1000ms than Lighthouse's LCP) and V5 (ghost anomaly probe — no false anomaly on a vanilla static page).
-4. `pnpm api:check --filter @nhonh/core` exit 0; diff additive-only.
+4. `pnpm api:check --filter @ohmyperf/core` exit 0; diff additive-only.
 5. A report produced with `{ sampling: { mode: 'sprt' }, ghostRun: true, crux: { apiKey: '...' } }` contains: `meta.sampling.stopReason`, `meta.sampling.nRunsInstrumented`, `meta.sampling.nRunsGhost`, `meta.crux.representativenessScore`, `meta.captureFingerprint`, `diagnostics.measurementOverhead.lcp`, and `metrics.lcp.corrected`.
 6. A legacy report (no options set) produced after this change is byte-compatible with the existing v1 viewer (no new required fields).
 7. `docs/measurement-rigor.md` describes V1–V7 methodology and lists `taxonomyVersion` bump policy.
@@ -92,7 +92,7 @@ This is OpenSpec change **#1 of 5 in the v2 series**. It establishes the meta-su
 - **CrUX API key handling**: never accept via CLI flag (shell history); only `OHMYPERF_CRUX_KEY` env. Cache key is `sha256(origin + formFactor)`, never raw URL on disk. Audit log lines near the key to ensure no echo. Mitigation: lint rule + code-review checklist in `docs/measurement-rigor.md`.
 - **Ghost run 2× wall-clock**: opt-in only via `--ghost`. CLI prints a duration-estimate warning when set. CI defaults stay off.
 - **Bundle budget for viewer (≤200KB gz) / deck (≤500KB gz)**: zero new code in viewer/deck — defensive `?.` chains only. Verified.
-- **`@nhonh/core` bundle growth ~6KB gz** (`sampling.ts` + `fingerprint.ts` + `safe-stable-stringify`): no published budget for core (server-side). Noted but not a blocker.
+- **`@ohmyperf/core` bundle growth ~6KB gz** (`sampling.ts` + `fingerprint.ts` + `safe-stable-stringify`): no published budget for core (server-side). Noted but not a blocker.
 - **`PerformanceTimeline` domain availability**: stable in Chromium since 84 (2020-07). Firefox/WebKit lack it; ghost mode is Chromium-only in v1, consistent with our existing CWV-via-PO Chromium constraint. Document.
 - **Future schema split** (`Report.diagnostics` top-level vs `meta.diagnostics`): we chose top-level `Report.diagnostics` per Oracle's structural-additivity argument; if downstream consumers complain we can mirror to `meta` non-breakingly. Doc note in `docs/measurement-rigor.md`.
 

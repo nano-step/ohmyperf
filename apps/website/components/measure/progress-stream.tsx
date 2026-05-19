@@ -1,6 +1,6 @@
 'use client';
 
-import type { ProgressEvent } from '@nhonh/shared-types';
+import type { ProgressEvent } from '@ohmyperf/shared-types';
 
 interface Props {
   events: ProgressEvent[];

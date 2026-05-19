@@ -14,7 +14,7 @@ The extension SHALL ship a Manifest v3 manifest declaring (at minimum) the permi
 - **AND** the manifest's `description` and `permissions_justification` (CWS-required) explicitly mention "perf measurement via DevTools Protocol"
 
 ### Requirement: "Measure this page" entry point
-The extension SHALL provide a browser-action button. Clicking it on a tab SHALL: (1) attach the debugger via `chrome.debugger.attach({ tabId }, '1.3')`, (2) bootstrap `@nhonh/core` in the extension service-worker against that target, (3) execute one measurement run with default `runs: 5` in `real` mode, (4) detach when complete, (5) open a new tab to the viewer (either local extension page `viewer.html` or `https://ohmyperf.dev/viewer` with the report passed via `postMessage` to the website's content script).
+The extension SHALL provide a browser-action button. Clicking it on a tab SHALL: (1) attach the debugger via `chrome.debugger.attach({ tabId }, '1.3')`, (2) bootstrap `@ohmyperf/core` in the extension service-worker against that target, (3) execute one measurement run with default `runs: 5` in `real` mode, (4) detach when complete, (5) open a new tab to the viewer (either local extension page `viewer.html` or `https://ohmyperf.dev/viewer` with the report passed via `postMessage` to the website's content script).
 
 #### Scenario: Button measures active tab
 - **WHEN** the user clicks the extension button on a tab pointing at `https://example.com`
@@ -27,7 +27,7 @@ The extension SHALL provide a browser-action button. Clicking it on a tab SHALL:
 - **AND** does NOT attempt to attach the debugger
 
 ### Requirement: OOPIF support via `chrome.debugger`
-The extension SHALL enable OOPIF auto-attach using the same flow as the CLI driver (`Target.setAutoAttach { flatten: true }`) and SHALL achieve parity with the CLI on the OOPIF synthetic test corpus. Where the `chrome.debugger` API differs from raw CDP-over-WebSocket, the `@nhonh/driver-extension` package SHALL document and shim the differences.
+The extension SHALL enable OOPIF auto-attach using the same flow as the CLI driver (`Target.setAutoAttach { flatten: true }`) and SHALL achieve parity with the CLI on the OOPIF synthetic test corpus. Where the `chrome.debugger` API differs from raw CDP-over-WebSocket, the `@ohmyperf/driver-extension` package SHALL document and shim the differences.
 
 #### Scenario: Extension OOPIF parity
 - **WHEN** the extension's CI suite runs `tests/oopif-corpus/` against the extension driver

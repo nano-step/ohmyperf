@@ -29,7 +29,7 @@ git add .ohmyperf-baseline/report.json
 git commit -m "chore: refresh ohmyperf baseline"
 ```
 
-The diff step uses Mann-Whitney U significance (α=0.05) plus per-metric noise floors documented in `@nhonh/core/src/diff.ts`.
+The diff step uses Mann-Whitney U significance (α=0.05) plus per-metric noise floors documented in `@ohmyperf/core/src/diff.ts`.
 
 ### Limitations
 

@@ -1,4 +1,4 @@
-# @nhonh/design-tokens
+# @ohmyperf/design-tokens
 
 Canonical TypeScript + CSS interface to the OhMyPerf Calibre OKLCH palette.
 
@@ -18,7 +18,7 @@ is identical. The build fails on any drift.
 ## Usage
 
 ```ts
-import { PALETTE_CSS, CALIBRE_LIGHT } from "@nhonh/design-tokens";
+import { PALETTE_CSS, CALIBRE_LIGHT } from "@ohmyperf/design-tokens";
 
 // Embed the full palette (with hex fallbacks + dark mode) into a static HTML <style> tag:
 const html = `<style>${PALETTE_CSS}</style>`;
@@ -31,7 +31,7 @@ const fallbackStroke = CALIBRE_LIGHT.hex.accentSuccess; // "#377f3d"
 For slide decks (no dark mode), use the light-only variant:
 
 ```ts
-import { PALETTE_CSS_LIGHT_ONLY } from "@nhonh/design-tokens";
+import { PALETTE_CSS_LIGHT_ONLY } from "@ohmyperf/design-tokens";
 ```
 
 ## Why hex fallbacks?
@@ -52,7 +52,7 @@ Browsers ignore unknown values and keep the last valid one. Newer browsers see b
 3. Add matching `hex` fallback to both palettes' `hex` sub-object.
 4. Add the `--color-*` name to `PROP_TO_CSS_VAR` map in `src/index.ts`.
 5. Run `node scripts/check-design-tokens.mjs` — must exit 0.
-6. Run `pnpm --filter @nhonh/design-tokens test` — all tests pass.
+6. Run `pnpm --filter @ohmyperf/design-tokens test` — all tests pass.
 
 ## License
 

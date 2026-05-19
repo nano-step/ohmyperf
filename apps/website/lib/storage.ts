@@ -1,5 +1,5 @@
 import { openDB, type DBSchema, type IDBPDatabase } from 'idb';
-import type { Report } from '@nhonh/shared-types';
+import type { Report } from '@ohmyperf/shared-types';
 
 export interface StoredReport {
   id: string;

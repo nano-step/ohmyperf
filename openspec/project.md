@@ -17,7 +17,7 @@ A next-generation, plugin-driven web performance measurement platform that measu
 
 ## Architecture (one-line)
 
-A pnpm-workspaces + Turborepo monorepo. `@nhonh/core` is a small reentrant engine driving any object that satisfies the `Driver` interface; `@nhonh/driver-playwright` wraps Playwright + raw CDP via `newCDPSession()` for Chromium-deep work; `@nhonh/driver-extension` wraps `chrome.debugger` for the Chrome extension surface. Plugins (built-in + third-party) attach lifecycle hooks. Reporters serialize a frozen `Report` (schema-versioned). The hosted backend is Cloudflare Workers + R2 + D1, with Hono + S3 + Postgres for self-host.
+A pnpm-workspaces + Turborepo monorepo. `@ohmyperf/core` is a small reentrant engine driving any object that satisfies the `Driver` interface; `@ohmyperf/driver-playwright` wraps Playwright + raw CDP via `newCDPSession()` for Chromium-deep work; `@ohmyperf/driver-extension` wraps `chrome.debugger` for the Chrome extension surface. Plugins (built-in + third-party) attach lifecycle hooks. Reporters serialize a frozen `Report` (schema-versioned). The hosted backend is Cloudflare Workers + R2 + D1, with Hono + S3 + Postgres for self-host.
 
 ## v1 scope
 
@@ -43,12 +43,12 @@ A pnpm-workspaces + Turborepo monorepo. `@nhonh/core` is a small reentrant engin
 ```
 ohmyperf/
 ├── packages/
-│   ├── core/                   # @nhonh/core — engine, types, plugin runtime
-│   ├── driver-playwright/      # @nhonh/driver-playwright
-│   ├── driver-extension/       # @nhonh/driver-extension (chrome.debugger)
-│   ├── plugins-builtin/        # @nhonh/plugins-{cwv,coverage,a11y,seo,lh-audits,...}
-│   ├── reporters/              # @nhonh/reporter-{json,html,md,junit,csv,har,trace}
-│   ├── viewer/                 # @nhonh/viewer — static React/Vite SPA
+│   ├── core/                   # @ohmyperf/core — engine, types, plugin runtime
+│   ├── driver-playwright/      # @ohmyperf/driver-playwright
+│   ├── driver-extension/       # @ohmyperf/driver-extension (chrome.debugger)
+│   ├── plugins-builtin/        # @ohmyperf/plugins-{cwv,coverage,a11y,seo,lh-audits,...}
+│   ├── reporters/              # @ohmyperf/reporter-{json,html,md,junit,csv,har,trace}
+│   ├── viewer/                 # @ohmyperf/viewer — static React/Vite SPA
 │   ├── share-client/           # upload/fetch shareable reports
 │   ├── share-server/           # backend (Hono on CF Workers + R2 + D1; Docker self-host)
 │   └── trace-utils/            # vendored tracium-equivalent
@@ -67,7 +67,7 @@ ohmyperf/
 - **TypeScript** everywhere except where platform forces otherwise (Kotlin for v1.1 JetBrains plugin).
 - **Apache-2.0** for our code; **MPL-2.0** for axe-core (link, don't modify; NOTICE attribution); **Apache-2.0** for vendored Lighthouse audits.
 - **No CDP types in public API** — neutral domain types at the engine boundary.
-- **No globals / singletons in `@nhonh/core`** — engine is reentrant.
+- **No globals / singletons in `@ohmyperf/core`** — engine is reentrant.
 - **Lockfile-frozen plugin integrity** via `ohmyperf.lock.json` with SRI hashes.
 - **Engine API frozen at end of P0**; subsequent additions are additive only within the `1.x` major.
 - **Cross-platform CI** on macOS arm64+x64, Ubuntu 22.04+24.04, Windows Server 2022.

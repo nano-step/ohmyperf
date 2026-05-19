@@ -24,7 +24,7 @@ All client paths are `apps/website/...` unless noted. References below to `types
 
 ## 0. Cross-cutting decisions (read first)
 
-- **Shared types** live in `packages/shared-types/` (created in α.1). It re-exports `Report` from `@nhonh/core` and adds `MeasureRequest`, `JobStatus`, `ProgressEvent`, `RunnerError`, `ExtensionMessage`, `ReportSummary`. Both the SPA, runner, and extension consume this — no duplicate definitions.
+- **Shared types** live in `packages/shared-types/` (created in α.1). It re-exports `Report` from `@ohmyperf/core` and adds `MeasureRequest`, `JobStatus`, `ProgressEvent`, `RunnerError`, `ExtensionMessage`, `ReportSummary`. Both the SPA, runner, and extension consume this — no duplicate definitions.
 - **Backend abstraction**: `runner-client.ts` and `extension-bridge.ts` both expose the same shape `MeasureBackend` (see §A). UI components consume `MeasureBackend`, not either concrete client. This is what makes the rest of the rendering tree backend-agnostic.
 - **One-time imports**: Recharts and uPlot are *never* imported statically from a route entry. Always via `next/dynamic({ ssr: false })`. Treat this as a CI lint rule (depcruise or ESLint custom).
 - **No `dangerouslySetInnerHTML`** anywhere in the React port — satisfies R7. The static `renderReportHtml` keeps its existing escape functions and remains the only HTML-string source.
@@ -43,7 +43,7 @@ import type {
   Job,
   Report,
   RunnerError,
-} from "@nhonh/shared-types";
+} from "@ohmyperf/shared-types";
 
 export interface RunnerClientOptions {
   readonly baseUrl: string;                // e.g. "http://localhost:5174"
@@ -271,7 +271,7 @@ import type {
   Job,
   ExtensionMessage,
   ExtensionResponse,
-} from "@nhonh/shared-types";
+} from "@ohmyperf/shared-types";
 import type { MeasureBackend, MeasureHandle } from "./runner-client";
 
 declare global {
@@ -415,7 +415,7 @@ function extError(code: string, message: string) {
 ```ts
 // apps/website/lib/storage.ts
 import { openDB, IDBPDatabase, DBSchema, IDBPTransaction } from "idb";
-import type { Report } from "@nhonh/core";
+import type { Report } from "@ohmyperf/core";
 
 export interface ReportRecord {
   readonly id: string;            // crypto.randomUUID()
@@ -641,7 +641,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import type { Backend } from "./backend-detector";
 import type { ReportSummary } from "./storage";
-import type { ProgressEvent } from "@nhonh/shared-types";
+import type { ProgressEvent } from "@ohmyperf/shared-types";
 
 export interface JobState {
   readonly id: string;
@@ -771,7 +771,7 @@ A second tiny module `lib/store-bindings.ts` wires `storage.upsertJob` to `start
 
 Reasons:
 - `render.ts` is 348 lines; ~80 of those are formatting logic (`formatBytes`, `shortenUrl`, `isUnstable`, `HEADLINE_METRICS`, `collectMetricNames`, CoV threshold). Extracting these is mechanical and lossless.
-- The HTML string renderer is consumed by `@nhonh/reporter-html` (`packages/reporter-html/src/index.ts` line 4: `import { renderReportHtml } from "@nhonh/viewer"`). Touching its public output breaks the CLI's golden HTML.
+- The HTML string renderer is consumed by `@ohmyperf/reporter-html` (`packages/reporter-html/src/index.ts` line 4: `import { renderReportHtml } from "@ohmyperf/viewer"`). Touching its public output breaks the CLI's golden HTML.
 - The parity test (`render.test.ts`) asserts the *string* output. We must keep `renderReportHtml` byte-stable. Extracting formatters does not change its output.
 
 ### E.2 File layout
@@ -803,7 +803,7 @@ Move these from `render.ts` verbatim (no behavior change), export them:
 
 ```ts
 // packages/viewer/src/format.ts
-import type { Report } from "@nhonh/core";
+import type { Report } from "@ohmyperf/core";
 
 export const UNSTABLE_COV_THRESHOLD = 0.2;
 
@@ -844,7 +844,7 @@ export function rateCwv(name: keyof typeof CWV_THRESHOLDS, value: number): CwvRa
 ```tsx
 // packages/viewer/src/react/ReportViewer.tsx
 import * as React from "react";
-import type { Report } from "@nhonh/core";
+import type { Report } from "@ohmyperf/core";
 import { ReportHeader } from "./ReportHeader";
 import { UnstableBanner } from "./UnstableBanner";
 import { CwvSummary } from "./CwvSummary";
@@ -857,7 +857,7 @@ import { RawJson } from "./RawJson";
 
 export interface ReportViewerProps {
   readonly report: Report;
-  /** Slot for the SPA's gauge component — keeps `@nhonh/viewer`
+  /** Slot for the SPA's gauge component — keeps `@ohmyperf/viewer`
    *  free of uPlot dependency. */
   readonly renderGauge?: (props: {
     metric: "lcp" | "inp" | "cls" | "fcp" | "ttfb";
@@ -895,7 +895,7 @@ Each sub-component is a direct React translation of its `render.ts` counterpart,
 ```jsonc
 // packages/viewer/package.json
 {
-  "name": "@nhonh/viewer",
+  "name": "@ohmyperf/viewer",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -905,7 +905,7 @@ Each sub-component is a direct React translation of its `render.ts` counterpart,
     "./react":  { "types": "./dist/react/index.d.ts",   "import": "./dist/react/index.js" }
   },
   "peerDependencies": {
-    "@nhonh/core": "workspace:*",
+    "@ohmyperf/core": "workspace:*",
     "react": ">=18 <20"
   },
   "peerDependenciesMeta": {
@@ -915,8 +915,8 @@ Each sub-component is a direct React translation of its `render.ts` counterpart,
 ```
 
 - Root export keeps the existing string-renderer surface (CLI keeps working unmodified).
-- `./format` exports the helpers — the SPA imports from `@nhonh/viewer/format` for `rateCwv`, `CWV_THRESHOLDS`, `formatBytes`.
-- `./react` is the new component surface — the SPA imports `<ReportViewer />` from `@nhonh/viewer/react`. React is an *optional* peer to avoid forcing CLI consumers to install React.
+- `./format` exports the helpers — the SPA imports from `@ohmyperf/viewer/format` for `rateCwv`, `CWV_THRESHOLDS`, `formatBytes`.
+- `./react` is the new component surface — the SPA imports `<ReportViewer />` from `@ohmyperf/viewer/react`. React is an *optional* peer to avoid forcing CLI consumers to install React.
 
 ### E.6 Parity strategy
 
@@ -942,7 +942,7 @@ uPlot is a canvas library; the gauge here is **bar-style threshold indicators** 
 import * as React from "react";
 import uPlot, { type Options } from "uplot";
 import "uplot/dist/uPlot.min.css";
-import { CWV_THRESHOLDS, rateCwv, type CwvRating } from "@nhonh/viewer/format";
+import { CWV_THRESHOLDS, rateCwv, type CwvRating } from "@ohmyperf/viewer/format";
 
 type CwvMetric = "lcp" | "inp" | "cls" | "fcp" | "ttfb";
 
@@ -1047,7 +1047,7 @@ uPlot is ~40KB gz (acceptable per design.md D11 for `/measure` 200KB and `/repor
 // apps/website/components/metrics/waterfall.tsx (entry, no chart deps)
 "use client";
 import dynamic from "next/dynamic";
-import type { Report } from "@nhonh/core";
+import type { Report } from "@ohmyperf/core";
 
 const WaterfallChart = dynamic(() => import("./waterfall.impl"), {
   ssr: false,
@@ -1068,8 +1068,8 @@ import * as React from "react";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ReferenceLine, ResponsiveContainer, Cell,
 } from "recharts";
-import type { Report, RunReport, Resource } from "@nhonh/core";
-import { formatBytes } from "@nhonh/viewer/format";
+import type { Report, RunReport, Resource } from "@ohmyperf/core";
+import { formatBytes } from "@ohmyperf/viewer/format";
 
 interface Row {
   readonly url: string;
@@ -1169,7 +1169,7 @@ Per types.ts L69-88, `FrameNode` has `children: readonly string[]` (IDs into `Fr
 // apps/website/components/metrics/frame-tree.tsx
 "use client";
 import * as React from "react";
-import type { FrameTree as FrameTreeT, FrameNode, Metric } from "@nhonh/core";
+import type { FrameTree as FrameTreeT, FrameNode, Metric } from "@ohmyperf/core";
 import { ChevronRight } from "lucide-react";
 
 export function FrameTree({ tree }: { tree: FrameTreeT }) {
@@ -1262,8 +1262,8 @@ function FrameMetricBadges({ metrics }: { metrics: Readonly<Record<string, Metri
 "use client";
 import * as React from "react";
 import type { MeasureBackend } from "@/lib/runner-client";
-import type { ProgressEvent } from "@nhonh/shared-types";
-import type { Report, Metric } from "@nhonh/core";
+import type { ProgressEvent } from "@ohmyperf/shared-types";
+import type { Report, Metric } from "@ohmyperf/core";
 import { useStore } from "@/lib/store";
 import { saveReport } from "@/lib/storage";
 import { Progress } from "@/components/ui/progress";
@@ -1547,7 +1547,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { getReport, type ReportRecord } from "@/lib/storage";
-import { ReportViewer } from "@nhonh/viewer/react";
+import { ReportViewer } from "@ohmyperf/viewer/react";
 import { CwvGauge } from "@/components/metrics/cwv-gauge";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -1628,12 +1628,12 @@ Per design D10: `dynamic = 'force-static'` + `dynamicParams = false` + empty `ge
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { saveReport } from "@/lib/storage";
-import { ReportViewer } from "@nhonh/viewer/react";
+import { ReportViewer } from "@ohmyperf/viewer/react";
 import { CwvGauge } from "@/components/metrics/cwv-gauge";
 import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import type { Report } from "@nhonh/core";
+import type { Report } from "@ohmyperf/core";
 
 const Waterfall = dynamic(() => import("@/components/metrics/waterfall.impl"), { ssr: false });
 
@@ -1747,7 +1747,7 @@ Choosing `@react-aria/dnd`? Not needed — native HTML5 drag/drop is ~20 LOC and
 import * as React from "react";
 import Link from "next/link";
 import { listReportSummaries, deleteReport, clearAllReports, type ReportSummary } from "@/lib/storage";
-import { formatBytes } from "@nhonh/viewer/format";
+import { formatBytes } from "@ohmyperf/viewer/format";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useStore } from "@/lib/store";
@@ -1836,9 +1836,9 @@ export default function ReportIndexPage() {
 
 | Route | Budget (gz) | Static imports allowed | MUST be dynamic |
 |---|---|---|---|
-| `/` (landing) | **150 KB** | React, zustand, idb (lazy), url-form (RHF+zod), backend-detector | uPlot, Recharts, `ReportViewer`, `@nhonh/viewer/react`, `@react-aria/*` |
+| `/` (landing) | **150 KB** | React, zustand, idb (lazy), url-form (RHF+zod), backend-detector | uPlot, Recharts, `ReportViewer`, `@ohmyperf/viewer/react`, `@react-aria/*` |
 | `/measure` | **200 KB** | Above + `progress-stream`, `error-state`, `cwv-gauge` (uPlot OK) | Recharts, `ReportViewer` |
-| `/report/[[...id]]` | **250 KB** | Above + `@nhonh/viewer/react`, `cwv-gauge`, `frame-tree` | `waterfall.impl` (Recharts) |
+| `/report/[[...id]]` | **250 KB** | Above + `@ohmyperf/viewer/react`, `cwv-gauge`, `frame-tree` | `waterfall.impl` (Recharts) |
 | `/viewer` | **250 KB** | Same as `/report/[[...id]]` | Same |
 | `/report` (index) | **100 KB** | React, zustand (subset), idb, shadcn `table`/`dialog`/`button` | uPlot, Recharts, `ReportViewer` |
 
@@ -1853,9 +1853,9 @@ export default function ReportIndexPage() {
 - `apps/website/components/metrics/waterfall.tsx` — *only* place Recharts is imported, behind `next/dynamic({ ssr: false })`.
 - `apps/website/components/metrics/cwv-gauge.tsx` — uPlot import is direct (it's allowed on `/measure` and beyond), but on landing it must not be imported. Achieve this by *not* importing `cwv-gauge` from `app/page.tsx` or any of its dependencies.
 - `apps/website/components/metrics/frame-tree.tsx` — pure React, no chart deps; can be statically imported on report pages.
-- `@nhonh/viewer/react` — never imported from landing. Only from `app/report/.../page.tsx`, `app/viewer/page.tsx`.
+- `@ohmyperf/viewer/react` — never imported from landing. Only from `app/report/.../page.tsx`, `app/viewer/page.tsx`.
 
-ESLint rule (recommended; small custom rule or `no-restricted-imports`): in `app/page.tsx` and `app/measure/page.tsx`, forbid imports of `@nhonh/viewer/react`, `recharts`, and `@/components/metrics/waterfall.impl`.
+ESLint rule (recommended; small custom rule or `no-restricted-imports`): in `app/page.tsx` and `app/measure/page.tsx`, forbid imports of `@ohmyperf/viewer/react`, `recharts`, and `@/components/metrics/waterfall.impl`.
 
 ---
 

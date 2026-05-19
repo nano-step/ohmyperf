@@ -1,5 +1,5 @@
 {
-  "name": "@nhonh/reporter-har",
+  "name": "@ohmyperf/reporter-har",
   "version": "0.0.0-pre",
   "description": "HTTP Archive (HAR) reporter with redaction applied.",
   "license": "Apache-2.0",

@@ -1,12 +1,12 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { serve, type ServerType } from "@hono/node-server";
-import type { Report } from "@nhonh/core";
+import type { Report } from "@ohmyperf/core";
 import type {
   ErrorEnvelope,
   HealthResponse,
   JobPollResponse,
   MeasureAcceptedResponse,
-} from "@nhonh/shared-types";
+} from "@ohmyperf/shared-types";
 import { createApp } from "../../app.js";
 import { readConfig, type Config } from "../../config.js";
 import { JobStore } from "../../queue.js";

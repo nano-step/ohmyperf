@@ -11,21 +11,21 @@ import {
   type Mode,
   type Plugin,
   type Report,
-} from "@nhonh/core";
-import { createPlaywrightAdapter } from "@nhonh/driver-playwright";
+} from "@ohmyperf/core";
+import { createPlaywrightAdapter } from "@ohmyperf/driver-playwright";
 import {
   axePlugin,
   cwvPlugin,
   customMetricExamplePlugin,
   thirdPartiesPlugin,
-} from "@nhonh/plugins-builtin";
-import { writeCsvReport } from "@nhonh/reporter-csv";
-import { BRAND_IDS, isBrandId, type BrandId } from "@nhonh/design-tokens";
-import { writeDeckReport } from "@nhonh/reporter-deck";
-import { writeHtmlReport } from "@nhonh/reporter-html";
-import { writeJsonReport } from "@nhonh/reporter-json";
-import { writeJunitReport } from "@nhonh/reporter-junit";
-import { writeMarkdownReport } from "@nhonh/reporter-markdown/node";
+} from "@ohmyperf/plugins-builtin";
+import { writeCsvReport } from "@ohmyperf/reporter-csv";
+import { BRAND_IDS, isBrandId, type BrandId } from "@ohmyperf/design-tokens";
+import { writeDeckReport } from "@ohmyperf/reporter-deck";
+import { writeHtmlReport } from "@ohmyperf/reporter-html";
+import { writeJsonReport } from "@ohmyperf/reporter-json";
+import { writeJunitReport } from "@ohmyperf/reporter-junit";
+import { writeMarkdownReport } from "@ohmyperf/reporter-markdown/node";
 import { EXIT_CODES } from "../exit-codes.js";
 import { isInteractiveContext, promptInteractive } from "./run-interactive.js";
 

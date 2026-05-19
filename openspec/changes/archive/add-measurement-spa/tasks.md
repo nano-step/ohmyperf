@@ -4,12 +4,12 @@ Phased delivery. Each task independently verifiable. Order de-risks downstream p
 
 ## α. Local Runner backend (build first, prove data flow via curl)
 
-- [x] α.1 Create `packages/shared-types/` with `MeasureRequest`, `JobStatus`, `ProgressEvent`, extension message envelopes. Re-export `Report` type from `@nhonh/core`.
+- [x] α.1 Create `packages/shared-types/` with `MeasureRequest`, `JobStatus`, `ProgressEvent`, extension message envelopes. Re-export `Report` type from `@ohmyperf/core`.
 - [x] α.2 Create `apps/runner/` skeleton: `package.json`, `tsconfig.json`, src structure, Hono dependency from catalog.
 - [x] α.3 Implement `apps/runner/src/config.ts` with PORT (5174), BIND (127.0.0.1), CORS allowlist, env opt-outs.
 - [x] α.4 Implement `apps/runner/src/ssrf-guard.ts` per D8 — block private/loopback/metadata IPs; `OHMYPERF_RUNNER_ALLOW_PRIVATE=1` opt-out; vitest unit tests for each blocked range. (19 cases pass, including IPv4-mapped IPv6, CGNAT, RFC1122 "this network", DNS-failure classification.)
 - [x] α.5 Implement `apps/runner/src/queue.ts` — in-memory FIFO, concurrency=1 default, configurable via env. (Includes 1h TTL eviction of terminal jobs and graceful `shutdown()`.)
-- [x] α.6 Implement `apps/runner/src/runner.ts` — invokes `@nhonh/core.runEngine` with `@nhonh/driver-playwright`; emits progress events to subscribers. Default plugins `[cwvPlugin(), axePlugin()]` applied for CLI parity. Per-run metrics emitted retrospectively post-run (see phase-alpha-runner §F note 1 — `runEngine` returns a finalized Report).
+- [x] α.6 Implement `apps/runner/src/runner.ts` — invokes `@ohmyperf/core.runEngine` with `@ohmyperf/driver-playwright`; emits progress events to subscribers. Default plugins `[cwvPlugin(), axePlugin()]` applied for CLI parity. Per-run metrics emitted retrospectively post-run (see phase-alpha-runner §F note 1 — `runEngine` returns a finalized Report).
 - [x] α.7 Implement `apps/runner/src/routes/health.ts` — `GET /api/health` returning `{ ok, version, engine, browser: { source, version } }`.
 - [x] α.8 Implement `apps/runner/src/routes/measure.ts` — `POST /api/measure` with zod validation, SSRF check, enqueue, return jobId 202. JobId via `crypto.randomUUID()` (unpredictable).
 - [x] α.9 Implement `apps/runner/src/routes/jobs.ts` — `GET /api/jobs/:id` (poll), `GET /api/jobs/:id/events` (SSE) per D7 event schema, `DELETE /api/jobs/:id` (cancel — aborts at next run boundary). SSE emits comment heartbeat `:\n\n` every 15s (config: `OHMYPERF_RUNNER_SSE_HEARTBEAT_MS`). Multiple SSE subscribers per job: fan-out via in-process EventBus; late joiners receive the replay buffer (last 50 events by default) before subscribing live.
@@ -48,7 +48,7 @@ Phased delivery. Each task independently verifiable. Order de-risks downstream p
 - [x] γ.1 Build `lib/runner-client.ts` — fetch + EventSource wrapper; typed event stream; reconnect with backoff; AbortController for cancellation.
 - [x] γ.2 Build `lib/storage.ts` — idb wrapper per D6: `saveReport`, `getReport(id)`, `listReports(limit)`, `deleteReport(id)`, `evictIfOverQuota(maxBytes)`. Use `db.transaction('reports', 'readwrite')` for atomic writes. Run eviction AFTER put. Catch `QuotaExceededError`: evict 25% oldest then retry once, else surface user-facing "Browser storage full" error.
 - [x] γ.3 Build `lib/store.ts` — zustand store: `{ backend, currentJob, recentReports }` + actions.
-- [x] γ.4 Port viewer to React: `apps/website/components/viewer/report-viewer.tsx` + `apps/website/lib/format.ts`. Keep `renderReportHtml` in `packages/viewer` untouched (no modification to frozen packages). (Deviation from D5 spec: React component placed in website to avoid modifying `@nhonh/viewer`.)
+- [x] γ.4 Port viewer to React: `apps/website/components/viewer/report-viewer.tsx` + `apps/website/lib/format.ts`. Keep `renderReportHtml` in `packages/viewer` untouched (no modification to frozen packages). (Deviation from D5 spec: React component placed in website to avoid modifying `@ohmyperf/viewer`.)
 - [x] γ.5 Build `components/measure/progress-stream.tsx` — consumes runner-client SSE; renders step list, per-run progress bar, ETA estimate.
 - [x] γ.6 Build `components/metrics/cwv-gauge.tsx` — canvas-based gauges; LCP/INP/CLS/FCP/TTFB; Google's Good/NI/Poor color bands. (uPlot not used — native canvas achieves same result with smaller footprint.)
 - [x] γ.7 Build `components/metrics/metric-row.tsx` — table row: median, p75, CoV%, n runs, unit.
@@ -94,7 +94,7 @@ Phased delivery. Each task independently verifiable. Order de-risks downstream p
 - [x] ε.12 `openspec/changes/add-ohmyperf-mvp/tasks.md` §10.1 marked superseded by `add-measurement-spa`.
 - [x] ε.13 Update `openspec/project.md` if any conventions change — no-op, no changes needed.
 - [x] ε.14 `docs/measurement-spa-deploy.md`: CF Pages (canonical), GitHub Pages, Vercel alternatives, docker-compose runner, self-host runner walkthrough.
-- [x] ε.15 Final E2E test files: **VERIFIED 2026-05-17 locally** — `pnpm --filter @nhonh/website test:smoke` and `test:a11y` both green. 14/14 tests pass (5 smoke + 5 a11y + 4 no-telemetry). Two a11y regressions found and fixed in commit `9b5652f` (color-contrast on `<code>` + scrollable `<pre>` keyboard focus). Logs: `scripts/smoke/logs/03-e2e-*.log`.
+- [x] ε.15 Final E2E test files: **VERIFIED 2026-05-17 locally** — `pnpm --filter @ohmyperf/website test:smoke` and `test:a11y` both green. 14/14 tests pass (5 smoke + 5 a11y + 4 no-telemetry). Two a11y regressions found and fixed in commit `9b5652f` (color-contrast on `<code>` + scrollable `<pre>` keyboard focus). Logs: `scripts/smoke/logs/03-e2e-*.log`.
 - [x] ε.16 Acceptance: **VERIFIED 2026-05-17 locally** — Typecheck ✅, build ✅, Playwright suite 14/14 green. Live runner acceptance still pending γ.18.
 
 ## ζ. Archive & promote

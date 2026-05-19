@@ -1,6 +1,6 @@
 'use client';
 
-import type { Report } from '@nhonh/core';
+import type { Report } from '@ohmyperf/core';
 import { ClsCulpritsList } from './cls-culprits-list';
 import { InpBreakdownCard } from './inp-breakdown-card';
 import { LcpBreakdownCard } from './lcp-breakdown-card';

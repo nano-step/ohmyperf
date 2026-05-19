@@ -2,7 +2,7 @@ import { copyFile, mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineCommand } from "citty";
-import { createConsoleLogger } from "@nhonh/core";
+import { createConsoleLogger } from "@ohmyperf/core";
 import { EXIT_CODES } from "../exit-codes.js";
 
 const SUPPORTED_PROVIDERS = ["github", "gitlab", "circle"] as const;

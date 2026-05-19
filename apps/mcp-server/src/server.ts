@@ -16,19 +16,19 @@ import {
   runEngine,
   type Opportunity,
   type Report,
-} from "@nhonh/core";
-import { createPlaywrightAdapter } from "@nhonh/driver-playwright";
+} from "@ohmyperf/core";
+import { createPlaywrightAdapter } from "@ohmyperf/driver-playwright";
 import {
   axePlugin,
   cwvPlugin,
   customMetricExamplePlugin,
   thirdPartiesPlugin,
-} from "@nhonh/plugins-builtin";
-import { BRAND_IDS, BRAND_MANIFEST, isBrandId, type BrandId } from "@nhonh/design-tokens";
-import { writeDeckReport } from "@nhonh/reporter-deck";
-import { writeHtmlReport } from "@nhonh/reporter-html";
-import { writeJsonReport } from "@nhonh/reporter-json";
-import { renderMarkdown } from "@nhonh/reporter-markdown";
+} from "@ohmyperf/plugins-builtin";
+import { BRAND_IDS, BRAND_MANIFEST, isBrandId, type BrandId } from "@ohmyperf/design-tokens";
+import { writeDeckReport } from "@ohmyperf/reporter-deck";
+import { writeHtmlReport } from "@ohmyperf/reporter-html";
+import { writeJsonReport } from "@ohmyperf/reporter-json";
+import { renderMarkdown } from "@ohmyperf/reporter-markdown";
 import {
   analyzeRegressionCause,
   type RegressionCauseReport,

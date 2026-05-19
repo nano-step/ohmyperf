@@ -2,7 +2,7 @@
 
 import { useEffect, useState, type ReactElement } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { BRAND_IDS, BRAND_MANIFEST, type BrandId } from '@nhonh/design-tokens';
+import { BRAND_IDS, BRAND_MANIFEST, type BrandId } from '@ohmyperf/design-tokens';
 
 const STORAGE_KEY = 'ohmyperf:style';
 

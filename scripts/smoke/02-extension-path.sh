@@ -23,7 +23,7 @@ echo "Date: $(date)" >> "$LOG"
 step "1/3 Verify extension-dist artifacts"
 DIST="$ROOT/apps/extension-chrome/extension-dist"
 for f in manifest.json background.bundle.js viewer.html viewer.bundle.js; do
-  if [ -f "$DIST/$f" ]; then ok "$f present"; else fail "$f missing — run: pnpm --filter @nhonh/extension-chrome build"; fi
+  if [ -f "$DIST/$f" ]; then ok "$f present"; else fail "$f missing — run: pnpm --filter @ohmyperf/extension-chrome build"; fi
 done
 
 step "2/3 Verify manifest has externally_connectable + deterministic key"
@@ -54,7 +54,7 @@ cat <<MANUAL | tee -a "$LOG"
 
    5. Now run the SPA (either keep runner running, OR stop it to force extension path):
         cd $ROOT
-        pnpm --filter @nhonh/website build
+        pnpm --filter @ohmyperf/website build
         npx --yes serve apps/website/out -l 3000
 
    6. Open http://127.0.0.1:3000/measure (or landing → enter URL)

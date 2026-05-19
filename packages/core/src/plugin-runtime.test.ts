@@ -82,7 +82,7 @@ describe("loadPlugins()", () => {
   });
 
   it("rejects string PluginRefs in v1 (no dynamic resolution)", () => {
-    expect(() => loadPlugins(["@nhonh/plugin-cwv"])).toThrow(PluginLoadError);
+    expect(() => loadPlugins(["@ohmyperf/plugin-cwv"])).toThrow(PluginLoadError);
   });
 });
 

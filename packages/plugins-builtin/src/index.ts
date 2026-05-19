@@ -1,4 +1,4 @@
-export const PACKAGE_NAME = "@nhonh/plugins-builtin" as const;
+export const PACKAGE_NAME = "@ohmyperf/plugins-builtin" as const;
 
 export { cwvPlugin, type CwvPluginOptions } from "./cwv.js";
 export { axePlugin, type AxePluginOptions } from "./axe.js";

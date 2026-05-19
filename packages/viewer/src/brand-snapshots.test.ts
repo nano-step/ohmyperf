@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import type { Report } from "@nhonh/core";
-import { BRAND_IDS, BRAND_MANIFEST, type BrandId } from "@nhonh/design-tokens";
+import type { Report } from "@ohmyperf/core";
+import { BRAND_IDS, BRAND_MANIFEST, type BrandId } from "@ohmyperf/design-tokens";
 import { renderReportHtml } from "./render.js";
 
 function loadFixture(name: string): Report {

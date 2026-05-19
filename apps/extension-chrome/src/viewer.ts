@@ -1,5 +1,5 @@
-import { renderReportHtml } from "@nhonh/viewer";
-import type { Report } from "@nhonh/core";
+import { renderReportHtml } from "@ohmyperf/viewer";
+import type { Report } from "@ohmyperf/core";
 
 interface ChromeStorageAPI {
   session: { get(keys: string[]): Promise<Record<string, unknown>> };

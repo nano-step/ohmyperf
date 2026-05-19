@@ -1,12 +1,12 @@
-import type { Report } from "@nhonh/core";
+import type { Report } from "@ohmyperf/core";
 import {
   classifyCwv,
   cwvStatusIcon,
   cwvStatusLabel,
   formatCwvValue,
   type CwvStatus,
-} from "@nhonh/viewer/charts";
-import { escapeHtml } from "@nhonh/viewer/escape";
+} from "@ohmyperf/viewer/charts";
+import { escapeHtml } from "@ohmyperf/viewer/escape";
 import { slideWrapper } from "../deck-shell.js";
 
 const CWV_ORDER: ReadonlyArray<string> = ["lcp", "inp", "cls", "fcp", "ttfb", "tbt"];

@@ -1,4 +1,4 @@
-import type { BrandId } from "@nhonh/design-tokens";
+import type { BrandId } from "@ohmyperf/design-tokens";
 
 /**
  * Per-brand structural CSS overrides concatenated after STRUCTURAL_CSS.

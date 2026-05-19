@@ -40,8 +40,8 @@ Five commits inside one OpenSpec change. Each commit lands independently passing
 
 - [ ] 1.5.1 `pnpm install` succeeds; no new workspace package added yet (brands/ is just a subdirectory of design-tokens).
 - [ ] 1.5.2 `pnpm typecheck` workspace: 43/43 packages green (unchanged from `add-beautiful-report` end-state).
-- [ ] 1.5.3 `pnpm --filter @nhonh/design-tokens build` clean.
-- [ ] 1.5.4 `pnpm --filter @nhonh/design-tokens test` 10/10 still pass.
+- [ ] 1.5.3 `pnpm --filter @ohmyperf/design-tokens build` clean.
+- [ ] 1.5.4 `pnpm --filter @ohmyperf/design-tokens test` 10/10 still pass.
 - [ ] 1.5.5 `node packages/design-tokens/scripts/sync-open-design.mjs --brand=linear-app --dry-run` (if `--dry-run` implemented) prints transform plan without writing.
 - [ ] 1.5.6 NOTICE entries appear under new "Vendored open-design" section.
 - [ ] 1.5.7 No brands vendored yet; commit is pure infrastructure.
@@ -102,8 +102,8 @@ Five commits inside one OpenSpec change. Each commit lands independently passing
 ### 2.6 Commit 2 acceptance
 
 - [ ] 2.6.1 `pnpm typecheck` workspace: 43/43 packages green.
-- [ ] 2.6.2 `pnpm --filter @nhonh/design-tokens build` clean; `dist/generated/brand-css.ts` exists with 3-brand map.
-- [ ] 2.6.3 `pnpm --filter @nhonh/design-tokens test` 10+ pass (existing 10 + any new brand-registry tests).
+- [ ] 2.6.2 `pnpm --filter @ohmyperf/design-tokens build` clean; `dist/generated/brand-css.ts` exists with 3-brand map.
+- [ ] 2.6.3 `pnpm --filter @ohmyperf/design-tokens test` 10+ pass (existing 10 + any new brand-registry tests).
 - [ ] 2.6.4 `node scripts/check-design-tokens.mjs` exits 0 (calibre still gated; brand mirrors not yet token-emitting).
 - [ ] 2.6.5 `node scripts/check-contrast.mjs` exits 0 across all 4 brands × supported themes.
 - [ ] 2.6.6 `pnpm license:audit` exits 0; brand CSS files have Apache-2.0 header.
@@ -151,7 +151,7 @@ Five commits inside one OpenSpec change. Each commit lands independently passing
 
 - [ ] 3.3.1 `packages/viewer/src/render.ts`:
   - Extend `RenderViewerOptions` with `style?: BrandId` (default `"calibre"`)
-  - Import `getBrandCss`, `resolveTheme`, `BRAND_MANIFEST` from `@nhonh/design-tokens`
+  - Import `getBrandCss`, `resolveTheme`, `BRAND_MANIFEST` from `@ohmyperf/design-tokens`
   - Replace hard-coded `VIEWER_CSS` import composition with `getBrandCss(opts.style ?? "calibre", opts.theme ?? "system")` + `STRUCTURAL_CSS` concatenation
   - Add `console.warn` path for unsupported theme per R5 rules
 - [ ] 3.3.2 `packages/viewer/src/styles.ts` — split into two exports: `PALETTE_CSS_INJECTED` (now empty placeholder; brand CSS supplies it via getBrandCss) + `STRUCTURAL_CSS` (everything else, including new chart selectors from 3.2.1). Update VIEWER_CSS to be a function or keep as compatibility re-export of STRUCTURAL_CSS only.
@@ -173,7 +173,7 @@ Five commits inside one OpenSpec change. Each commit lands independently passing
 ### 3.5 Commit 3 acceptance
 
 - [ ] 3.5.1 `pnpm typecheck` workspace: 43/43 green.
-- [ ] 3.5.2 `pnpm --filter @nhonh/viewer test` ALL pass (46 existing + N new brand-snapshot tests).
+- [ ] 3.5.2 `pnpm --filter @ohmyperf/viewer test` ALL pass (46 existing + N new brand-snapshot tests).
 - [ ] 3.5.3 `grep -rE "CALIBRE_LIGHT|CALIBRE_DARK" packages/viewer/src packages/reporter-deck/src` returns 0 matches.
 - [ ] 3.5.4 `node scripts/check-contrast.mjs` still exits 0.
 - [ ] 3.5.5 `node scripts/check-design-tokens.mjs` still exits 0.
@@ -209,7 +209,7 @@ Five commits inside one OpenSpec change. Each commit lands independently passing
 ### 4.3 Visual regression test setup
 
 - [ ] 4.3.1 Create `tests/visual-regression/` workspace package:
-  - `package.json` — name `@nhonh/tests-visual-regression`, devDeps: `@playwright/test` (catalog), `@nhonh/viewer`, `@nhonh/reporter-deck`, `@nhonh/design-tokens`
+  - `package.json` — name `@ohmyperf/tests-visual-regression`, devDeps: `@playwright/test` (catalog), `@ohmyperf/viewer`, `@ohmyperf/reporter-deck`, `@ohmyperf/design-tokens`
   - `playwright.config.ts` — chromium only, ubuntu-only assertion (skip on other OS via test.skip)
   - `tsconfig.json`
   - `tests/brand-fixtures.test.ts` — for each `BrandId × {viewer,deck}`:
@@ -217,15 +217,15 @@ Five commits inside one OpenSpec change. Each commit lands independently passing
     - `page.goto('file://...')`
     - `page.setViewportSize({ width: 1280, height: 720 })`
     - `expect(await page.screenshot({ fullPage: true })).toMatchSnapshot('baselines/<surface>/<brand>.png', { maxDiffPixelRatio: 0.005 })`
-- [ ] 4.3.2 Generate initial baselines: `pnpm --filter @nhonh/tests-visual-regression test --update-snapshots`
+- [ ] 4.3.2 Generate initial baselines: `pnpm --filter @ohmyperf/tests-visual-regression test --update-snapshots`
 - [ ] 4.3.3 Commit baselines under `tests/visual-regression/baselines/`. ~6 PNGs for viewer (4 brands; linear-app rendered in dark; stripe + vercel + calibre in light) + ~4 PNGs for deck (always light) = ~10 baselines.
-- [ ] 4.3.4 Add `pnpm test:visual` root script: `turbo run test:visual --filter @nhonh/tests-visual-regression`
+- [ ] 4.3.4 Add `pnpm test:visual` root script: `turbo run test:visual --filter @ohmyperf/tests-visual-regression`
 - [ ] 4.3.5 Add `.github/workflows/visual-regression.yml` — ubuntu-24.04 only, runs on PRs touching `packages/design-tokens/brands` or `packages/viewer/src` or `packages/reporter-deck/src`. Uploads diff artifacts on failure.
 
 ### 4.4 Commit 4 acceptance
 
 - [ ] 4.4.1 `pnpm typecheck` workspace: 44/44 (43 + new visual-regression package) green.
-- [ ] 4.4.2 `pnpm --filter @nhonh/reporter-deck test` ALL pass (19 existing + N new brand-snapshot tests).
+- [ ] 4.4.2 `pnpm --filter @ohmyperf/reporter-deck test` ALL pass (19 existing + N new brand-snapshot tests).
 - [ ] 4.4.3 `pnpm test:visual` exits 0; baselines render deterministically on ubuntu-24.04.
 - [ ] 4.4.4 Bundle size: deck rendered with each brand from fixtures/rich.json ≤ 500 KB gz.
 - [ ] 4.4.5 Manual: open `tests/visual-regression/baselines/deck/linear-app.png` — visually confirm linear's purple accent appears on light slide chrome.
@@ -252,7 +252,7 @@ Five commits inside one OpenSpec change. Each commit lands independently passing
   - Imports `BRAND_MANIFEST`
   - Prints table to stdout: ID, Display Name, Preferred Theme, Supports Light, Supports Dark, License, Description
 - [ ] 5.2.2 Register `listStylesCommand` in `apps/cli/src/cli.ts` `subCommands` map.
-- [ ] 5.2.3 `apps/cli/package.json` already has `@nhonh/design-tokens` via `@nhonh/viewer` transitive; add direct workspace dep if needed for type re-export.
+- [ ] 5.2.3 `apps/cli/package.json` already has `@ohmyperf/design-tokens` via `@ohmyperf/viewer` transitive; add direct workspace dep if needed for type re-export.
 
 ### 5.3 MCP `list_styles` tool
 
@@ -261,7 +261,7 @@ Five commits inside one OpenSpec change. Each commit lands independently passing
     - Description: "List available visual styles (brand IDs + manifest metadata)."
     - Input schema: empty object
     - Handler: returns `{ content: [{ type: "text", text: "<table summary>" }, { type: "text", text: JSON.stringify(BRAND_MANIFEST, null, 2) }] }`
-- [ ] 5.3.2 Add `@nhonh/design-tokens` workspace dep to `apps/mcp-server/package.json` if not transitive.
+- [ ] 5.3.2 Add `@ohmyperf/design-tokens` workspace dep to `apps/mcp-server/package.json` if not transitive.
 
 ### 5.4 MCP `generate_deck` `style` arg
 
@@ -282,18 +282,18 @@ Five commits inside one OpenSpec change. Each commit lands independently passing
 
 - [ ] 5.6.1 Create `apps/website/components/report/style-picker.tsx`:
   - Headless dropdown (no shadcn additions); `<button>` + `<ul>` with `role="listbox"`
-  - Reads `BRAND_MANIFEST` from `@nhonh/design-tokens`
+  - Reads `BRAND_MANIFEST` from `@ohmyperf/design-tokens`
   - State: current style from URL `?style=<id>` query param (default `calibre`); persists to `localStorage["ohmyperf:style"]`
   - On change: updates URL via `router.push({ query: { style: newId } })` (Next.js useRouter)
 - [ ] 5.6.2 Update `apps/website/components/viewer/report-viewer.tsx` (or wherever `ReportViewer` lives):
   - Reads selected style from URL via `useSearchParams`
-  - Dynamic-imports `getBrandCss` from `@nhonh/design-tokens` and injects via a `<style id="ohmyperf-brand-css">` tag in the component tree
+  - Dynamic-imports `getBrandCss` from `@ohmyperf/design-tokens` and injects via a `<style id="ohmyperf-brand-css">` tag in the component tree
   - When style changes: replace the `<style>` block's textContent (no React tree rebuild)
 - [ ] 5.6.3 Update `apps/website/components/report/export-menu.tsx`:
   - Read selected style from URL
   - Pass `{ style: selectedStyle }` to `renderReportHtml` / `renderReportDeck` calls in "Download as HTML" / "Download as deck" handlers
 - [ ] 5.6.4 Update `apps/website/app/report/page.tsx` (or report layout) to render `<StylePicker />` in toolbar.
-- [ ] 5.6.5 `apps/website/package.json` — add `@nhonh/design-tokens` to dependencies (currently transitive via `@nhonh/reporter-markdown`, but make direct for clarity).
+- [ ] 5.6.5 `apps/website/package.json` — add `@ohmyperf/design-tokens` to dependencies (currently transitive via `@ohmyperf/reporter-markdown`, but make direct for clarity).
 - [ ] 5.6.6 Bundle budget check: `/report/[[...id]]` route stays ≤ 250 KB gz (brand CSS loaded via dynamic import lazily; not in initial bundle).
 
 ### 5.7 Documentation
@@ -319,7 +319,7 @@ Five commits inside one OpenSpec change. Each commit lands independently passing
 - [ ] 5.8.6 MCP smoke: stdio handshake → `tools/list` returns 12 tools incl. `list_styles` + `generate_html_report`.
 - [ ] 5.8.7 MCP smoke: `tools/call list_styles` returns BRAND_MANIFEST as JSON.
 - [ ] 5.8.8 MCP smoke: `tools/call generate_html_report reportPath=<x> style=stripe` writes file to disk, returns path.
-- [ ] 5.8.9 `pnpm --filter @nhonh/website build` succeeds; bundle budget gates pass.
+- [ ] 5.8.9 `pnpm --filter @ohmyperf/website build` succeeds; bundle budget gates pass.
 - [ ] 5.8.10 Manual: open website `/report/<id>` with `?style=vercel` → ReportViewer renders in vercel palette; brand picker dropdown shows selected; URL stays `?style=vercel`.
 - [ ] 5.8.11 `pnpm test:visual` exits 0 (baselines unchanged from Commit 4 — this commit doesn't change rendering logic, only adds UX surfaces).
 - [ ] 5.8.12 `pnpm license:audit` exits 0; NOTICE entries finalized.

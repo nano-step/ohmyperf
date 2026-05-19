@@ -1,5 +1,5 @@
-import type { Report } from "@nhonh/core";
-import { renderHorizontalBars } from "@nhonh/viewer/charts";
+import type { Report } from "@ohmyperf/core";
+import { renderHorizontalBars } from "@ohmyperf/viewer/charts";
 import { slideWrapper } from "../deck-shell.js";
 import { renderEmptyStateSlide } from "./empty-slide.js";
 

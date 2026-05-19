@@ -12,7 +12,7 @@
 | Decision | Resolution | Source |
 | --- | --- | --- |
 | Where taxonomy lives | `packages/core/src/taxonomy/v1.ts` as a frozen-object registry; leaf module. | Oracle §1 + §2 |
-| Source-map I/O package boundary | New workspace package `@nhonh/sourcemaps`; `core` stays browser-safe. | Oracle §1 |
+| Source-map I/O package boundary | New workspace package `@ohmyperf/sourcemaps`; `core` stays browser-safe. | Oracle §1 |
 | Source-map library | `@jridgewell/trace-mapping` (NOT Mozilla `source-map`, NOT `@jridgewell/source-map`). | Oracle §5 |
 | When source maps resolve | At `pluginRuntime.onReport`, never at collection. | Oracle §1 + §2 |
 | Stack-capture injection mechanism | `Page.addScriptToEvaluateOnNewDocument` + `Runtime.addBinding('__ohmyperf_inj')`, mirroring `cwv-collector.ts:85`. | Oracle §2 + §5 |

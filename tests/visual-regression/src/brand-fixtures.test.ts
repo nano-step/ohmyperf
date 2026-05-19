@@ -4,10 +4,10 @@ import { tmpdir, platform } from "node:os";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import type { Report } from "@nhonh/core";
-import { BRAND_IDS, BRAND_MANIFEST, type BrandId } from "@nhonh/design-tokens";
-import { renderReportHtml } from "@nhonh/viewer";
-import { renderReportDeck } from "@nhonh/reporter-deck";
+import type { Report } from "@ohmyperf/core";
+import { BRAND_IDS, BRAND_MANIFEST, type BrandId } from "@ohmyperf/design-tokens";
+import { renderReportHtml } from "@ohmyperf/viewer";
+import { renderReportDeck } from "@ohmyperf/reporter-deck";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const baselineDir = resolve(here, "..", "baselines");

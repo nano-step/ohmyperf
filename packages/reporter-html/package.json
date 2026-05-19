@@ -1,7 +1,7 @@
 {
-  "name": "@nhonh/reporter-html",
-  "version": "0.1.1",
-  "description": "Self-contained HTML reporter; embeds @nhonh/viewer output + the inert Report payload.",
+  "name": "@ohmyperf/reporter-html",
+  "version": "0.1.0",
+  "description": "Self-contained HTML reporter; embeds @ohmyperf/viewer output + the inert Report payload.",
   "license": "Apache-2.0",
   "engines": {
     "node": ">=22.0.0"
@@ -29,12 +29,12 @@
     "clean": "rimraf dist .turbo *.tsbuildinfo"
   },
   "peerDependencies": {
-    "@nhonh/core": "workspace:*",
-    "@nhonh/viewer": "workspace:*"
+    "@ohmyperf/core": "workspace:*",
+    "@ohmyperf/viewer": "workspace:*"
   },
   "devDependencies": {
-    "@nhonh/core": "workspace:*",
-    "@nhonh/viewer": "workspace:*",
+    "@ohmyperf/core": "workspace:*",
+    "@ohmyperf/viewer": "workspace:*",
     "vitest": "catalog:"
   },
   "publishConfig": {

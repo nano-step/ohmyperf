@@ -9,9 +9,9 @@ import {
   measure,
 } from "./index.js";
 
-describe("@nhonh/core surface", () => {
+describe("@ohmyperf/core surface", () => {
   it("exports stable identity constants", () => {
-    expect(PACKAGE_NAME).toBe("@nhonh/core");
+    expect(PACKAGE_NAME).toBe("@ohmyperf/core");
     expect(SCHEMA_VERSION).toBe("1.0.0");
   });
 

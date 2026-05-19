@@ -1,7 +1,7 @@
 'use client';
 
 import type { RunnerErrorCode } from '@/lib/runner-client';
-import type { ErrorCode } from '@nhonh/shared-types';
+import type { ErrorCode } from '@ohmyperf/shared-types';
 import Link from 'next/link';
 
 type AnyErrorCode = RunnerErrorCode | ErrorCode | string;

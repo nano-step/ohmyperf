@@ -1,4 +1,4 @@
-import type { Logger } from "@nhonh/core";
+import type { Logger } from "@ohmyperf/core";
 import type { Frame, Page } from "playwright";
 import {
   type AttachedToTargetEvent,

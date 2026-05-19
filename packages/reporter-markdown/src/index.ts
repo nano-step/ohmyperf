@@ -1,4 +1,4 @@
-import type { AggregatedMetric, Metric, Report, RunReport } from "@nhonh/core";
+import type { AggregatedMetric, Metric, Report, RunReport } from "@ohmyperf/core";
 
 export const REPORTER_ID = "markdown" as const;
 

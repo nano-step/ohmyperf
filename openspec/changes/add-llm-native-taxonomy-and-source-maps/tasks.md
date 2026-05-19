@@ -32,12 +32,12 @@ Phasing rationale: **B1 (taxonomy) is foundational** — B4 absences reference t
   - Optional sibling fields: `MetricAttribution.sourceLocation?`, `LongTask.sourceLocation?`, `Resource.injectionPath?`.
   - **Top-level on `Report`**: `diagnoses?`, `absences?`, `taxonomyVersion?`, `warnings?: ReadonlyArray<{ id: string; count?: number; detail?: string }>`, `degradations?: ReadonlyArray<{ capability: PluginDegradationCapability; reason: string }>`.
   - **Top-level on `RunReport`**: `pluginData?: Readonly<Record<string, unknown>>` — used by `dom-snapshot.ts` collector to store the snapshot per-run.
-  - **On `Report.artifacts`**: `codeWindowRefs?: ReadonlyArray<ArtifactRef>` (additive optional) — emitted by `@nhonh/sourcemaps` when `codeWindow === 'artifact'`.
+  - **On `Report.artifacts`**: `codeWindowRefs?: ReadonlyArray<ArtifactRef>` (additive optional) — emitted by `@ohmyperf/sourcemaps` when `codeWindow === 'artifact'`.
   - Verify NO existing field is widened/narrowed/removed (run `tsc --noEmit` against fixtures from `tests/fixtures/reports/`). Existing `ReportMeta.degradations` is untouched — `DriverCapability` is NOT widened.
 
-## B2. Source-map resolution (`@nhonh/sourcemaps`)
+## B2. Source-map resolution (`@ohmyperf/sourcemaps`)
 
-- [ ] B2.1 Create new workspace package `packages/sourcemaps/` (name `@nhonh/sourcemaps`). `package.json` with `"engines": { "node": ">=20" }`. Add `@jridgewell/trace-mapping` as runtime dep. Add to `pnpm-workspace.yaml`.
+- [ ] B2.1 Create new workspace package `packages/sourcemaps/` (name `@ohmyperf/sourcemaps`). `package.json` with `"engines": { "node": ">=20" }`. Add `@jridgewell/trace-mapping` as runtime dep. Add to `pnpm-workspace.yaml`.
 - [ ] B2.2 Implement `packages/sourcemaps/src/resolver.ts`:
   - `class SourceMapResolver(config: SourceMapConfig)`.
   - `async resolve(url: string, line: number, column: number): Promise<SourceLocation | null>`.
@@ -82,7 +82,7 @@ Phasing rationale: **B1 (taxonomy) is foundational** — B4 absences reference t
     - Read accumulated records via `await session.send('Runtime.evaluate', { expression: 'JSON.stringify(window.__ohmyperf_injections || [])', returnByValue: true })`.
     - Parse each record's `stack` into raw `SourceLocation[]` (top frame first) using V8 stack-format regex (`at <fn> (<url>:<line>:<col>)`). **Each entry has `resolved: false`** and `file` = the minified URL.
     - For each `Resource` in the report whose URL matches a captured record's `src`, attach `resource.injectionPath = locations[0..N]` (immediate inserter first; only depth-1 in v1 per MVA cut).
-    - `@nhonh/sourcemaps` later rewrites entries to `resolved: true` form during its `onReport` hook.
+    - `@ohmyperf/sourcemaps` later rewrites entries to `resolved: true` form during its `onReport` hook.
 - [ ] B3.4 CSP fallback: wrap `Page.addScriptToEvaluateOnNewDocument` in try/catch; on error, return a new `Report` from `finalize()` with `degradations` extended by `{ capability: 'injection-attribution', reason: <err.message> }` and skip the collector — DO NOT throw, DO NOT mutate (Report is deep-readonly; use returned-new-Report pattern via the engine's `report-spread` boundary).
 - [ ] B3.5 OOPIF coverage: confirm the existing `Target.setAutoAttach` flow (in `cwv-collector.ts`) bubbles `Page.addScriptToEvaluateOnNewDocument` into child frames. If not, add per-frame init-script registration in the auto-attach handler. Per-frame `window.__ohmyperf_injections` arrays are read and merged at finalize.
 - [ ] B3.6 Static `<script src=...>` mapping: explicitly **out of scope for v1** (see MVA cuts). For static tags, `resource.injectionPath` is `undefined`. Tasks for v2.1 (HTML-source mapping) documented in a follow-up issue but not blocking.
@@ -140,7 +140,7 @@ Phasing rationale: **B1 (taxonomy) is foundational** — B4 absences reference t
   - `Report.degradations?: ReadonlyArray<{ capability: PluginDegradationCapability; reason: string }>` exists.
   - `PluginDegradationCapability` union is defined and exported.
   - **`ReportMeta.degradations` is UNTOUCHED** — `DriverCapability` is NOT widened to include `'source-maps'`/`'injection-attribution'`. (Driver vs plugin degradation capabilities are kept distinct unions.)
-- [ ] B5.5 Extend `ReportCtx` for plugin artifact emission. Current `ReportCtx` is `{ logger }`; @nhonh/sourcemaps needs to write code-window bytes that end up on `Report.artifacts.codeWindowRefs`. Add (additive only) to `ReportCtx`:
+- [ ] B5.5 Extend `ReportCtx` for plugin artifact emission. Current `ReportCtx` is `{ logger }`; @ohmyperf/sourcemaps needs to write code-window bytes that end up on `Report.artifacts.codeWindowRefs`. Add (additive only) to `ReportCtx`:
   - `artifacts: { put(kind: 'codeWindow' | 'sourceMap', bytes: Uint8Array): Promise<ArtifactRef> }` — returns an `ArtifactRef { sha256, bytes }` and stages it for the engine to attach to `Report.artifacts.codeWindowRefs` (or `sourceMapRefs`) at finalize. Implementation lives in `engine.ts` post-onReport-spread; the engine collates plugin-emitted artifacts and writes the array on the next Report iteration.
   - Update `Report.artifacts` to include `codeWindowRefs?: ReadonlyArray<ArtifactRef>`.
   - This is the **only** new public-API surface for plugins introduced by this change; document it in `packages/core/README.md`.

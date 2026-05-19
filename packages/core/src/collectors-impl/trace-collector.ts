@@ -1,4 +1,4 @@
-import { parseTrace, type MainThreadTask, type TraceEvent } from "@nhonh/trace-utils";
+import { parseTrace, type MainThreadTask, type TraceEvent } from "@ohmyperf/trace-utils";
 import type { CDPSessionLike, Logger, LongTask } from "../types.js";
 
 export interface TraceCollectorHandle {

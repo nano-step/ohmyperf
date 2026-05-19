@@ -1,4 +1,4 @@
-# @nhonh/reporter-har
+# @ohmyperf/reporter-har
 
 HTTP Archive (HAR) reporter with redaction applied.
 

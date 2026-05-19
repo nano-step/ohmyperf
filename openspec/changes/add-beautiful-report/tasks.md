@@ -9,7 +9,7 @@ Four commits inside one OpenSpec change. Each commit lands independently passing
 ### 1.1 Package scaffold
 
 - [ ] 1.1.1 Create `packages/design-tokens/` workspace package:
-  - `package.json` — name `@nhonh/design-tokens`, version `0.0.0-pre`, license `Apache-2.0`, type `module`, main + types + exports map, `engines.node >= 22`, no runtime deps, devDep on `vitest` + `@microsoft/api-extractor` catalog versions.
+  - `package.json` — name `@ohmyperf/design-tokens`, version `0.0.0-pre`, license `Apache-2.0`, type `module`, main + types + exports map, `engines.node >= 22`, no runtime deps, devDep on `vitest` + `@microsoft/api-extractor` catalog versions.
   - `tsconfig.json` — extends `../../tsconfig.base.json`, references nothing.
   - `src/index.ts` — TS const exports: `CALIBRE_LIGHT`, `CALIBRE_DARK`, `paletteCssVars(scheme)`, `PALETTE_CSS` template string.
   - `src/index.css` — same CSS string written separately for raw `@import` consumers.
@@ -17,7 +17,7 @@ Four commits inside one OpenSpec change. Each commit lands independently passing
   - `api-extractor.json` — mirror `packages/core/api-extractor.json`.
   - `README.md` — documents canonical-source-is-globals.css decision, how to add a token.
 - [ ] 1.1.2 Add `packages/design-tokens` to workspace pnpm-workspace.yaml (if explicit; pnpm typically auto-discovers).
-- [ ] 1.1.3 `pnpm install`, then `pnpm --filter @nhonh/design-tokens build` clean.
+- [ ] 1.1.3 `pnpm install`, then `pnpm --filter @ohmyperf/design-tokens build` clean.
 
 ### 1.2 Palette values
 
@@ -49,7 +49,7 @@ Four commits inside one OpenSpec change. Each commit lands independently passing
 ### 1.5 Commit 1 acceptance
 
 - [ ] 1.5.1 `pnpm typecheck` clean across workspace (39+1=40 packages now).
-- [ ] 1.5.2 `pnpm --filter @nhonh/design-tokens test` 3+ tests pass.
+- [ ] 1.5.2 `pnpm --filter @ohmyperf/design-tokens test` 3+ tests pass.
 - [ ] 1.5.3 `node scripts/check-design-tokens.mjs` exits 0.
 - [ ] 1.5.4 `node scripts/check-contrast.mjs` exits 0 (no regression).
 - [ ] 1.5.5 No visual change in `apps/website` or `packages/viewer` (pure scaffold commit).
@@ -69,7 +69,7 @@ Four commits inside one OpenSpec change. Each commit lands independently passing
   - `index.ts` — barrel re-export.
 - [ ] 2.1.2 Update `packages/viewer/package.json`:
   - Add `"./charts"` to `exports` map.
-  - Add workspace dep `"@nhonh/design-tokens": "workspace:*"`.
+  - Add workspace dep `"@ohmyperf/design-tokens": "workspace:*"`.
 - [ ] 2.1.3 Update `packages/viewer/etc/viewer.api.md` (api-extractor regen).
 - [ ] 2.1.4 vitest: render each chart against synthetic input, snapshot test. Negative test: `safeNumeric` strips `NaN`/`Infinity`/strings.
 
@@ -83,7 +83,7 @@ Four commits inside one OpenSpec change. Each commit lands independently passing
 ### 2.3 Styles rewrite
 
 - [ ] 2.3.1 Rewrite `packages/viewer/src/styles.ts`:
-  - Replace hard-coded hex palette with `import { PALETTE_CSS } from "@nhonh/design-tokens"`.
+  - Replace hard-coded hex palette with `import { PALETTE_CSS } from "@ohmyperf/design-tokens"`.
   - Add `@media print` block: CWV cards stay legible (icons + pattern fills, no background colors), tables use solid borders, hyperlinks show their URL via `a[href]::after { content: " (" attr(href) ")"; }`.
   - Add empty-state card styles (`.empty-state` with subdued success-tinted background).
   - Add new section styles: `.hero`, `.cwv-grid`, `.cwv-card`, `.third-parties`, `.donut`.
@@ -150,14 +150,14 @@ Four commits inside one OpenSpec change. Each commit lands independently passing
 
 ### 2.9 Commit 2 acceptance
 
-- [ ] 2.9.1 `pnpm --filter @nhonh/viewer typecheck` clean.
-- [ ] 2.9.2 `pnpm --filter @nhonh/viewer test` all tests pass (snapshot, security, print).
+- [ ] 2.9.1 `pnpm --filter @ohmyperf/viewer typecheck` clean.
+- [ ] 2.9.2 `pnpm --filter @ohmyperf/viewer test` all tests pass (snapshot, security, print).
 - [ ] 2.9.3 `pnpm typecheck` workspace clean.
 - [ ] 2.9.4 `node scripts/check-design-tokens.mjs` exits 0.
 - [ ] 2.9.5 `node scripts/check-contrast.mjs` exits 0.
 - [ ] 2.9.6 `node scripts/check-bundle-budgets.mjs --artifact report.html.gz --report-input packages/viewer/fixtures/rich.json` exits 0.
 - [ ] 2.9.7 Open `report.html` (rendered from `fixtures/rich.json`) in Chrome/Safari/Firefox manually — visual sanity check. (Local user action, not CI.)
-- [ ] 2.9.8 Existing CLI `pnpm --filter @nhonh/cli build && node apps/cli/dist/cli.js run --url https://example.com` succeeds and emits a beautiful `report.html`.
+- [ ] 2.9.8 Existing CLI `pnpm --filter @ohmyperf/cli build && node apps/cli/dist/cli.js run --url https://example.com` succeeds and emits a beautiful `report.html`.
 
 ---
 
@@ -166,13 +166,13 @@ Four commits inside one OpenSpec change. Each commit lands independently passing
 ### 3.1 Package scaffold
 
 - [ ] 3.1.1 Create `packages/reporter-deck/`:
-  - `package.json` — name `@nhonh/reporter-deck`, version `0.0.0-pre`, license `Apache-2.0`, type `module`. Mirrors `packages/reporter-html/package.json` exactly: same fields, same engines, same devDeps shape.
-  - Workspace deps: `@nhonh/core` (peer), `@nhonh/viewer` (charts subpath), `@nhonh/design-tokens`.
-  - `tsconfig.json` extends base, references `@nhonh/viewer` + `@nhonh/design-tokens`.
+  - `package.json` — name `@ohmyperf/reporter-deck`, version `0.0.0-pre`, license `Apache-2.0`, type `module`. Mirrors `packages/reporter-html/package.json` exactly: same fields, same engines, same devDeps shape.
+  - Workspace deps: `@ohmyperf/core` (peer), `@ohmyperf/viewer` (charts subpath), `@ohmyperf/design-tokens`.
+  - `tsconfig.json` extends base, references `@ohmyperf/viewer` + `@ohmyperf/design-tokens`.
   - `api-extractor.json` mirrors `packages/reporter-html/api-extractor.json`.
   - `etc/reporter-deck.api.md` — api-extractor snapshot from day 1.
   - `README.md` — boundary doc (Swiss layouts + Calibre palette), keyboard nav, print-to-PDF, v1.0 limits + v1.1 stretch.
-- [ ] 3.1.2 `pnpm install`, then `pnpm --filter @nhonh/reporter-deck build` clean.
+- [ ] 3.1.2 `pnpm install`, then `pnpm --filter @ohmyperf/reporter-deck build` clean.
 
 ### 3.2 Deck shell
 
@@ -198,11 +198,11 @@ Four commits inside one OpenSpec change. Each commit lands independently passing
   - Single accent stripe (Calibre blue).
 - [ ] 3.3.2 `src/slides/cwv.ts` → `renderCwvSlide(report: Report): string`:
   - 6-tile grid (large traffic-light cards), one per CWV metric.
-  - Reuses `renderCwvCard` from `@nhonh/viewer/charts`.
+  - Reuses `renderCwvCard` from `@ohmyperf/viewer/charts`.
   - Headline interpretation line ("4 metrics good, 1 needs improvement, 1 poor").
 - [ ] 3.3.3 `src/slides/opportunities.ts` → `renderOpportunitiesSlide(report: Report): string`:
   - Top 5 opportunities by `wastedMs`.
-  - Horizontal bar chart via `renderHorizontalBars` from `@nhonh/viewer/charts`.
+  - Horizontal bar chart via `renderHorizontalBars` from `@ohmyperf/viewer/charts`.
   - Empty-state slide if no opportunities (`renderEmptyStateSlide("No opportunities detected ✓")`).
 - [ ] 3.3.4 `src/slides/third-parties.ts` → `renderThirdPartiesSlide(report: Report): string`:
   - Donut chart + top-5 entity list with main-thread time + transfer size.
@@ -226,7 +226,7 @@ Four commits inside one OpenSpec change. Each commit lands independently passing
   - `writeDeckReport(report, outputDir, opts): Promise<DeckReporterResult>` — mirrors `writeHtmlReport` from `packages/reporter-html/src/index.ts`.
   - `renderReportToString(report, opts)` re-export.
   - `REPORTER_ID = "deck"`.
-- [ ] 3.4.3 Re-export `escape.ts` from `@nhonh/viewer` (no duplication): `export { escapeHtml, safeUrl, safeNumeric } from "@nhonh/viewer/escape"`. (If `@nhonh/viewer` doesn't expose `escape` subpath, add `"./escape"` to its `exports` map in Commit 2 task 2.2.)
+- [ ] 3.4.3 Re-export `escape.ts` from `@ohmyperf/viewer` (no duplication): `export { escapeHtml, safeUrl, safeNumeric } from "@ohmyperf/viewer/escape"`. (If `@ohmyperf/viewer` doesn't expose `escape` subpath, add `"./escape"` to its `exports` map in Commit 2 task 2.2.)
 - [ ] 3.4.4 api-extractor snapshot.
 
 ### 3.5 Tests
@@ -253,8 +253,8 @@ Four commits inside one OpenSpec change. Each commit lands independently passing
 
 ### 3.7 Commit 3 acceptance
 
-- [ ] 3.7.1 `pnpm --filter @nhonh/reporter-deck typecheck` clean.
-- [ ] 3.7.2 `pnpm --filter @nhonh/reporter-deck test` all tests pass.
+- [ ] 3.7.1 `pnpm --filter @ohmyperf/reporter-deck typecheck` clean.
+- [ ] 3.7.2 `pnpm --filter @ohmyperf/reporter-deck test` all tests pass.
 - [ ] 3.7.3 `pnpm typecheck` workspace clean (41 packages now).
 - [ ] 3.7.4 `node scripts/check-design-tokens.mjs` exits 0 (deck dist now in scope).
 - [ ] 3.7.5 `node scripts/check-contrast.mjs` exits 0 (deck artifact in scope).
@@ -267,33 +267,33 @@ Four commits inside one OpenSpec change. Each commit lands independently passing
 
 ### 4.1 CLI integration
 
-- [ ] 4.1.1 Add workspace dep `@nhonh/reporter-deck` to `apps/cli/package.json`.
+- [ ] 4.1.1 Add workspace dep `@ohmyperf/reporter-deck` to `apps/cli/package.json`.
 - [ ] 4.1.2 Add `packages/reporter-deck` to `apps/cli/tsconfig.json` references.
 - [ ] 4.1.3 Update `apps/cli/src/commands/run.ts`:
-  - Import `writeDeckReport` from `@nhonh/reporter-deck`.
+  - Import `writeDeckReport` from `@ohmyperf/reporter-deck`.
   - After existing `writeHtmlReport` invocation, call `writeDeckReport(report, outputDir, opts)`.
   - Log line: `Wrote report-deck.html (${path.relative(cwd, deckPath)})`.
   - Failures: catch + log as WARN; do not fail the run (deck is opt-out-by-failure, viewer/json are critical path).
-- [ ] 4.1.4 `pnpm --filter @nhonh/cli typecheck` clean; `pnpm --filter @nhonh/cli test` passes; existing `tests/parity/lighthouse-parity.test.ts` still green.
+- [ ] 4.1.4 `pnpm --filter @ohmyperf/cli typecheck` clean; `pnpm --filter @ohmyperf/cli test` passes; existing `tests/parity/lighthouse-parity.test.ts` still green.
 
 ### 4.2 MCP `generate_deck` tool
 
-- [ ] 4.2.1 Add workspace dep `@nhonh/reporter-deck` to `apps/mcp-server/package.json` devDeps.
+- [ ] 4.2.1 Add workspace dep `@ohmyperf/reporter-deck` to `apps/mcp-server/package.json` devDeps.
 - [ ] 4.2.2 Update `apps/mcp-server/src/server.ts`:
-  - Import `writeDeckReport` from `@nhonh/reporter-deck`.
+  - Import `writeDeckReport` from `@ohmyperf/reporter-deck`.
   - Register new tool `generate_deck` in ListTools handler:
     - Input schema: `{ reportPath?: string, uri?: string, outputDir?: string }`.
     - Description: "Render a saved report as a multi-slide presentation HTML deck. Writes to disk and returns the file path. Does not return body inline."
   - Handler (CallTool): resolve report via `resolveReportRef(reportsDir, args)`, default outputDir to `${reportsDir}/decks/`, call `writeDeckReport`, return `{ content: [{ type: "text", text: "Wrote deck to ${path}" }, { type: "text", text: JSON.stringify({ path, bytes }, null, 2) }] }`.
 - [ ] 4.2.3 Optionally add `track_deck` companion prompt that sequences `track_url` → `generate_deck` for a "weekly perf digest" flow. Decide at implementation time; default = skip.
-- [ ] 4.2.4 `pnpm --filter @nhonh/mcp-server typecheck` clean; `pnpm --filter @nhonh/mcp-server test` 13+ tests pass (existing + any new).
+- [ ] 4.2.4 `pnpm --filter @ohmyperf/mcp-server typecheck` clean; `pnpm --filter @ohmyperf/mcp-server test` 13+ tests pass (existing + any new).
 - [ ] 4.2.5 Layered MCP smoke (Python script mirroring Phase 2 testing pattern):
   - `tools/list` includes `generate_deck`.
   - `tools/call generate_deck reportPath=fixtures/rich.json outputDir=/tmp/...` returns a path; file exists; size < 500KB gzipped.
 
 ### 4.3 Website export-menu
 
-- [ ] 4.3.1 Add workspace dep `@nhonh/reporter-deck` + `@nhonh/viewer` (charts) to `apps/website/package.json`. Confirm both are browser-safe (no Node deps).
+- [ ] 4.3.1 Add workspace dep `@ohmyperf/reporter-deck` + `@ohmyperf/viewer` (charts) to `apps/website/package.json`. Confirm both are browser-safe (no Node deps).
 - [ ] 4.3.2 Update `apps/website/components/report/export-menu.tsx`:
   - New item "Download as deck" between "Download HTML" and "Download JSON".
   - On click: import `renderReportDeck` client-side (dynamic import to avoid SSR bundle bloat), render to string, create Blob, trigger download as `report-deck.html`.
@@ -327,7 +327,7 @@ Four commits inside one OpenSpec change. Each commit lands independently passing
 
 - [ ] 4.7.1 `pnpm typecheck` workspace clean (41 packages).
 - [ ] 4.7.2 `pnpm test` workspace passes (existing + new tests).
-- [ ] 4.7.3 `pnpm --filter @nhonh/cli build && node apps/cli/dist/cli.js run --url https://example.com --browserPath /opt/chromium --runs 1 --mode real` → emits `report.html` + `report-deck.html` + `report.json`. Both HTMLs render in browser.
+- [ ] 4.7.3 `pnpm --filter @ohmyperf/cli build && node apps/cli/dist/cli.js run --url https://example.com --browserPath /opt/chromium --runs 1 --mode real` → emits `report.html` + `report-deck.html` + `report.json`. Both HTMLs render in browser.
 - [ ] 4.7.4 MCP layered smoke (mirroring previous test):
   - `tools/list` includes `generate_deck` (10 tools now).
   - `tools/call generate_deck` writes deck file.
@@ -359,5 +359,5 @@ Four commits inside one OpenSpec change. Each commit lands independently passing
 - Theme toggle UI in viewer (button + localStorage).
 - Vietnamese locale extraction via `__I18N_KEY__` annotations.
 - Detailed LCP/INP/CLS breakdown sections in viewer (port `apps/website/components/insights/*` to vanilla).
-- `@nhonh/design-primitives` package extraction if third consumer emerges.
+- `@ohmyperf/design-primitives` package extraction if third consumer emerges.
 - Email-client-safe HTML variant.

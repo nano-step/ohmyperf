@@ -2,12 +2,12 @@
 
 import { useState } from 'react';
 import { Loader2, Share2 } from 'lucide-react';
-import type { Report } from '@nhonh/core';
+import type { Report } from '@ohmyperf/core';
 import {
   uploadReport,
   ShareUploadError,
   ShareSecretLeakError,
-} from '@nhonh/share-client';
+} from '@ohmyperf/share-client';
 import { toast } from 'sonner';
 import { getShareEndpoint } from '@/lib/env';
 
@@ -83,7 +83,7 @@ export function ShareButton({ report }: Props) {
             <p className="font-medium mb-1">Share endpoint not configured.</p>
             <p className="text-muted-foreground mb-2">
               Set <code className="font-mono">NEXT_PUBLIC_SHARE_ENDPOINT</code> to a deployed{' '}
-              <code className="font-mono">@nhonh/share-server</code>, or self-host one.
+              <code className="font-mono">@ohmyperf/share-server</code>, or self-host one.
             </p>
             <a
               href="/docs/measurement-spa-deploy.md"

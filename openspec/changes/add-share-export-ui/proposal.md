@@ -4,7 +4,7 @@
 
 The post-MVP audit (Sisyphus 2026-05-17) found two gaps that limit OhMyPerf's daily usefulness:
 
-1. **The SPA has zero share/export UI.** `@nhonh/share-client` exists and works end-to-end via CLI (`ohmyperf share report.json`). `@nhonh/share-server` is fully implemented (Hono + R2 + D1 adapter, FileSystem adapter, redaction pipeline). But the SPA's `/report` route has no "Share via link" button, no "Download JSON" button, no "Copy as Markdown" button. The website's `package.json` doesn't even depend on `@nhonh/share-client`. Every measurement is trapped in the user's IndexedDB.
+1. **The SPA has zero share/export UI.** `@ohmyperf/share-client` exists and works end-to-end via CLI (`ohmyperf share report.json`). `@ohmyperf/share-server` is fully implemented (Hono + R2 + D1 adapter, FileSystem adapter, redaction pipeline). But the SPA's `/report` route has no "Share via link" button, no "Download JSON" button, no "Copy as Markdown" button. The website's `package.json` doesn't even depend on `@ohmyperf/share-client`. Every measurement is trapped in the user's IndexedDB.
 
 2. **The Report UI is a colorless data dump.** `apps/website/app/globals.css` defines the entire design palette in OKLCH with `chroma=0` (pure grayscale). There is no brand hue. The `ReportViewer` doesn't use any shadcn components — it's raw Tailwind divs and tables. Six fully-built components in `apps/website/components/metrics/` (`Waterfall`, collapsible `FrameTree`, `VarianceBanner`, `MetricRow`, `AuditsList`, `WaterfallChart`) are **orphaned** — never imported by `ReportViewer`. `uplot` is installed as a dependency but used nowhere.
 
@@ -16,15 +16,15 @@ User chose **Calibre / SpeedCurve** as the visual direction: perf-tool aesthetic
 
 ### Added — Share + Export
 
-- `apps/website/package.json` — add `@nhonh/share-client: workspace:*` dependency.
+- `apps/website/package.json` — add `@ohmyperf/share-client: workspace:*` dependency.
 - `apps/website/lib/env.ts` — read `NEXT_PUBLIC_SHARE_ENDPOINT` (optional). When unset, share UI shows "Self-host a share-server to enable sharing" instead of being broken.
 - `apps/website/components/report/share-button.tsx` — primary action button. On click:
   - If endpoint unset: open a popover explaining `OHMYPERF_SHARE_ENDPOINT` env var + Workers deploy link.
-  - If endpoint set: call `uploadReport({ endpoint, report })` from `@nhonh/share-client`. Show loading state. On success: copy `url` to clipboard + show toast "Share link copied" with the URL displayed.
+  - If endpoint set: call `uploadReport({ endpoint, report })` from `@ohmyperf/share-client`. Show loading state. On success: copy `url` to clipboard + show toast "Share link copied" with the URL displayed.
   - On `ShareSecretLeakError`: show a destructive dialog listing the leaked keys + suggest `--unsafe-share-with-secrets` flag (CLI only).
 - `apps/website/components/report/export-menu.tsx` — secondary action. shadcn `DropdownMenu` with items:
   - "Download JSON" — `new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' })` → `<a download>`.
-  - "Copy as Markdown" — call `renderMarkdown(report)` from `@nhonh/reporter-markdown` (browser-safe, no Node APIs). Copy result to clipboard.
+  - "Copy as Markdown" — call `renderMarkdown(report)` from `@ohmyperf/reporter-markdown` (browser-safe, no Node APIs). Copy result to clipboard.
   - "Copy as JSON (compact)" — single-line JSON to clipboard.
 - `apps/website/app/report/page.tsx` — wire `ShareButton` + `ExportMenu` into the report toolbar (next to "← All reports").
 - `packages/share-server/wrangler.toml` — NEW deployment config (Workers + R2 + D1 bindings). Includes inline comment instructions for `wrangler d1 create` / `wrangler r2 bucket create`.
@@ -66,7 +66,7 @@ User chose **Calibre / SpeedCurve** as the visual direction: perf-tool aesthetic
 
 ## Pinned design decisions (Phase 2 synthesis 2026-05-17)
 
-- **`reporter-markdown` browser-safety fix = split package**: Add `./node` subpath export for `writeMarkdownReport` (fs-using wrapper). Keep `renderMarkdown` in root `./index` with no `node:*` imports. SPA imports `renderMarkdown` from `@nhonh/reporter-markdown`; CLI imports `writeMarkdownReport` from `@nhonh/reporter-markdown/node`. Cleanest boundary; no inline reimplementation in SPA.
+- **`reporter-markdown` browser-safety fix = split package**: Add `./node` subpath export for `writeMarkdownReport` (fs-using wrapper). Keep `renderMarkdown` in root `./index` with no `node:*` imports. SPA imports `renderMarkdown` from `@ohmyperf/reporter-markdown`; CLI imports `writeMarkdownReport` from `@ohmyperf/reporter-markdown/node`. Cleanest boundary; no inline reimplementation in SPA.
 - **Visual reference PINNED**: Calibre (https://calibreapp.com homepage + product screenshots). Muted-blue accent, clean perf-tool aesthetic. NOT SpeedCurve (which is more chart-heavy and multi-accent — looser fit for OhMyPerf's report-centric UX).
 - **Track C-prep parallel lane**: tasks C0/C1/C6/C7 + shadcn-add + uplot-removal + reporter-markdown-split START IMMEDIATELY in parallel with Track A. Zero engine dependency. Saves ~1 day wall-clock.
 - **OKLCH palette WCAG-verified values**:

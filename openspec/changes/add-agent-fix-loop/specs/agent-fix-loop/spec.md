@@ -123,17 +123,17 @@ The `verifyFix({ baselineReportId, patch, runs?, focusMetrics?, apply })` librar
 
 ### Requirement: Apply mode is narrowed to 'worktree' in v1
 
-The v1 public TypeScript surface (`ApplyMode` exported from `@nhonh/agent-loop`) MUST be the literal `'worktree'`. The MCP tool's zod schema MUST accept only `'worktree'` for the `apply` argument; any other value MUST fail input validation BEFORE entering library code. v1.1 will broaden the union to include `'in-place'` when that work lands.
+The v1 public TypeScript surface (`ApplyMode` exported from `@ohmyperf/agent-loop`) MUST be the literal `'worktree'`. The MCP tool's zod schema MUST accept only `'worktree'` for the `apply` argument; any other value MUST fail input validation BEFORE entering library code. v1.1 will broaden the union to include `'in-place'` when that work lands.
 
 #### Scenario: in-place mode is rejected at schema validation
 
 - **WHEN** an MCP client calls `verify_fix({ ..., apply: "in-place" })`
-- **THEN** the call fails with an MCP `InvalidParams` error before reaching `@nhonh/agent-loop` code
+- **THEN** the call fails with an MCP `InvalidParams` error before reaching `@ohmyperf/agent-loop` code
 - **AND** the error message includes the allowed enum `["worktree"]`
 
 #### Scenario: TypeScript type narrows to 'worktree'
 
-- **GIVEN** a TypeScript consumer imports `ApplyMode` from `@nhonh/agent-loop`
+- **GIVEN** a TypeScript consumer imports `ApplyMode` from `@ohmyperf/agent-loop`
 - **WHEN** code attempts `const mode: ApplyMode = "in-place"`
 - **THEN** TypeScript reports a type error (the literal `'in-place'` is not assignable to `ApplyMode`)
 
@@ -192,7 +192,7 @@ Every `CanonicalEdit.filePath` MUST be validated by `worktree-manager.safety.ass
 
 ### Requirement: Worktree cleanup is guaranteed on success, failure, and crash
 
-`@nhonh/worktree-manager` MUST destroy any worktree it creates upon successful completion. On exception or `SIGINT`/`SIGTERM`, the atexit handler MUST run synchronous cleanup. On hard crash (`SIGKILL`), the janitor sweeping `/tmp/ohmyperf-verify-*` on next ohmyperf startup MUST remove the orphaned worktree, provided its PID-lockfile references a non-alive process.
+`@ohmyperf/worktree-manager` MUST destroy any worktree it creates upon successful completion. On exception or `SIGINT`/`SIGTERM`, the atexit handler MUST run synchronous cleanup. On hard crash (`SIGKILL`), the janitor sweeping `/tmp/ohmyperf-verify-*` on next ohmyperf startup MUST remove the orphaned worktree, provided its PID-lockfile references a non-alive process.
 
 #### Scenario: Successful verify leaves /tmp clean
 
@@ -265,7 +265,7 @@ When `focusMetrics` has length k > 1, the verdict logic MUST apply Holm step-dow
 
 ### Requirement: Bundle-size budget for repair-archetypes
 
-`@nhonh/repair-archetypes` MUST satisfy two CI gates:
+`@ohmyperf/repair-archetypes` MUST satisfy two CI gates:
 
 - Eager bundle (registry index + framework-detect logic, loaded on every import) ≤ **8 KB gz**.
 - Total bundle (registry + lazy archetype chunks summed) ≤ **50 KB gz**.

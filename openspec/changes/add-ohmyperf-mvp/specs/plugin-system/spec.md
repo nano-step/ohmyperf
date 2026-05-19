@@ -93,7 +93,7 @@ The engine SHALL maintain a project-local `ohmyperf.lock.json` recording every p
 - **THEN** `ohmyperf.lock.json` is regenerated to match the new plugin set
 
 ### Requirement: Built-in vs third-party plugin trust
-Built-in plugins (those shipped under `@nhonh/plugins-*`) SHALL load without prompting. Third-party plugins (any other package or relative path) SHALL trigger a one-time interactive trust confirmation per plugin per machine on first use. CI mode SHALL automatically trust everything in the lockfile and SHALL refuse anything outside it.
+Built-in plugins (those shipped under `@ohmyperf/plugins-*`) SHALL load without prompting. Third-party plugins (any other package or relative path) SHALL trigger a one-time interactive trust confirmation per plugin per machine on first use. CI mode SHALL automatically trust everything in the lockfile and SHALL refuse anything outside it.
 
 #### Scenario: First-time third-party prompt (interactive)
 - **WHEN** the user runs `ohmyperf <url>` on a TTY for the first time with a third-party plugin in `ohmyperf.config.ts`
@@ -121,14 +121,14 @@ A shared/exported report (JSON, HTML, hosted-share-link) SHALL be inert data onl
 The engine SHALL discover plugins exclusively from explicit configuration in `ohmyperf.config.ts` (the `plugins` array) or the `plugins` argument to `measure()`. The engine SHALL NOT auto-load plugins by package-name convention or directory scanning in v1.
 
 #### Scenario: Plugin not in config is not loaded
-- **WHEN** `@nhonh/plugin-cwv` is installed in `node_modules` but not listed in `ohmyperf.config.ts`
+- **WHEN** `@ohmyperf/plugin-cwv` is installed in `node_modules` but not listed in `ohmyperf.config.ts`
 - **THEN** measurement runs without invoking that plugin's hooks
 
 ### Requirement: Three reference plugins ship with v1
 The repository SHALL ship at least three plugins under `packages/plugins-builtin/` that demonstrate the plugin lifecycle and serve as the basis for first-party functionality:
-1. `@nhonh/plugin-cwv` — CWV collection (LCP/CLS/INP/FCP/TTFB) via `web-vitals/attribution`.
-2. `@nhonh/plugin-axe` — accessibility audit via `axe-core`.
-3. `@nhonh/plugin-custom-metric-example` — a documented example showing how to register a user-defined metric.
+1. `@ohmyperf/plugin-cwv` — CWV collection (LCP/CLS/INP/FCP/TTFB) via `web-vitals/attribution`.
+2. `@ohmyperf/plugin-axe` — accessibility audit via `axe-core`.
+3. `@ohmyperf/plugin-custom-metric-example` — a documented example showing how to register a user-defined metric.
 
 #### Scenario: Built-ins are discoverable
 - **WHEN** a user runs `ohmyperf list-plugins`

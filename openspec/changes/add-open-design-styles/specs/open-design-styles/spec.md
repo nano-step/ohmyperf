@@ -10,9 +10,9 @@ The render-time `style` option on `renderReportHtml(report, opts)` and `renderRe
 
 ### R1 — Strict BrandId union
 
-The package `@nhonh/design-tokens` MUST export a strict TypeScript union literal type for valid brand identifiers.
+The package `@ohmyperf/design-tokens` MUST export a strict TypeScript union literal type for valid brand identifiers.
 
-**WHEN** a developer imports `BrandId` from `@nhonh/design-tokens`
+**WHEN** a developer imports `BrandId` from `@ohmyperf/design-tokens`
 **THEN** the type MUST be exactly `"calibre" | "linear-app" | "stripe" | "vercel"`
 **AND** MUST NOT be a wider type (`string` or `BrandIdentifier`).
 
@@ -23,9 +23,9 @@ The package `@nhonh/design-tokens` MUST export a strict TypeScript union literal
 
 ### R2 — Brand registry contract
 
-`@nhonh/design-tokens` MUST expose a brand registry sufficient for runtime style resolution.
+`@ohmyperf/design-tokens` MUST expose a brand registry sufficient for runtime style resolution.
 
-**WHEN** a developer imports `BRAND_MANIFEST` from `@nhonh/design-tokens`
+**WHEN** a developer imports `BRAND_MANIFEST` from `@ohmyperf/design-tokens`
 **THEN** the export MUST be `Readonly<Record<BrandId, BrandManifest>>`
 **AND** each manifest MUST include: `id`, `displayName`, `preferredTheme` (`"light"|"dark"`), `supportsLight: boolean`, `supportsDark: boolean`, `description`, `license`
 **AND** vendored brands (non-calibre) MUST also include `upstreamSha: string`.
@@ -254,7 +254,7 @@ This change MUST NOT regress invariants from `add-beautiful-report`.
 **THEN** `Report.schemaVersion` MUST remain `"1.0.0"`
 **AND** `packages/core/src/types.ts` MUST NOT change
 **AND** `packages/core/etc/core.api.md` MUST have zero diff
-**AND** `@nhonh/design-tokens` MUST NOT remove any existing export (`CALIBRE_LIGHT`, `CALIBRE_DARK`, `PALETTE_CSS`, `PALETTE_CSS_LIGHT_ONLY`, `TOKEN_NAMES`, `paletteCssVars`)
+**AND** `@ohmyperf/design-tokens` MUST NOT remove any existing export (`CALIBRE_LIGHT`, `CALIBRE_DARK`, `PALETTE_CSS`, `PALETTE_CSS_LIGHT_ONLY`, `TOKEN_NAMES`, `paletteCssVars`)
 **AND** `packages/design-tokens/etc/design-tokens.api.md` diff MUST be additive only (only new exports for `BrandId`, `BRAND_IDS`, `BRAND_MANIFEST`, `getBrandCss`, `resolveTheme`, `BrandManifest`)
 **AND** the viewer + deck single-file no-external-requests guarantee MUST hold (per R8)
 **AND** bundle budgets MUST hold per artifact per brand (viewer ≤ 200 KB gz; deck ≤ 500 KB gz).

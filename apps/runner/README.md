@@ -1,6 +1,6 @@
-# `@nhonh/runner`
+# `@ohmyperf/runner`
 
-Local Docker self-host HTTP runner for OhMyPerf. Wraps `@nhonh/core` 1.0 + Playwright behind a Hono HTTP server. Powers the SPA "Local runner" path (Phase α of `add-measurement-spa`).
+Local Docker self-host HTTP runner for OhMyPerf. Wraps `@ohmyperf/core` 1.0 + Playwright behind a Hono HTTP server. Powers the SPA "Local runner" path (Phase α of `add-measurement-spa`).
 
 ## Quickstart
 
@@ -34,7 +34,7 @@ curl http://127.0.0.1:5174/api/jobs/$JOB
 | GET    | `/api/jobs/:id/events`     | SSE stream of `ProgressEvent`s + 15s heartbeat comments.     |
 | DELETE | `/api/jobs/:id`            | Cancel an in-flight job. Returns `204`.                      |
 
-Event types in the SSE stream: `queued`, `run-start`, `navigation`, `metric`, `run-complete`, `complete`, `error`, `cancelled`. See `@nhonh/shared-types` for the discriminated union.
+Event types in the SSE stream: `queued`, `run-start`, `navigation`, `metric`, `run-complete`, `complete`, `error`, `cancelled`. See `@ohmyperf/shared-types` for the discriminated union.
 
 ## Environment variables
 
@@ -75,27 +75,27 @@ If you need durable history use the CLI (`ohmyperf run`) or the SPA's IndexedDB 
 
 ```sh
 pnpm install
-pnpm --filter @nhonh/shared-types build
-pnpm --filter @nhonh/runner build
+pnpm --filter @ohmyperf/shared-types build
+pnpm --filter @ohmyperf/runner build
 
 # Production-style start
-pnpm --filter @nhonh/runner start
+pnpm --filter @ohmyperf/runner start
 
 # Watch mode (uses Node 22 strip-types so no tsx needed)
-pnpm --filter @nhonh/runner dev
+pnpm --filter @ohmyperf/runner dev
 ```
 
 Run the test suite (no real Playwright required for these tests — the engine is mocked via dependency injection):
 
 ```sh
-pnpm --filter @nhonh/runner test
+pnpm --filter @ohmyperf/runner test
 ```
 
 To run the runner against real targets, install Playwright browsers locally:
 
 ```sh
 pnpm dlx playwright install chromium
-pnpm --filter @nhonh/runner start
+pnpm --filter @ohmyperf/runner start
 ```
 
 ## Known limitations (v1)

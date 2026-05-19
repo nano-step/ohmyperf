@@ -53,7 +53,7 @@ Six commits across two PRs. Each commit lands independently passing typecheck + 
   - Test: stripe's `--elev-raised` after sync matches upstream byte-for-byte (modulo documented font-strip + color-mix-precompute transforms).
   - Test: vercel's `--elev-raised` after sync matches upstream byte-for-byte.
   - Test: linear-app's `--elev-raised` after sync matches upstream byte-for-byte.
-- [ ] 1.3.2 Wire test into `pnpm --filter @nhonh/design-tokens test` via vitest or standalone runner.
+- [ ] 1.3.2 Wire test into `pnpm --filter @ohmyperf/design-tokens test` via vitest or standalone runner.
 
 #### 1.4 STRUCTURAL_CSS visual neutrality assertion
 
@@ -63,12 +63,12 @@ Six commits across two PRs. Each commit lands independently passing typecheck + 
 #### 1.5 Commit 1 acceptance
 
 - [ ] 1.5.1 `pnpm typecheck` workspace: 44/44 packages green.
-- [ ] 1.5.2 `pnpm --filter @nhonh/design-tokens test` 32+ tests pass (existing + 3 new sync byte-fidelity).
+- [ ] 1.5.2 `pnpm --filter @ohmyperf/design-tokens test` 32+ tests pass (existing + 3 new sync byte-fidelity).
 - [ ] 1.5.3 `pnpm check:design-tokens` exits 0 (drift gate covers expanded calibre surface).
 - [ ] 1.5.4 `pnpm check:contrast` exits 0 (4 existing accent tokens still gate).
 - [ ] 1.5.5 `pnpm check:brand-licenses` exits 0.
-- [ ] 1.5.6 `pnpm --filter @nhonh/viewer test` 73+ pass (existing snapshots unchanged).
-- [ ] 1.5.7 `pnpm --filter @nhonh/reporter-deck test` 41+ pass.
+- [ ] 1.5.6 `pnpm --filter @ohmyperf/viewer test` 73+ pass (existing snapshots unchanged).
+- [ ] 1.5.7 `pnpm --filter @ohmyperf/reporter-deck test` 41+ pass.
 - [ ] 1.5.8 Bundle size: viewer artifact still ≤ 200 KB gz per brand.
 
 ---
@@ -120,7 +120,7 @@ Six commits across two PRs. Each commit lands independently passing typecheck + 
 
 - [ ] 3.1.1 Create `packages/viewer/src/structural-overrides.ts`:
   ```ts
-  import type { BrandId } from "@nhonh/design-tokens";
+  import type { BrandId } from "@ohmyperf/design-tokens";
   
   export const BRAND_STRUCTURAL_OVERRIDES: Readonly<Record<BrandId, string>> = {
     calibre: "",
@@ -162,7 +162,7 @@ Six commits across two PRs. Each commit lands independently passing typecheck + 
 - [ ] 3.4.2 Override map size test passes.
 - [ ] 3.4.3 `pnpm api:check` passes — `getDeckBrandOverlay` signature unchanged (just deprecated; no breaking).
 - [ ] 3.4.4 All existing tests pass.
-- [ ] 3.4.5 `pnpm --filter @nhonh/viewer test` brand snapshots show:
+- [ ] 3.4.5 `pnpm --filter @ohmyperf/viewer test` brand snapshots show:
   - Vercel viewer HTML contains `.cwv-card { border: none }`
   - Linear-app viewer HTML does NOT contain `.cwv-card { border: none }`
 
@@ -220,7 +220,7 @@ Six commits across two PRs. Each commit lands independently passing typecheck + 
 #### 4.5 Commit 4 acceptance
 
 - [ ] 4.5.1 `pnpm typecheck` workspace: 44/44 green.
-- [ ] 4.5.2 `pnpm --filter @nhonh/reporter-deck test` brand-snapshot tests assert dark/light per brand.
+- [ ] 4.5.2 `pnpm --filter @ohmyperf/reporter-deck test` brand-snapshot tests assert dark/light per brand.
 - [ ] 4.5.3 Bundle size: deck artifact still ≤ 500 KB gz per brand.
 - [ ] 4.5.4 Manual render: linear-app deck visibly dark; stripe/vercel/calibre decks visibly light.
 
@@ -327,8 +327,8 @@ Six commits across two PRs. Each commit lands independently passing typecheck + 
 
 - [ ] 5.4.1 `pnpm typecheck` workspace: 44/44 green.
 - [ ] 5.4.2 `pnpm check:contrast` exits 0 (extended gate).
-- [ ] 5.4.3 `pnpm --filter @nhonh/viewer test` includes new structural-signature tests; ALL PASS.
-- [ ] 5.4.4 `pnpm --filter @nhonh/reporter-deck test` includes deck signature tests; ALL PASS.
+- [ ] 5.4.3 `pnpm --filter @ohmyperf/viewer test` includes new structural-signature tests; ALL PASS.
+- [ ] 5.4.4 `pnpm --filter @ohmyperf/reporter-deck test` includes deck signature tests; ALL PASS.
 - [ ] 5.4.5 Override map cap test passes.
 
 ---
@@ -380,7 +380,7 @@ Six commits across two PRs. Each commit lands independently passing typecheck + 
 - [ ] X.4 `pnpm check:design-tokens`: drift gate green.
 - [ ] X.5 `pnpm check:brand-licenses`: Apache-2.0 + provenance green.
 - [ ] X.6 `pnpm check:bundle-budgets`: viewer ≤ 200 KB gz, deck ≤ 500 KB gz per brand.
-- [ ] X.7 `pnpm api:check`: `@nhonh/design-tokens` surface additive-only (`getDeckBrandOverlay` deprecated but signature unchanged).
+- [ ] X.7 `pnpm api:check`: `@ohmyperf/design-tokens` surface additive-only (`getDeckBrandOverlay` deprecated but signature unchanged).
 - [ ] X.8 `pnpm test:visual`: 14 baselines match on ubuntu-CI.
 - [ ] X.9 Manual end-to-end smoke: `ohmyperf run https://example.com --style=<each>` produces visually-distinct viewer+deck artifacts per brand.
 - [ ] X.10 Manual website smoke: `/report/<id>?style=<each>` renders with full brand structural identity (not just color swap).

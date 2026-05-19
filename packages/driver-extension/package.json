@@ -1,5 +1,5 @@
 {
-  "name": "@nhonh/driver-extension",
+  "name": "@ohmyperf/driver-extension",
   "version": "0.0.0-pre",
   "description": "Driver implementation backed by chrome.debugger. Used by the Chrome extension surface.",
   "license": "Apache-2.0",
@@ -29,10 +29,10 @@
     "clean": "rimraf dist .turbo *.tsbuildinfo"
   },
   "peerDependencies": {
-    "@nhonh/core": "workspace:*"
+    "@ohmyperf/core": "workspace:*"
   },
   "devDependencies": {
-    "@nhonh/core": "workspace:*",
+    "@ohmyperf/core": "workspace:*",
     "vitest": "catalog:"
   },
   "private": true

@@ -4,7 +4,7 @@ import type {
   MeasureRequest,
   ProgressEvent,
   Report,
-} from "@nhonh/shared-types";
+} from "@ohmyperf/shared-types";
 import type { Config } from "./config.js";
 import { EventBus } from "./events.js";
 import { executeJob, type EngineRunner } from "./runner.js";

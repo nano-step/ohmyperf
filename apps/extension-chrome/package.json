@@ -1,5 +1,5 @@
 {
-  "name": "@nhonh/extension-chrome",
+  "name": "@ohmyperf/extension-chrome",
   "version": "0.0.0-pre",
   "description": "MV3 Chrome extension; chrome.debugger-backed real-device runner.",
   "license": "Apache-2.0",
@@ -22,10 +22,10 @@
     "clean": "rimraf dist .turbo extension-dist *.tsbuildinfo"
   },
   "devDependencies": {
-    "@nhonh/core": "workspace:*",
-    "@nhonh/driver-extension": "workspace:*",
-    "@nhonh/shared-types": "workspace:*",
-    "@nhonh/viewer": "workspace:*",
+    "@ohmyperf/core": "workspace:*",
+    "@ohmyperf/driver-extension": "workspace:*",
+    "@ohmyperf/shared-types": "workspace:*",
+    "@ohmyperf/viewer": "workspace:*",
     "esbuild": "^0.24.0",
     "vitest": "catalog:"
   },

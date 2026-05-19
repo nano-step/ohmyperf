@@ -1,9 +1,9 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
-import type { Report, RunReport, Metric } from "@nhonh/core";
+import type { Report, RunReport, Metric } from "@ohmyperf/core";
 
 export const REPORTER_ID = "csv" as const;
-export const PACKAGE_NAME = "@nhonh/reporter-csv" as const;
+export const PACKAGE_NAME = "@ohmyperf/reporter-csv" as const;
 export const PACKAGE_ROLE = "CSV reporter (long format, per-metric-per-run)." as const;
 
 export interface CsvReporterOptions {

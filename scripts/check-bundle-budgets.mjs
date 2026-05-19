@@ -21,7 +21,7 @@ const manifestPath = join(websiteRoot, '.next', 'app-build-manifest.json');
 const manifest = await readJson(manifestPath);
 
 if (!manifest) {
-  console.error(`Cannot find ${manifestPath}. Run 'pnpm --filter @nhonh/website build' first.`);
+  console.error(`Cannot find ${manifestPath}. Run 'pnpm --filter @ohmyperf/website build' first.`);
   process.exit(2);
 }
 

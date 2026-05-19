@@ -1,6 +1,6 @@
-export const SHARED_TYPES_PACKAGE = "@nhonh/shared-types" as const;
+export const SHARED_TYPES_PACKAGE = "@ohmyperf/shared-types" as const;
 
-export type { Report, BrowserInfo, ReportMeta, RunReport, Mode } from "@nhonh/core";
+export type { Report, BrowserInfo, ReportMeta, RunReport, Mode } from "@ohmyperf/core";
 
 export type CacheMode = "cold" | "warm" | "cold-then-warm";
 
@@ -68,7 +68,7 @@ export interface ProgressEventRunComplete {
 export interface ProgressEventComplete {
   readonly type: "complete";
   readonly jobId: string;
-  readonly report: import("@nhonh/core").Report;
+  readonly report: import("@ohmyperf/core").Report;
   readonly t: number;
 }
 
@@ -146,7 +146,7 @@ export interface MeasureAcceptedResponse {
 export interface JobPollResponse {
   readonly id: string;
   readonly status: JobStatus;
-  readonly report?: import("@nhonh/core").Report;
+  readonly report?: import("@ohmyperf/core").Report;
   readonly error?: { readonly code: ErrorCode; readonly message: string };
 }
 
@@ -281,7 +281,7 @@ export type PortEvent =
       readonly protocolVersion: ProtocolVersion;
       readonly type: "complete";
       readonly jobId: string;
-      readonly report: import("@nhonh/core").Report;
+      readonly report: import("@ohmyperf/core").Report;
       readonly ts: number;
     }
   | {

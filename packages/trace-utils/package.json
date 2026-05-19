@@ -1,6 +1,6 @@
 {
-  "name": "@nhonh/trace-utils",
-  "version": "0.1.1",
+  "name": "@ohmyperf/trace-utils",
+  "version": "0.1.0",
   "description": "Vendored tracium-equivalent. MainThreadTasks parsing, function attribution.",
   "license": "Apache-2.0",
   "engines": {

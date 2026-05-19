@@ -18,7 +18,7 @@ import {
   type StreamPortHandle,
 } from '@/lib/extension-bridge';
 import { saveReport, saveJob } from '@/lib/storage';
-import type { MeasureRequest, Report } from '@nhonh/shared-types';
+import type { MeasureRequest, Report } from '@ohmyperf/shared-types';
 
 function MeasureContent() {
   const searchParams = useSearchParams();

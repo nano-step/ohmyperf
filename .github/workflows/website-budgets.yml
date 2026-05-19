@@ -26,6 +26,6 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - run: pnpm --filter "@nhonh/website..." build
+      - run: pnpm --filter "@ohmyperf/website..." build
 
       - run: node scripts/check-bundle-budgets.mjs

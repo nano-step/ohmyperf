@@ -1,4 +1,4 @@
-export const PACKAGE_NAME = "@nhonh/design-tokens" as const;
+export const PACKAGE_NAME = "@ohmyperf/design-tokens" as const;
 
 export interface PaletteScheme {
   readonly background: string;

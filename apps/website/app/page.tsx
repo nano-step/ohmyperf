@@ -48,7 +48,7 @@ export default function LandingPage() {
               <span className="text-sm font-medium">Install the CLI</span>
               <span className="ml-auto text-xs bg-muted px-2 py-0.5 rounded-full">CLI</span>
             </div>
-            <pre tabIndex={0} role="region" aria-label="CLI install commands" className="rounded-md bg-muted p-3 text-xs overflow-x-auto focus-visible:outline-2 focus-visible:outline-ring"><code>{`npm i -g @nhonh/cli\nohmyperf install-browser\nohmyperf run https://example.com`}</code></pre>
+            <pre tabIndex={0} role="region" aria-label="CLI install commands" className="rounded-md bg-muted p-3 text-xs overflow-x-auto focus-visible:outline-2 focus-visible:outline-ring"><code>{`npm i -g @ohmyperf/cli\nohmyperf install-browser\nohmyperf run https://example.com`}</code></pre>
             <p className="text-xs text-muted-foreground mt-2">Requires Node.js 20+ on macOS, Linux, or Windows.</p>
           </div>
           <div className="rounded-lg border border-border bg-card p-4">

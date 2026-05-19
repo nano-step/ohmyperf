@@ -4,8 +4,8 @@ import type {
   EngineLaunchAdapter,
   EnginePageContext,
   Logger,
-} from "@nhonh/core";
-import { createSilentLogger } from "@nhonh/core";
+} from "@ohmyperf/core";
+import { createSilentLogger } from "@ohmyperf/core";
 import {
   createPlaywrightDriver,
   pageHandleAsTarget,

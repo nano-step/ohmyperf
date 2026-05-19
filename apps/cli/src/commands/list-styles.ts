@@ -1,5 +1,5 @@
 import { defineCommand } from "citty";
-import { BRAND_IDS, BRAND_MANIFEST } from "@nhonh/design-tokens";
+import { BRAND_IDS, BRAND_MANIFEST } from "@ohmyperf/design-tokens";
 
 export const listStylesCommand = defineCommand({
   meta: {

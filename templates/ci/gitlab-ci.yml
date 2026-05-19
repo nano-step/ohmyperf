@@ -22,7 +22,7 @@ ohmyperf:measure:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   before_script:
-    - npm install -g @nhonh/cli
+    - npm install -g @ohmyperf/cli
     - ohmyperf install-browser
     - export OHMYPERF_CHROMIUM_PATH=$(find ~/.cache/ms-playwright /opt/playwright-browsers -type f -path '*/chromium-*/chrome-linux/chrome' 2>/dev/null | head -1)
     - test -n "$OHMYPERF_CHROMIUM_PATH" || (echo "Chromium binary not found after install" && exit 1)

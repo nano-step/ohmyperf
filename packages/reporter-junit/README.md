@@ -1,4 +1,4 @@
-# `@nhonh/reporter-junit`
+# `@ohmyperf/reporter-junit`
 
 JUnit XML reporter for ohmyperf. One `<testcase>` per budget threshold.
 
@@ -6,12 +6,12 @@ JUnit XML reporter for ohmyperf. One `<testcase>` per budget threshold.
 - Failed thresholds surface as native test failures in CI test runners.
 - Use via `ohmyperf run --format=junit` then publish as a JUnit artifact in your CI.
 
-Part of the [ohmyperf](https://github.com/hoainho/ohmyperf) monorepo. Most users install the [`@nhonh/cli`](https://www.npmjs.com/package/@nhonh/cli) or [`@nhonh/mcp-server`](https://www.npmjs.com/package/@nhonh/mcp-server) binary rather than this package directly.
+Part of the [ohmyperf](https://github.com/hoainho/ohmyperf) monorepo. Most users install the [`@ohmyperf/cli`](https://www.npmjs.com/package/@ohmyperf/cli) or [`@ohmyperf/mcp-server`](https://www.npmjs.com/package/@ohmyperf/mcp-server) binary rather than this package directly.
 
 ## Install
 
 ```bash
-npm install @nhonh/reporter-junit
+npm install @ohmyperf/reporter-junit
 ```
 
 Requires Node ≥ 22.

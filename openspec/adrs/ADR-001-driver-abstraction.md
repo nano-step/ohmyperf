@@ -11,10 +11,10 @@ OhMyPerf must drive a real browser to collect measurements. Three orchestration 
 
 ## Decision
 
-Define a `Driver` interface in `@nhonh/core/types`. Ship two v1 implementations:
+Define a `Driver` interface in `@ohmyperf/core/types`. Ship two v1 implementations:
 
-1. `@nhonh/driver-playwright` — wraps Playwright. The default driver for CLI/SDK/IDE. For Chromium-deep work, calls `context.newCDPSession(target)` to send raw CDP. All raw CDP goes through a single `cdp-compat.ts` shim.
-2. `@nhonh/driver-extension` — wraps `chrome.debugger`. The driver for the Chrome extension surface.
+1. `@ohmyperf/driver-playwright` — wraps Playwright. The default driver for CLI/SDK/IDE. For Chromium-deep work, calls `context.newCDPSession(target)` to send raw CDP. All raw CDP goes through a single `cdp-compat.ts` shim.
+2. `@ohmyperf/driver-extension` — wraps `chrome.debugger`. The driver for the Chrome extension surface.
 
 Drop `puppeteer-core` from v1 entirely. The `Driver` interface keeps the door open for it as a third implementation later.
 
@@ -36,6 +36,6 @@ The Driver's `browserVersion` field is **the source of truth** for the browser r
 
 ## Compliance / Validation
 
-- Lint rule: `Protocol.*` types from `playwright/types/protocol` MUST NOT appear in `@nhonh/core` public exports. Enforced via `api-extractor` snapshot in CI.
+- Lint rule: `Protocol.*` types from `playwright/types/protocol` MUST NOT appear in `@ohmyperf/core` public exports. Enforced via `api-extractor` snapshot in CI.
 - Acceptance test: `report.meta.browser.version` always equals `driver.browserVersion`.
 - The OOPIF synthetic test corpus runs against both drivers (Playwright + Extension) in CI to guard against drift.

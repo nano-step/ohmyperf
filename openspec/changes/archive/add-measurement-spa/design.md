@@ -5,7 +5,7 @@
 1. **Zero-friction first measurement** on landing page: user enters URL → sees CWV results without leaving the site.
 2. **Zero cloud cost** for production deployment (`ohmyperf.dev` = static export on CF Pages).
 3. **Two measurement paths** with identical `Report` output: (a) Chrome extension via `chrome.debugger` for instant zero-infra path; (b) Docker-self-host Node runner via Playwright for users who prefer not to install extension OR are on Firefox/Safari.
-4. **Reuse frozen engine** (`@nhonh/core` 1.0) without modification.
+4. **Reuse frozen engine** (`@ohmyperf/core` 1.0) without modification.
 5. **Dogfood**: SPA itself must pass OhMyPerf's own CWV gate on its landing page.
 
 ## Architecture overview
@@ -45,9 +45,9 @@ User browser (Chromium-based, Chrome/Edge ideal)
                           │ stream back to SPA   │    │      events (SSE)    │
                           │                      │    │ GET  /api/health     │
                           │ Uses                 │    │                      │
-                          │  @nhonh/core      │    │ Uses                 │
-                          │  @nhonh/driver-   │    │  @nhonh/core      │
-                          │  extension           │    │  @nhonh/driver-   │
+                          │  @ohmyperf/core      │    │ Uses                 │
+                          │  @ohmyperf/driver-   │    │  @ohmyperf/core      │
+                          │  extension           │    │  @ohmyperf/driver-   │
                           └──────────┬───────────┘    │  playwright          │
                                      │                └──────────┬───────────┘
                                      │                           │
@@ -130,10 +130,10 @@ Document trade-off in `/docs` or runner README.
 `packages/viewer/` currently exports `renderReportHtml(report: Report): string`. We add:
 
 - NEW: `packages/viewer/src/react/ReportViewer.tsx` — full React component tree mirroring HTML output (CWV summary tiles, waterfall, frame tree, audits list, redaction badges, schema version gate).
-- PRESERVE: `renderReportHtml` for `@nhonh/reporter-html` (used by CLI).
+- PRESERVE: `renderReportHtml` for `@ohmyperf/reporter-html` (used by CLI).
 - Both share `packages/viewer/src/format.ts` for ms/bytes/threshold formatters.
 
-SPA imports `@nhonh/viewer` for `<ReportViewer report={...} />` on `/viewer` and `/report/[id]`.
+SPA imports `@ohmyperf/viewer` for `<ReportViewer report={...} />` on `/viewer` and `/report/[id]`.
 
 Implementation: extract render logic into framework-agnostic functions, then thin React wrapper. Maintain test parity (`render.test.ts` covers both outputs).
 
@@ -280,7 +280,7 @@ Recharts is dynamic-imported via `next/dynamic({ ssr: false })` so it never ente
 
 Weekly cron in GitHub Actions:
 ```yaml
-- run: pnpm --filter @nhonh/cli build
+- run: pnpm --filter @ohmyperf/cli build
 - run: ./apps/cli/bin/ohmyperf run https://ohmyperf.dev --mode ci-stable --runs 5 --format json
 - run: node scripts/assert-perf-budget.mjs ohmyperf-out/report.json
 ```

@@ -54,9 +54,9 @@
 ### TypeScript regression check
 
 ```
-✓ pnpm --filter @nhonh/website typecheck      → clean (tsc --noEmit)
-✓ pnpm --filter @nhonh/runner typecheck       → clean (tsc -b)
-✓ pnpm --filter @nhonh/extension-chrome typecheck → clean (tsc -b)
+✓ pnpm --filter @ohmyperf/website typecheck      → clean (tsc --noEmit)
+✓ pnpm --filter @ohmyperf/runner typecheck       → clean (tsc -b)
+✓ pnpm --filter @ohmyperf/extension-chrome typecheck → clean (tsc -b)
 ```
 
 ### Build artifacts present

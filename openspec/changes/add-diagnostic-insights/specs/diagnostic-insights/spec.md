@@ -100,6 +100,6 @@ The long-tasks table SHALL apply visual emphasis to tasks ≥ 100ms (amber) and 
 The SPA `/report/[[...id]]` route (the key used in `scripts/bundle-budgets.json`) SHALL stay under 250 KB First Load JS (gzipped).
 
 #### Scenario: Bundle budget check passes
-- **WHEN** `pnpm --filter @nhonh/website analyze:check` runs after this change
+- **WHEN** `pnpm --filter @ohmyperf/website analyze:check` runs after this change
 - **THEN** the `/report/[[...id]]` route bundle is ≤ 250 KB gzip
 - **AND** the existing CI gate (`.github/workflows/website-budgets.yml`) fails the build on overage

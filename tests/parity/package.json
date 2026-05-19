@@ -1,5 +1,5 @@
 {
-  "name": "@nhonh/tests-parity",
+  "name": "@ohmyperf/tests-parity",
   "version": "0.0.0-pre",
   "description": "Lighthouse parity test harness for Track A acceptance. Gated behind pnpm test:parity (not in default pnpm test).",
   "license": "Apache-2.0",
@@ -11,9 +11,9 @@
     "clean": "rimraf dist .turbo *.tsbuildinfo"
   },
   "devDependencies": {
-    "@nhonh/core": "workspace:*",
-    "@nhonh/driver-playwright": "workspace:*",
-    "@nhonh/plugins-builtin": "workspace:*",
+    "@ohmyperf/core": "workspace:*",
+    "@ohmyperf/driver-playwright": "workspace:*",
+    "@ohmyperf/plugins-builtin": "workspace:*",
     "lighthouse": "^13.3.0",
     "playwright": "catalog:",
     "vitest": "catalog:"

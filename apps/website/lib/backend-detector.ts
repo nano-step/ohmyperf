@@ -1,4 +1,4 @@
-import { PROTOCOL_VERSION } from '@nhonh/shared-types';
+import { PROTOCOL_VERSION } from '@ohmyperf/shared-types';
 
 import { env } from './env';
 

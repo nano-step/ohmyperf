@@ -1,11 +1,11 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { createSilentLogger, runEngine, type Report } from "@nhonh/core";
-import { createPlaywrightAdapter } from "@nhonh/driver-playwright";
+import { createSilentLogger, runEngine, type Report } from "@ohmyperf/core";
+import { createPlaywrightAdapter } from "@ohmyperf/driver-playwright";
 import {
   axePlugin,
   customMetricExamplePlugin,
   cwvPlugin,
-} from "@nhonh/plugins-builtin";
+} from "@ohmyperf/plugins-builtin";
 import { startFixtureServer, type FixtureServerHandle } from "./index.js";
 
 let server: FixtureServerHandle | undefined;

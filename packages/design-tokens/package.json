@@ -1,6 +1,6 @@
 {
-  "name": "@nhonh/design-tokens",
-  "version": "0.1.1",
+  "name": "@ohmyperf/design-tokens",
+  "version": "0.1.0",
   "description": "Calibre OKLCH palette tokens shared by viewer + reporter-deck + website. Single source of truth interface; canonical source remains apps/website/app/globals.css.",
   "license": "Apache-2.0",
   "engines": {

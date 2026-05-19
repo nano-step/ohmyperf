@@ -49,14 +49,14 @@ Extension ID: ${extensionId}
 
 Next steps:
   1. Build the extension (bundle script will inject the key automatically):
-       pnpm --filter @nhonh/extension-chrome build
+       pnpm --filter @ohmyperf/extension-chrome build
   2. Open chrome://extensions
   3. Enable "Developer mode" (top-right toggle)
   4. Click "Load unpacked"
   5. Select directory: ${join(extRoot, "extension-dist")}
   6. Verify the extension ID matches: ${extensionId}
   7. Restart the SPA dev server so .env.local is picked up:
-       pnpm --filter @nhonh/website dev
+       pnpm --filter @ohmyperf/website dev
   8. Open http://localhost:3000 — backend detector should now find the extension.
 
 The keypair at .dev-keys/extension.pem is git-ignored. Keep it stable so the

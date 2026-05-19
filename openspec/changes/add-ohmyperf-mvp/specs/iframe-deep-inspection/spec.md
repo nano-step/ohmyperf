@@ -107,7 +107,7 @@ When a navigation response is served by a Service Worker (CDP `Network.responseR
 - **AND** `report.runs[0].metrics.ttfb.source === 'service-worker'`
 
 ### Requirement: SPA soft-nav default
-By default the engine SHALL NOT reset CWV windows on `Page.navigatedWithinDocument` events. CWV windows continue to accumulate per the `web-vitals` library's session-window semantics. A first-party plugin (`@nhonh/plugin-spa-route-cwv`) MAY opt in to per-route CWV reset.
+By default the engine SHALL NOT reset CWV windows on `Page.navigatedWithinDocument` events. CWV windows continue to accumulate per the `web-vitals` library's session-window semantics. A first-party plugin (`@ohmyperf/plugin-spa-route-cwv`) MAY opt in to per-route CWV reset.
 
 #### Scenario: Soft-nav does not reset CLS
 - **WHEN** measurement runs a scenario that performs a `history.pushState` mid-run after CLS has already accumulated

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import type { Report, AggregatedMetric } from '@nhonh/core';
+import type { Report, AggregatedMetric } from '@ohmyperf/core';
 import { rateMetric, RATING_COLORS, formatMs, formatScore } from '@/lib/format';
 
 const GAUGE_METRICS = ['lcp', 'fcp', 'ttfb', 'inp', 'cls'] as const;

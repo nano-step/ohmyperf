@@ -1,4 +1,4 @@
--- @nhonh/share-server — initial D1 schema
+-- @ohmyperf/share-server — initial D1 schema
 -- Mirrors the D1_SCHEMA constant in src/workers.ts.
 -- Apply with: wrangler d1 migrations apply ohmyperf-share-prod
 

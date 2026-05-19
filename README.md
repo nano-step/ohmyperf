@@ -4,32 +4,32 @@
 > Lighthouse and PageSpeed Insights run on synthetic CPUs in a Google datacenter.
 > OhMyPerf runs on **your hardware** with **your browser** and reports what your users actually experience.
 
-**v0.1.1** · **License**: Apache-2.0 · **npm**: [`@nhonh/cli`](https://www.npmjs.com/package/@nhonh/cli) + [`@nhonh/mcp-server`](https://www.npmjs.com/package/@nhonh/mcp-server) · **Repo**: [`hoainho/ohmyperf`](https://github.com/hoainho/ohmyperf)
+**v0.1.0** · **License**: Apache-2.0 · **npm**: [`@ohmyperf/cli`](https://www.npmjs.com/package/@ohmyperf/cli) + [`@ohmyperf/mcp-server`](https://www.npmjs.com/package/@ohmyperf/mcp-server) · **Repo**: [`hoainho/ohmyperf`](https://github.com/hoainho/ohmyperf)
 
 ## Install
 
 ```bash
 # CLI for humans + CI
-npm install -g @nhonh/cli
+npm install -g @ohmyperf/cli
 ohmyperf run https://your-site.com
 
 # MCP server for AI coding agents (Claude in OpenCode, Cursor, Copilot)
-npm install -g @nhonh/mcp-server
+npm install -g @ohmyperf/mcp-server
 ```
 
-Or use `npx -y @nhonh/cli run https://your-site.com` for a zero-install one-off.
+Or use `npx -y @ohmyperf/cli run https://your-site.com` for a zero-install one-off.
 
 Requires Node ≥ 22. Playwright Chromium auto-downloads on first run (~150 MB).
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  Engine: @nhonh/core (45-export API, frozen)                 │
+│  Engine: @ohmyperf/core (45-export API, frozen)                 │
 │  · Playwright + raw CDP (Target.setAutoAttach for cross-origin) │
 │  · Plugin runtime · Calibration · Outlier rejection · Diff      │
 └─────────────────────────────────────────────────────────────────┘
         │
         ├──► CLI                 npx ohmyperf run <url>
-        ├──► npm SDK             import { runEngine } from "@nhonh/core"
+        ├──► npm SDK             import { runEngine } from "@ohmyperf/core"
         ├──► Chrome extension    chrome.debugger driver, click → measure
         ├──► Website             ohmyperf.dev landing + drag-drop /viewer
         ├──► VSCode extension    OhMyPerf: Measure URL (command palette)
@@ -56,10 +56,10 @@ Requires Node ≥ 22. Playwright Chromium auto-downloads on first run (~150 MB).
 
 | # | Surface | Package | Quickstart |
 |---|---|---|---|
-| 1 | **CLI** | [`@nhonh/cli`](apps/cli/) | `ohmyperf run https://example.com` |
-| 2 | **npm SDK** | [`@nhonh/core`](packages/core/) | `import { runEngine } from "@nhonh/core"` |
+| 1 | **CLI** | [`@ohmyperf/cli`](apps/cli/) | `ohmyperf run https://example.com` |
+| 2 | **npm SDK** | [`@ohmyperf/core`](packages/core/) | `import { runEngine } from "@ohmyperf/core"` |
 | 3 | **Chrome extension** | [`apps/extension-chrome/`](apps/extension-chrome/) | Load unpacked → click toolbar icon |
-| 4 | **Website (SPA)** | [`apps/website/`](apps/website/) · spec [`measurement-spa`](openspec/specs/measurement-spa/spec.md) | `pnpm --filter @nhonh/website dev` → measure at `/measure`, view at `/viewer`, history at `/report`. Static export to CF Pages. |
+| 4 | **Website (SPA)** | [`apps/website/`](apps/website/) · spec [`measurement-spa`](openspec/specs/measurement-spa/spec.md) | `pnpm --filter @ohmyperf/website dev` → measure at `/measure`, view at `/viewer`, history at `/report`. Static export to CF Pages. |
 | 5 | **VSCode extension** | [`apps/ide-vscode/`](apps/ide-vscode/) | `Cmd+Shift+P` → `OhMyPerf: Measure URL` |
 | 6 | **MCP server** | [`apps/mcp-server/`](apps/mcp-server/) | `tools/measure({ url })` from any MCP client |
 | 7 | **Share-server** | [`packages/share-server/`](packages/share-server/) | Cloudflare Workers or `node dist/node.js` |
@@ -68,7 +68,7 @@ Requires Node ≥ 22. Playwright Chromium auto-downloads on first run (~150 MB).
 
 ```bash
 # Install
-npm install -g @nhonh/cli
+npm install -g @ohmyperf/cli
 ohmyperf install-browser
 
 # Measure
@@ -114,10 +114,10 @@ Exit codes 0–12 documented per the [`cli-surface`](openspec/changes/add-ohmype
 ## npm SDK quickstart
 
 ```ts
-import { runEngine, createSilentLogger } from "@nhonh/core";
-import { createPlaywrightAdapter } from "@nhonh/driver-playwright";
-import { cwvPlugin, axePlugin } from "@nhonh/plugins-builtin";
-import { writeJsonReport } from "@nhonh/reporter-json";
+import { runEngine, createSilentLogger } from "@ohmyperf/core";
+import { createPlaywrightAdapter } from "@ohmyperf/driver-playwright";
+import { cwvPlugin, axePlugin } from "@ohmyperf/plugins-builtin";
+import { writeJsonReport } from "@ohmyperf/reporter-json";
 
 const { driver, adapter } = createPlaywrightAdapter({
   url: "https://example.com",
@@ -143,7 +143,7 @@ console.log(report.aggregated.lcp);
 await writeJsonReport(report, "./out");
 ```
 
-The public API (`@nhonh/core`) is frozen at `1.0.0-stable` and enforced by `api-extractor` in CI. See [`packages/core/etc/core.api.md`](packages/core/etc/core.api.md) for the 45-export contract.
+The public API (`@ohmyperf/core`) is frozen at `1.0.0-stable` and enforced by `api-extractor` in CI. See [`packages/core/etc/core.api.md`](packages/core/etc/core.api.md) for the 45-export contract.
 
 ## Chrome extension
 
@@ -265,7 +265,7 @@ API:
 ```
 POST /api/share          { report, password?, expiresInMs?, private? } → { id, url, expiresAt }
 GET  /api/r/:id          → raw report JSON (with optional password gate)
-GET  /r/:id              → rendered HTML (uses @nhonh/viewer)
+GET  /r/:id              → rendered HTML (uses @ohmyperf/viewer)
 DELETE /api/r/:id        → 204
 ```
 
@@ -355,17 +355,17 @@ Documented per surface in each commit message. Not blockers for v0 dogfood:
 109 tests across 11 workspaces, all passing against real Chromium + real Hono server + mocked `chrome.debugger`/`vscode` APIs:
 
 ```
-@nhonh/core                39
-@nhonh/driver-playwright    6
-@nhonh/driver-extension     6
-@nhonh/viewer              11
-@nhonh/reporter-markdown    8
-@nhonh/share-server        10
-@nhonh/website              2
+@ohmyperf/core                39
+@ohmyperf/driver-playwright    6
+@ohmyperf/driver-extension     6
+@ohmyperf/viewer              11
+@ohmyperf/reporter-markdown    8
+@ohmyperf/share-server        10
+@ohmyperf/website              2
 ohmyperf-vscode                2
-@nhonh/extension-chrome     2
-@nhonh/mcp-server           3
-@nhonh/tests-oopif-corpus  20
+@ohmyperf/extension-chrome     2
+@ohmyperf/mcp-server           3
+@ohmyperf/tests-oopif-corpus  20
                           ──────
                              109
 ```
@@ -376,7 +376,7 @@ Quality gates wired in CI:
 - `pnpm lint` with import-layering rules (plugins can't import core internals, viewer can't import drivers, CDP types stay inside driver packages)
 - `pnpm test` (Vitest) with `OHMYPERF_CHROMIUM_PATH` for real-browser tests
 - `pnpm license:audit` — 396 packages scanned, allow-list of Apache-2.0 / MIT / ISC / BSD / MPL-2.0
-- `pnpm --filter @nhonh/core api:check` — api-extractor enforces the frozen 1.0.0 public surface
+- `pnpm --filter @ohmyperf/core api:check` — api-extractor enforces the frozen 1.0.0 public surface
 
 ## Contributing
 
@@ -386,7 +386,7 @@ Pull requests must:
 
 - Pass `pnpm typecheck && pnpm lint && pnpm test && pnpm license:audit`
 - Update the API contract (`packages/core/etc/core.api.md`) when changing public exports
-- Match existing ESLint layering rules — no CDP types in `@nhonh/core`, no driver imports in `@nhonh/viewer`
+- Match existing ESLint layering rules — no CDP types in `@ohmyperf/core`, no driver imports in `@ohmyperf/viewer`
 
 ## License
 

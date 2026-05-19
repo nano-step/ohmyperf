@@ -1,6 +1,6 @@
 {
-  "name": "@nhonh/share-client",
-  "version": "0.1.1",
+  "name": "@ohmyperf/share-client",
+  "version": "0.1.0",
   "description": "Upload/fetch shareable reports; runs the redaction pipeline before upload.",
   "license": "Apache-2.0",
   "engines": {
@@ -29,10 +29,10 @@
     "clean": "rimraf dist .turbo *.tsbuildinfo"
   },
   "peerDependencies": {
-    "@nhonh/core": "workspace:*"
+    "@ohmyperf/core": "workspace:*"
   },
   "devDependencies": {
-    "@nhonh/core": "workspace:*",
+    "@ohmyperf/core": "workspace:*",
     "vitest": "catalog:"
   },
   "publishConfig": {

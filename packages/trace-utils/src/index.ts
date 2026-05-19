@@ -110,5 +110,5 @@ function pickRendererPid(events: ReadonlyArray<TraceEvent>): number | undefined 
   return best;
 }
 
-export const PACKAGE_NAME = "@nhonh/trace-utils" as const;
+export const PACKAGE_NAME = "@ohmyperf/trace-utils" as const;
 export const PACKAGE_ROLE = "MainThreadTasks parsing + function attribution (minimal Lighthouse 13 tracehouse port)." as const;

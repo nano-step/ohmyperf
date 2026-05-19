@@ -31,8 +31,8 @@ You should receive an acknowledgement within **2 business days**. A first-pass t
 
 In scope:
 
-- The `@nhonh/core` engine and all collectors under `packages/core/`
-- `@nhonh/driver-playwright` and `@nhonh/driver-extension`
+- The `@ohmyperf/core` engine and all collectors under `packages/core/`
+- `@ohmyperf/driver-playwright` and `@ohmyperf/driver-extension`
 - Reporters under `packages/reporter-*`
 - The Chrome extension at `apps/extension-chrome/`
 - The hosted share-server at `packages/share-server/` (Workers and Node adapters)

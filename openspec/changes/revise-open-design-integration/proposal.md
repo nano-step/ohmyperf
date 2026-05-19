@@ -237,7 +237,7 @@ Total: **14 PNGs**.
 - Vendor-only-tokens: never import `components.html` or `DESIGN.md`
 - Report schema 1.0.0 FROZEN
 - WCAG-AA contrast pre-gate on shipped artifacts (now expanded to 4-tier ramp)
-- `@nhonh/design-tokens` api-extractor surface additive-only (`getDeckBrandOverlay` deprecated but signature preserved)
+- `@ohmyperf/design-tokens` api-extractor surface additive-only (`getDeckBrandOverlay` deprecated but signature preserved)
 
 ## Phasing
 

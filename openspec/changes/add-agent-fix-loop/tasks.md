@@ -10,9 +10,9 @@
 - [ ] E0.3 Bump `engines.node` to `>=22.0.0` for all 4 new packages, matching Track A's pinned floor.
 - [ ] E0.4 Reserve workspace catalog versions: `fast-json-patch ^3.1`, `nanoid ^5`, `async-mutex ^0.5`, `zod ^3` (if not already pinned by mcp-server), `parse-diff ^0.11` (deferred to v1.1).
 
-## E1. `@nhonh/worktree-manager` (foundational; do this first)
+## E1. `@ohmyperf/worktree-manager` (foundational; do this first)
 
-- [ ] E1.1 Create package skeleton: `packages/worktree-manager/{package.json, src/index.ts, tsconfig.json}`. Name `@nhonh/worktree-manager`. Private to workspace (not published to npm in v1).
+- [ ] E1.1 Create package skeleton: `packages/worktree-manager/{package.json, src/index.ts, tsconfig.json}`. Name `@ohmyperf/worktree-manager`. Private to workspace (not published to npm in v1).
 - [ ] E1.2 Implement `create(repoRoot, baselineRef): Promise<Worktree>` using `child_process.exec('git worktree add --detach <path> <ref>')`. Path = `/tmp/ohmyperf-verify-${nanoid(16)}`. Set `chmod 0700`.
 - [ ] E1.3 Implement PID lock file: write `${worktree}/.ohmyperf-lock` containing `{ pid: process.pid, createdAt: Date.now() }`.
 - [ ] E1.4 Implement `destroy(worktree, { keep?: boolean }): Promise<void>`. On `keep=true`, log retention path; else `git worktree remove --force ${path}` with `rm -rf` fallback.
@@ -25,7 +25,7 @@
   - [ ] E1.8.c Janitor: mock filesystem + mock process tree; verify cleanup of stale, preservation of alive-PID.
   - [ ] E1.8.d Atexit: child-process test for SIGINT cleanup.
 
-## E2. `@nhonh/patch-applier`
+## E2. `@ohmyperf/patch-applier`
 
 - [ ] E2.1 Create package `packages/patch-applier/`.
 - [ ] E2.2 Define `CanonicalPatch` + `CanonicalEdit` types in `src/types.ts` exactly as in `design.md` §3.
@@ -41,7 +41,7 @@
   - [ ] E2.5.d Atomic semantics: stage all writes to a tmp dir inside worktree, then atomic-rename into place. On any failure mid-batch, roll back.
 - [ ] E2.6 Unit tests: JSON Patch → CanonicalPatch round-trip; oldSha mismatch rejection; atomic rollback test (force one edit to fail, assert others reverted).
 
-## E3. `@nhonh/repair-archetypes`
+## E3. `@ohmyperf/repair-archetypes`
 
 - [ ] E3.1 Create package `packages/repair-archetypes/`.
 - [ ] E3.2 Implement `Archetype` + `Framework` + `DetectedFramework` types per `design.md` §3.
@@ -59,7 +59,7 @@
 - [ ] E3.8 Bundle-size CI gate: `pnpm size:archetypes` script + GitHub Action step. Fails build if eager portion > 8KB gz OR total dist > 50KB gz.
 - [ ] E3.9 ADR drafted for archetype governance: `openspec/adrs/000X-archetype-versioning.md` (governance, versioning, per-archetype canonical fixture requirement, ADR required for each new archetype).
 
-## E4. `@nhonh/agent-loop` — core library
+## E4. `@ohmyperf/agent-loop` — core library
 
 - [ ] E4.1 Create package `packages/agent-loop/`.
 - [ ] E4.2 Define types in `src/types.ts` per `design.md` §3 (VerifyArgs, VerifyResult, ProposeArgs, RepairProposal, MetricDelta, Verdict, FocusMetric, Edit, Diagnosis).

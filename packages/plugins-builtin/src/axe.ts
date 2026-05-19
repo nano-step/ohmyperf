@@ -1,5 +1,5 @@
 import { createRequire } from "node:module";
-import { definePlugin, type AuditResult, type Plugin } from "@nhonh/core";
+import { definePlugin, type AuditResult, type Plugin } from "@ohmyperf/core";
 
 const requireFromHere = createRequire(import.meta.url);
 

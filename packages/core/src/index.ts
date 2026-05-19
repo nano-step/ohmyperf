@@ -1,4 +1,4 @@
-export const PACKAGE_NAME = "@nhonh/core" as const;
+export const PACKAGE_NAME = "@ohmyperf/core" as const;
 export const SCHEMA_VERSION = "1.0.0" as const;
 
 export { createConsoleLogger, createSilentLogger } from "./logger.js";

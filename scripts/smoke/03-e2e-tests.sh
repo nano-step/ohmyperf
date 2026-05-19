@@ -17,21 +17,21 @@ FAILED=0
 step "ε.15 + ε.16 — Final E2E test files"
 
 step "1/4 Install Playwright chromium"
-(cd "$ROOT" && pnpm --filter @nhonh/website exec playwright install chromium 2>&1) \
+(cd "$ROOT" && pnpm --filter @ohmyperf/website exec playwright install chromium 2>&1) \
   | tee "$LOG_DIR/03-e2e-install.log"
 
 step "2/4 Smoke test (tests/smoke.spec.ts)"
-(cd "$ROOT" && pnpm --filter @nhonh/website test:smoke 2>&1) \
+(cd "$ROOT" && pnpm --filter @ohmyperf/website test:smoke 2>&1) \
   | tee "$LOG_DIR/03-e2e-smoke.log"
 [ "${PIPESTATUS[0]}" = "0" ] && ok "smoke passed" || fail "smoke failed — see log"
 
 step "3/4 a11y test (tests/a11y.spec.ts)"
-(cd "$ROOT" && pnpm --filter @nhonh/website test:a11y 2>&1) \
+(cd "$ROOT" && pnpm --filter @ohmyperf/website test:a11y 2>&1) \
   | tee "$LOG_DIR/03-e2e-a11y.log"
 [ "${PIPESTATUS[0]}" = "0" ] && ok "a11y passed" || fail "a11y failed — see log"
 
 step "4/4 no-telemetry test"
-(cd "$ROOT" && pnpm --filter @nhonh/website exec playwright test tests/no-telemetry.spec.ts 2>&1) \
+(cd "$ROOT" && pnpm --filter @ohmyperf/website exec playwright test tests/no-telemetry.spec.ts 2>&1) \
   | tee "$LOG_DIR/03-e2e-no-telemetry.log"
 [ "${PIPESTATUS[0]}" = "0" ] && ok "no-telemetry passed" || fail "no-telemetry failed — see log"
 

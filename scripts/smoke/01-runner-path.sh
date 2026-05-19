@@ -36,7 +36,7 @@ command -v curl   >/dev/null && ok "curl available"            || fail "curl not
 [ "$FAILED" = "1" ] && { echo; echo "Pre-flight FAILED. See $LOG."; exit 1; }
 
 step "2/5 Start runner (docker compose, port 5174)"
-echo "If docker compose fails, fallback: pnpm --filter @nhonh/runner dev" >> "$LOG"
+echo "If docker compose fails, fallback: pnpm --filter @ohmyperf/runner dev" >> "$LOG"
 if (cd "$ROOT" && docker compose -f apps/runner/docker-compose.yml up --build -d >> "$LOG" 2>&1); then
   ok "runner started"
 else
@@ -66,7 +66,7 @@ curl -fsS http://127.0.0.1:5174/api/health | tee -a "$LOG" >/dev/null
 echo >> "$LOG"
 
 step "3/5 Build + start website (port 3000)"
-(cd "$ROOT" && pnpm --filter @nhonh/website build >> "$LOG" 2>&1) \
+(cd "$ROOT" && pnpm --filter @ohmyperf/website build >> "$LOG" 2>&1) \
   && ok "website build" || fail "website build failed"
 
 cd "$ROOT/apps/website"

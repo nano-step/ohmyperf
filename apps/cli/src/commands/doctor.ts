@@ -1,7 +1,7 @@
 import { defineCommand } from "citty";
 import { existsSync } from "node:fs";
 import { arch as osArch, platform as osPlatform, release as osRelease } from "node:os";
-import { createConsoleLogger } from "@nhonh/core";
+import { createConsoleLogger } from "@ohmyperf/core";
 import { EXIT_CODES } from "../exit-codes.js";
 
 export const doctorCommand = defineCommand({

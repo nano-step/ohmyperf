@@ -80,7 +80,7 @@ The OOPIF corpus SHALL include 13 fixtures, each with explicit metric-availabili
 - **THEN** a corresponding entry in `tests/oopif-corpus/expectations/<fixture>.ts` exists declaring `mustHaveMetrics: string[]`, `mayMissMetrics: string[]`, and `mustHaveAttribution: string[]`
 
 #### Scenario: 13 corpus fixtures all pass
-- **WHEN** `pnpm test --filter @nhonh/oopif-corpus` runs
+- **WHEN** `pnpm test --filter @ohmyperf/oopif-corpus` runs
 - **THEN** all 13 fixtures pass attach/detach assertions
 - **AND** all 13 fixtures pass metric-availability assertions
 - **AND** at least the `oopif-3-cross-origin` and `iframe-resize-causes-parent-shift` fixtures pass attribution assertions
@@ -89,6 +89,6 @@ The OOPIF corpus SHALL include 13 fixtures, each with explicit metric-availabili
 Changes to `MetricAttribution` SHALL be additive only (new optional fields), with `api-extractor` confirming no removed/renamed exports.
 
 #### Scenario: api-extractor passes
-- **WHEN** `pnpm api:check --filter @nhonh/core` runs after this change
+- **WHEN** `pnpm api:check --filter @ohmyperf/core` runs after this change
 - **THEN** exit code is 0
 - **AND** `core.api.md` diff contains only `+` lines (no `-` lines for existing exports)

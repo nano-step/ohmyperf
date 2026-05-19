@@ -1,4 +1,4 @@
-# @nhonh/website
+# @ohmyperf/website
 
 Next.js 15 static-export SPA: landing, measurement flow, drag-drop viewer, report history.
 
@@ -7,7 +7,7 @@ Next.js 15 static-export SPA: landing, measurement flow, drag-drop viewer, repor
 ```bash
 # from repo root
 pnpm install
-pnpm --filter @nhonh/website dev
+pnpm --filter @ohmyperf/website dev
 # → http://localhost:3000
 ```
 
@@ -40,7 +40,7 @@ pnpm --filter @nhonh/website dev
 ### Cloudflare Pages (canonical)
 
 ```
-Build command: pnpm --filter @nhonh/website build
+Build command: pnpm --filter @ohmyperf/website build
 Build output:  apps/website/out
 Node version:  22
 ```
@@ -66,7 +66,7 @@ Add `vercel.json` at `apps/website/`:
 ### Local development
 
 ```bash
-pnpm --filter @nhonh/website dev
+pnpm --filter @ohmyperf/website dev
 # optionally run the local runner:
 docker compose -f apps/runner/docker-compose.yml up -d
 ```
@@ -76,14 +76,14 @@ docker compose -f apps/runner/docker-compose.yml up -d
 ### Unit / vitest
 
 ```bash
-pnpm --filter @nhonh/website test
+pnpm --filter @ohmyperf/website test
 ```
 
 ### a11y (deferred to local run — Playwright browsers not available in sandbox)
 
 ```bash
-pnpm --filter @nhonh/website build
-pnpm --filter @nhonh/website test:a11y
+pnpm --filter @ohmyperf/website build
+pnpm --filter @ohmyperf/website test:a11y
 ```
 
 ### Dogfood policy

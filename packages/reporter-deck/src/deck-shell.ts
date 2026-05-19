@@ -1,6 +1,6 @@
-import type { Report } from "@nhonh/core";
-import { BRAND_MANIFEST, getBrandCss, resolveTheme, type BrandId } from "@nhonh/design-tokens";
-import { escapeHtml, escapeJsonForHtml } from "@nhonh/viewer/escape";
+import type { Report } from "@ohmyperf/core";
+import { BRAND_MANIFEST, getBrandCss, resolveTheme, type BrandId } from "@ohmyperf/design-tokens";
+import { escapeHtml, escapeJsonForHtml } from "@ohmyperf/viewer/escape";
 import { DECK_CSS, DECK_NAV_SCRIPT } from "./styles.js";
 
 export interface RenderDeckShellOptions {
@@ -34,7 +34,7 @@ export function renderDeckShell(slides: ReadonlyArray<string>, opts: RenderDeckS
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<meta name="generator" content="@nhonh/reporter-deck 0.0.0-pre" />
+<meta name="generator" content="@ohmyperf/reporter-deck 0.0.0-pre" />
 <meta name="referrer" content="no-referrer" />
 <meta name="ohmyperf-style" content="${escapeHtml(style)}" />
 <title>${escapeHtml(opts.title)}</title>

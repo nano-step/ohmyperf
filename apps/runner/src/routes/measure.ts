@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { z } from "zod";
-import type { MeasureAcceptedResponse, MeasureRequest } from "@nhonh/shared-types";
+import type { MeasureAcceptedResponse, MeasureRequest } from "@ohmyperf/shared-types";
 import type { Config } from "../config.js";
 import type { JobStore } from "../queue.js";
 import type { AppVariables } from "../app.js";

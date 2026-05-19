@@ -2,7 +2,7 @@ import { homedir } from "node:os";
 import { resolve } from "node:path";
 import * as p from "@clack/prompts";
 import pc from "picocolors";
-import { BRAND_IDS, BRAND_MANIFEST, type BrandId } from "@nhonh/design-tokens";
+import { BRAND_IDS, BRAND_MANIFEST, type BrandId } from "@ohmyperf/design-tokens";
 
 export interface InteractiveAnswers {
   readonly url: string;

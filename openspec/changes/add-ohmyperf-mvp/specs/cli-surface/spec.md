@@ -5,7 +5,7 @@ The `ohmyperf` CLI binary: subcommands, flags, exit codes, CI ergonomics.
 ## ADDED Requirements
 
 ### Requirement: CLI binary
-The repository SHALL ship a `bin` named `ohmyperf` exported by `@nhonh/cli`. The CLI SHALL be implemented with the `citty` framework. Running `ohmyperf` with no args SHALL print a help banner with a list of subcommands.
+The repository SHALL ship a `bin` named `ohmyperf` exported by `@ohmyperf/cli`. The CLI SHALL be implemented with the `citty` framework. Running `ohmyperf` with no args SHALL print a help banner with a list of subcommands.
 
 #### Scenario: Help text
 - **WHEN** the user runs `ohmyperf --help`

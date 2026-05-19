@@ -1,4 +1,4 @@
-import type { Metric } from '@nhonh/core';
+import type { Metric } from '@ohmyperf/core';
 
 interface Props {
   metric: Metric;

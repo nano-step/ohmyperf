@@ -1,4 +1,4 @@
-import type { AuditResult } from '@nhonh/core';
+import type { AuditResult } from '@ohmyperf/core';
 
 interface ThirdPartyItem {
   entity: string;

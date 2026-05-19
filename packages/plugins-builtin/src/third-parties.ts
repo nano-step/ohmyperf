@@ -1,4 +1,4 @@
-import { definePlugin, type Plugin, type Report, type Resource } from "@nhonh/core";
+import { definePlugin, type Plugin, type Report, type Resource } from "@ohmyperf/core";
 import nostatsSubset from "third-party-web/nostats-subset.js";
 
 const { getEntity } = nostatsSubset as {

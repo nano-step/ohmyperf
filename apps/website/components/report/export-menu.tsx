@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import type { Report } from '@nhonh/core';
-import { renderMarkdown } from '@nhonh/reporter-markdown';
+import type { Report } from '@ohmyperf/core';
+import { renderMarkdown } from '@ohmyperf/reporter-markdown';
 import { toast } from 'sonner';
 
 interface Props {

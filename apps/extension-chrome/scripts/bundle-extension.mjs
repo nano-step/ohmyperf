@@ -42,7 +42,7 @@ if (!esbuild) {
     "// Placeholder — install 'esbuild' to produce the real bundle.\n",
   );
   console.warn(
-    "[bundle-extension] esbuild not installed; wrote placeholder bundles. Run `pnpm add -D -F @nhonh/extension-chrome esbuild` for production bundles.",
+    "[bundle-extension] esbuild not installed; wrote placeholder bundles. Run `pnpm add -D -F @ohmyperf/extension-chrome esbuild` for production bundles.",
   );
   process.exit(0);
 }

@@ -1,9 +1,9 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
-import type { Report, BudgetEvaluation } from "@nhonh/core";
+import type { Report, BudgetEvaluation } from "@ohmyperf/core";
 
 export const REPORTER_ID = "junit" as const;
-export const PACKAGE_NAME = "@nhonh/reporter-junit" as const;
+export const PACKAGE_NAME = "@ohmyperf/reporter-junit" as const;
 export const PACKAGE_ROLE = "JUnit XML reporter; one testcase per budget threshold." as const;
 
 export interface JunitReporterOptions {

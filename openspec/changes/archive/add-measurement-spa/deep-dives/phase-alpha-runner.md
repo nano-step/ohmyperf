@@ -35,7 +35,7 @@ I have enough context. Now let me produce the deliverable — the deep-dive code
 
 # Phase α — Runner Backend Code-Level Spec
 
-**Scope**: `apps/runner/` — Hono server that exposes the HTTP contract D7 to the SPA, invokes `@nhonh/core.runEngine` via `@nhonh/driver-playwright`, and ships as a Docker image.
+**Scope**: `apps/runner/` — Hono server that exposes the HTTP contract D7 to the SPA, invokes `@ohmyperf/core.runEngine` via `@ohmyperf/driver-playwright`, and ships as a Docker image.
 
 **Constraints applied from REVIEW.md**: C1 (DELETE /api/jobs/:id), C2 (15s SSE heartbeat), C3 (fan-out + replay buffer), R3 (no persistence, document restart loss), R7 (CSP — N/A here, applies to SPA), R9 (`crypto.randomUUID()` for jobId).
 
@@ -88,10 +88,10 @@ One-line purpose mirrors share-server pattern (`app.ts` builds the Hono app, `no
 
 ```json
 {
-  "name": "@nhonh/runner",
+  "name": "@ohmyperf/runner",
   "version": "0.0.0-pre",
   "private": true,
-  "description": "Local Docker-self-host HTTP runner. Wraps @nhonh/core + driver-playwright behind Hono.",
+  "description": "Local Docker-self-host HTTP runner. Wraps @ohmyperf/core + driver-playwright behind Hono.",
   "license": "Apache-2.0",
   "type": "module",
   "main": "./dist/server.js",
@@ -105,9 +105,9 @@ One-line purpose mirrors share-server pattern (`app.ts` builds the Hono app, `no
     "clean": "rimraf dist .turbo *.tsbuildinfo"
   },
   "dependencies": {
-    "@nhonh/core": "workspace:*",
-    "@nhonh/driver-playwright": "workspace:*",
-    "@nhonh/plugins-builtin": "workspace:*",
+    "@ohmyperf/core": "workspace:*",
+    "@ohmyperf/driver-playwright": "workspace:*",
+    "@ohmyperf/plugins-builtin": "workspace:*",
     "@hono/node-server": "^1.19.14",
     "hono": "catalog:",
     "ipaddr.js": "^1.9.1",
@@ -124,7 +124,7 @@ One-line purpose mirrors share-server pattern (`app.ts` builds the Hono app, `no
 
 **Notes**:
 - `@hono/node-server` is present in node_modules already (1.19.14) — use catalog if you want to centralize; for now direct pin matches share-server's pragmatism.
-- `ipaddr.js@^1.9.1` is in node_modules already; pin directly (it has no peer of `@nhonh/*` so catalog overkill — but you can add it to catalog later for consistency).
+- `ipaddr.js@^1.9.1` is in node_modules already; pin directly (it has no peer of `@ohmyperf/*` so catalog overkill — but you can add it to catalog later for consistency).
 - `playwright` is needed because driver-playwright peer-depends on it — runner installs it directly.
 - `plugins-builtin` is included so default cwv/axe plugins can run identically to CLI; the runner SHOULD apply the same default plugin set as `apps/cli/src/commands/run.ts:269` (`cwvPlugin + axePlugin + customMetricExamplePlugin`) for parity unless the request opts out.
 - Catalog entry update to `pnpm-workspace.yaml` (α.12): `ipaddr.js: ^1.9.1` and `"@hono/node-server": ^1.19.14` are the only NEW entries; `hono`, `zod` already there.
@@ -323,7 +323,7 @@ for (const sig of ["SIGINT", "SIGTERM"] as const) {
 
 ```ts
 import { Hono } from "hono";
-import { SCHEMA_VERSION } from "@nhonh/core";
+import { SCHEMA_VERSION } from "@ohmyperf/core";
 import type { AppEnv } from "../app.js";
 import { readVersion } from "../version.js";
 
@@ -333,7 +333,7 @@ export function healthRoute(_env: AppEnv): Hono {
     c.json({
       ok: true,
       version: readVersion(),         // runner package.json version
-      engine: SCHEMA_VERSION,         // "1.0.0" from @nhonh/core
+      engine: SCHEMA_VERSION,         // "1.0.0" from @ohmyperf/core
       browser: {
         source: "bundled",            // Playwright bundled chromium
         version: process.env.PLAYWRIGHT_CHROMIUM_VERSION ?? "unknown",
@@ -509,7 +509,7 @@ export function jobsRoute(env: AppEnv): Hono {
 ```ts
 import type { Config } from "./config.js";
 import type { MeasureRequest } from "./routes/measure.js";
-import type { Report } from "@nhonh/core";
+import type { Report } from "@ohmyperf/core";
 import { EventBus, type ProgressEvent } from "./events.js";
 import { executeJob } from "./runner.js";
 
@@ -688,7 +688,7 @@ export type ProgressEvent =
   | { type: "navigation"; jobId: string; runIndex: number; phase: "started" | "committed" | "loaded" | "idle"; t: number }
   | { type: "metric"; jobId: string; runIndex: number; name: string; value: number; t: number }
   | { type: "run-complete"; jobId: string; runIndex: number; t: number }
-  | { type: "complete"; jobId: string; report: import("@nhonh/core").Report; t: number }
+  | { type: "complete"; jobId: string; report: import("@ohmyperf/core").Report; t: number }
   | { type: "error"; jobId: string; code: string; message: string; t: number }
   | { type: "cancelled"; jobId: string; code: "job/cancelled"; t: number };
 
@@ -749,9 +749,9 @@ import {
   runEngine,
   type Logger,
   type Report,
-} from "@nhonh/core";
-import { createPlaywrightAdapter } from "@nhonh/driver-playwright";
-import { cwvPlugin, axePlugin } from "@nhonh/plugins-builtin";
+} from "@ohmyperf/core";
+import { createPlaywrightAdapter } from "@ohmyperf/driver-playwright";
+import { cwvPlugin, axePlugin } from "@ohmyperf/plugins-builtin";
 import type { Job } from "./queue.js";
 import type { ProgressEvent } from "./events.js";
 
@@ -1064,13 +1064,13 @@ COPY apps/runner/ apps/runner/
 
 # Skip Playwright browser download in build stage — the runtime image has them.
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
-RUN pnpm install --frozen-lockfile --filter @nhonh/runner...
+RUN pnpm install --frozen-lockfile --filter @ohmyperf/runner...
 
 # Build the runner + its workspace deps.
-RUN pnpm --filter @nhonh/runner... build
+RUN pnpm --filter @ohmyperf/runner... build
 
 # Prune to production-only dependency tree.
-RUN pnpm --filter @nhonh/runner deploy --prod /out
+RUN pnpm --filter @ohmyperf/runner deploy --prod /out
 
 # ---- Runtime stage ----
 FROM mcr.microsoft.com/playwright:v1.49.1-jammy AS runtime

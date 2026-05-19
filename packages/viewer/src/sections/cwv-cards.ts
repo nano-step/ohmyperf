@@ -1,4 +1,4 @@
-import type { Report } from "@nhonh/core";
+import type { Report } from "@ohmyperf/core";
 import { renderCwvCard } from "../charts/cwv-traffic-light.js";
 
 const CWV_ORDER: ReadonlyArray<string> = ["lcp", "inp", "cls", "fcp", "ttfb", "tbt"];

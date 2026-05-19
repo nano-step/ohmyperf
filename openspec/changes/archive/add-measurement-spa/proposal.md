@@ -25,14 +25,14 @@ This closes the longstanding "click and measure on the website" experience witho
   - `/report` history index backed by IndexedDB
   - Tailwind v4 + shadcn/ui design system
   - next-intl i18n scaffold (EN-only copy in v1, VI keys present for v1.5)
-- `apps/runner/` — NEW Hono HTTP service running `@nhonh/core` + `@nhonh/driver-playwright`
+- `apps/runner/` — NEW Hono HTTP service running `@ohmyperf/core` + `@ohmyperf/driver-playwright`
   - `POST /api/measure`, `GET /api/jobs/:id/events` (SSE), `GET /api/health`
   - In-memory job queue (concurrency=1 default)
   - SSRF guard blocking private/loopback/metadata IPs by default
   - Allowlist CORS with Private Network Access preflight support
   - Dockerfile + docker-compose.yml for self-host
 - `packages/shared-types/` — NEW internal package with `MeasureRequest`, `JobStatus`, `ProgressEvent`, extension message envelopes
-- `packages/viewer/` — port from static HTML string renderer to React component (`<ReportViewer />`), exposed for SPA consumption; keep legacy `renderReportHtml` export for `@nhonh/reporter-html`
+- `packages/viewer/` — port from static HTML string renderer to React component (`<ReportViewer />`), exposed for SPA consumption; keep legacy `renderReportHtml` export for `@ohmyperf/reporter-html`
 - Apps shared lib in `apps/website/lib/`: `backend-detector.ts`, `extension-bridge.ts`, `runner-client.ts`, `storage.ts` (idb), `store.ts` (zustand), `url-validation.ts`
 
 ### Modified

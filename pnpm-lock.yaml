@@ -86,40 +86,40 @@ importers:
       '@clack/prompts':
         specifier: ^0.10.0
         version: 0.10.1
-      '@nhonh/core':
+      '@ohmyperf/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@nhonh/design-tokens':
+      '@ohmyperf/design-tokens':
         specifier: workspace:*
         version: link:../../packages/design-tokens
-      '@nhonh/driver-playwright':
+      '@ohmyperf/driver-playwright':
         specifier: workspace:*
         version: link:../../packages/driver-playwright
-      '@nhonh/plugins-builtin':
+      '@ohmyperf/plugins-builtin':
         specifier: workspace:*
         version: link:../../packages/plugins-builtin
-      '@nhonh/reporter-csv':
+      '@ohmyperf/reporter-csv':
         specifier: workspace:*
         version: link:../../packages/reporter-csv
-      '@nhonh/reporter-deck':
+      '@ohmyperf/reporter-deck':
         specifier: workspace:*
         version: link:../../packages/reporter-deck
-      '@nhonh/reporter-html':
+      '@ohmyperf/reporter-html':
         specifier: workspace:*
         version: link:../../packages/reporter-html
-      '@nhonh/reporter-json':
+      '@ohmyperf/reporter-json':
         specifier: workspace:*
         version: link:../../packages/reporter-json
-      '@nhonh/reporter-junit':
+      '@ohmyperf/reporter-junit':
         specifier: workspace:*
         version: link:../../packages/reporter-junit
-      '@nhonh/reporter-markdown':
+      '@ohmyperf/reporter-markdown':
         specifier: workspace:*
         version: link:../../packages/reporter-markdown
-      '@nhonh/share-client':
+      '@ohmyperf/share-client':
         specifier: workspace:*
         version: link:../../packages/share-client
-      '@nhonh/viewer':
+      '@ohmyperf/viewer':
         specifier: workspace:*
         version: link:../../packages/viewer
       citty:
@@ -138,16 +138,16 @@ importers:
 
   apps/extension-chrome:
     devDependencies:
-      '@nhonh/core':
+      '@ohmyperf/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@nhonh/driver-extension':
+      '@ohmyperf/driver-extension':
         specifier: workspace:*
         version: link:../../packages/driver-extension
-      '@nhonh/shared-types':
+      '@ohmyperf/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types
-      '@nhonh/viewer':
+      '@ohmyperf/viewer':
         specifier: workspace:*
         version: link:../../packages/viewer
       esbuild:
@@ -159,10 +159,10 @@ importers:
 
   apps/ide-vscode:
     devDependencies:
-      '@nhonh/core':
+      '@ohmyperf/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@nhonh/viewer':
+      '@ohmyperf/viewer':
         specifier: workspace:*
         version: link:../../packages/viewer
       '@types/vscode':
@@ -180,28 +180,28 @@ importers:
       '@modelcontextprotocol/sdk':
         specifier: ^1.29.0
         version: 1.29.0(zod@3.25.76)
-      '@nhonh/core':
+      '@ohmyperf/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@nhonh/design-tokens':
+      '@ohmyperf/design-tokens':
         specifier: workspace:*
         version: link:../../packages/design-tokens
-      '@nhonh/driver-playwright':
+      '@ohmyperf/driver-playwright':
         specifier: workspace:*
         version: link:../../packages/driver-playwright
-      '@nhonh/plugins-builtin':
+      '@ohmyperf/plugins-builtin':
         specifier: workspace:*
         version: link:../../packages/plugins-builtin
-      '@nhonh/reporter-deck':
+      '@ohmyperf/reporter-deck':
         specifier: workspace:*
         version: link:../../packages/reporter-deck
-      '@nhonh/reporter-html':
+      '@ohmyperf/reporter-html':
         specifier: workspace:*
         version: link:../../packages/reporter-html
-      '@nhonh/reporter-json':
+      '@ohmyperf/reporter-json':
         specifier: workspace:*
         version: link:../../packages/reporter-json
-      '@nhonh/reporter-markdown':
+      '@ohmyperf/reporter-markdown':
         specifier: workspace:*
         version: link:../../packages/reporter-markdown
       zod:
@@ -217,16 +217,16 @@ importers:
       '@hono/node-server':
         specifier: 'catalog:'
         version: 1.19.14(hono@4.12.18)
-      '@nhonh/core':
+      '@ohmyperf/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@nhonh/driver-playwright':
+      '@ohmyperf/driver-playwright':
         specifier: workspace:*
         version: link:../../packages/driver-playwright
-      '@nhonh/plugins-builtin':
+      '@ohmyperf/plugins-builtin':
         specifier: workspace:*
         version: link:../../packages/plugins-builtin
-      '@nhonh/shared-types':
+      '@ohmyperf/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types
       hono:
@@ -254,22 +254,22 @@ importers:
       '@hookform/resolvers':
         specifier: 3.10.0
         version: 3.10.0(react-hook-form@7.54.2(react@19.0.0))
-      '@nhonh/core':
+      '@ohmyperf/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@nhonh/design-tokens':
+      '@ohmyperf/design-tokens':
         specifier: workspace:*
         version: link:../../packages/design-tokens
-      '@nhonh/reporter-markdown':
+      '@ohmyperf/reporter-markdown':
         specifier: workspace:*
         version: link:../../packages/reporter-markdown
-      '@nhonh/share-client':
+      '@ohmyperf/share-client':
         specifier: workspace:*
         version: link:../../packages/share-client
-      '@nhonh/shared-types':
+      '@ohmyperf/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types
-      '@nhonh/viewer':
+      '@ohmyperf/viewer':
         specifier: workspace:*
         version: link:../../packages/viewer
       class-variance-authority:
@@ -372,7 +372,7 @@ importers:
 
   packages/core:
     dependencies:
-      '@nhonh/trace-utils':
+      '@ohmyperf/trace-utils':
         specifier: workspace:*
         version: link:../trace-utils
       web-vitals:
@@ -394,7 +394,7 @@ importers:
 
   packages/driver-extension:
     devDependencies:
-      '@nhonh/core':
+      '@ohmyperf/core':
         specifier: workspace:*
         version: link:../core
       vitest:
@@ -403,7 +403,7 @@ importers:
 
   packages/driver-playwright:
     devDependencies:
-      '@nhonh/core':
+      '@ohmyperf/core':
         specifier: workspace:*
         version: link:../core
       playwright:
@@ -419,10 +419,10 @@ importers:
         specifier: ^0.29.2
         version: 0.29.2
     devDependencies:
-      '@nhonh/core':
+      '@ohmyperf/core':
         specifier: workspace:*
         version: link:../core
-      '@nhonh/driver-playwright':
+      '@ohmyperf/driver-playwright':
         specifier: workspace:*
         version: link:../driver-playwright
       axe-core:
@@ -437,19 +437,19 @@ importers:
 
   packages/reporter-csv:
     devDependencies:
-      '@nhonh/core':
+      '@ohmyperf/core':
         specifier: workspace:*
         version: link:../core
 
   packages/reporter-deck:
     devDependencies:
-      '@nhonh/core':
+      '@ohmyperf/core':
         specifier: workspace:*
         version: link:../core
-      '@nhonh/design-tokens':
+      '@ohmyperf/design-tokens':
         specifier: workspace:*
         version: link:../design-tokens
-      '@nhonh/viewer':
+      '@ohmyperf/viewer':
         specifier: workspace:*
         version: link:../viewer
       vitest:
@@ -460,10 +460,10 @@ importers:
 
   packages/reporter-html:
     devDependencies:
-      '@nhonh/core':
+      '@ohmyperf/core':
         specifier: workspace:*
         version: link:../core
-      '@nhonh/viewer':
+      '@ohmyperf/viewer':
         specifier: workspace:*
         version: link:../viewer
       vitest:
@@ -472,7 +472,7 @@ importers:
 
   packages/reporter-json:
     devDependencies:
-      '@nhonh/core':
+      '@ohmyperf/core':
         specifier: workspace:*
         version: link:../core
       vitest:
@@ -481,7 +481,7 @@ importers:
 
   packages/reporter-junit:
     devDependencies:
-      '@nhonh/core':
+      '@ohmyperf/core':
         specifier: workspace:*
         version: link:../core
 
@@ -489,7 +489,7 @@ importers:
 
   packages/reporter-markdown:
     devDependencies:
-      '@nhonh/core':
+      '@ohmyperf/core':
         specifier: workspace:*
         version: link:../core
       vitest:
@@ -500,7 +500,7 @@ importers:
 
   packages/share-client:
     devDependencies:
-      '@nhonh/core':
+      '@ohmyperf/core':
         specifier: workspace:*
         version: link:../core
       vitest:
@@ -509,10 +509,10 @@ importers:
 
   packages/share-server:
     devDependencies:
-      '@nhonh/core':
+      '@ohmyperf/core':
         specifier: workspace:*
         version: link:../core
-      '@nhonh/viewer':
+      '@ohmyperf/viewer':
         specifier: workspace:*
         version: link:../viewer
       hono:
@@ -524,7 +524,7 @@ importers:
 
   packages/shared-types:
     devDependencies:
-      '@nhonh/core':
+      '@ohmyperf/core':
         specifier: workspace:*
         version: link:../core
       vitest:
@@ -535,10 +535,10 @@ importers:
 
   packages/viewer:
     devDependencies:
-      '@nhonh/core':
+      '@ohmyperf/core':
         specifier: workspace:*
         version: link:../core
-      '@nhonh/design-tokens':
+      '@ohmyperf/design-tokens':
         specifier: workspace:*
         version: link:../design-tokens
       vitest:
@@ -547,16 +547,16 @@ importers:
 
   tests/oopif-corpus:
     devDependencies:
-      '@nhonh/cli':
+      '@ohmyperf/cli':
         specifier: workspace:*
         version: link:../../apps/cli
-      '@nhonh/core':
+      '@ohmyperf/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@nhonh/driver-playwright':
+      '@ohmyperf/driver-playwright':
         specifier: workspace:*
         version: link:../../packages/driver-playwright
-      '@nhonh/plugins-builtin':
+      '@ohmyperf/plugins-builtin':
         specifier: workspace:*
         version: link:../../packages/plugins-builtin
       playwright:
@@ -568,13 +568,13 @@ importers:
 
   tests/parity:
     devDependencies:
-      '@nhonh/core':
+      '@ohmyperf/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@nhonh/driver-playwright':
+      '@ohmyperf/driver-playwright':
         specifier: workspace:*
         version: link:../../packages/driver-playwright
-      '@nhonh/plugins-builtin':
+      '@ohmyperf/plugins-builtin':
         specifier: workspace:*
         version: link:../../packages/plugins-builtin
       lighthouse:
@@ -589,16 +589,16 @@ importers:
 
   tests/visual-regression:
     devDependencies:
-      '@nhonh/core':
+      '@ohmyperf/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@nhonh/design-tokens':
+      '@ohmyperf/design-tokens':
         specifier: workspace:*
         version: link:../../packages/design-tokens
-      '@nhonh/reporter-deck':
+      '@ohmyperf/reporter-deck':
         specifier: workspace:*
         version: link:../../packages/reporter-deck
-      '@nhonh/viewer':
+      '@ohmyperf/viewer':
         specifier: workspace:*
         version: link:../../packages/viewer
       playwright:

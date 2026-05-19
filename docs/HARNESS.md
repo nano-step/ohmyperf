@@ -208,7 +208,7 @@ validate:quick   (always — every lane)
   pnpm lint && pnpm typecheck && pnpm test
 
 test:integration   (normal + high-risk)
-  pnpm --filter @nhonh/tests-oopif-corpus test
+  pnpm --filter @ohmyperf/tests-oopif-corpus test
 
 test:e2e   (high-risk or when UI behavior changes)
   pnpm --filter tests-visual-regression test
@@ -249,13 +249,13 @@ determines whether user-flow testing and review gate apply.
 A `release` commit (any commit that bumps a published package's `version`)
 **MUST** also update `README.md` in the **same** commit if the README
 mentions a pinned version anywhere (install snippets, badges, examples).
-This is non-negotiable — if `npm install @nhonh/cli@X.Y.Z` is in the
+This is non-negotiable — if `npm install @ohmyperf/cli@X.Y.Z` is in the
 README, X.Y.Z must equal the version this commit bumps to.
 
 Enforced by `.github/workflows/publish-stable.yml` guard step that fails
 the workflow if README references the old version. To bypass for a
 genuine generic snippet (e.g. `@latest`), set the README install snippet
-to `npm install @nhonh/cli` (no version pin) — the guard accepts that.
+to `npm install @ohmyperf/cli` (no version pin) — the guard accepts that.
 
 Pump-version commit checklist:
 1. Bump `version` in root + every publishable package.json.
@@ -284,10 +284,10 @@ that matches the changed surface:
 
 | Changed surface | Tool | Command |
 |---|---|---|
-| Bot / chat handler | Command simulator | `pnpm --filter @nhonh/tests-oopif-corpus test` |
+| Bot / chat handler | Command simulator | `pnpm --filter @ohmyperf/tests-oopif-corpus test` |
 | Web UI | Playwright / Cypress | `pnpm --filter tests-visual-regression test` |
-| REST API | API integration test | `pnpm --filter @nhonh/tests-oopif-corpus test` |
-| Backend-only (no user surface) | Existing integration tests | `pnpm --filter @nhonh/tests-oopif-corpus test` |
+| REST API | API integration test | `pnpm --filter @ohmyperf/tests-oopif-corpus test` |
+| Backend-only (no user surface) | Existing integration tests | `pnpm --filter @ohmyperf/tests-oopif-corpus test` |
 | LLM / external service call | Live smoke script | `# N/A` |
 
 **Lane × user-flow requirement:**

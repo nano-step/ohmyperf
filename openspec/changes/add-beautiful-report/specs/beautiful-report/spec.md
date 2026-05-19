@@ -4,7 +4,7 @@ This capability formalises how OhMyPerf produces visually polished, brand-consis
 
 ## Scope
 
-Static HTML artifacts produced by `@nhonh/viewer` (reporter id `"html"`) and `@nhonh/reporter-deck` (reporter id `"deck"`). The interactive Next.js route at `/report` is OUT of scope (governed by `add-share-export-ui`). The Calibre OKLCH palette is the single source of visual truth; `apps/website/app/globals.css` is the canonical token source; `packages/design-tokens` is the canonical interface.
+Static HTML artifacts produced by `@ohmyperf/viewer` (reporter id `"html"`) and `@ohmyperf/reporter-deck` (reporter id `"deck"`). The interactive Next.js route at `/report` is OUT of scope (governed by `add-share-export-ui`). The Calibre OKLCH palette is the single source of visual truth; `apps/website/app/globals.css` is the canonical token source; `packages/design-tokens` is the canonical interface.
 
 ## Requirements
 
@@ -209,7 +209,7 @@ Both viewer and deck artifacts MUST be self-contained single-file HTML.
 **AND** clicking it MUST trigger a Blob download of a deck-rendered HTML named `report-deck.html`.
 
 **WHEN** the deck render is invoked client-side
-**THEN** `@nhonh/reporter-deck` MUST be loaded via dynamic import to keep the initial route bundle small
+**THEN** `@ohmyperf/reporter-deck` MUST be loaded via dynamic import to keep the initial route bundle small
 **AND** the `/report/<id>` route bundle MUST remain ≤ 250 KB gzipped (existing budget).
 
 ### R13 — Localization readiness

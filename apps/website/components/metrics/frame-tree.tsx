@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import type { FrameNode } from '@nhonh/core';
+import type { FrameNode } from '@ohmyperf/core';
 
 interface Props {
   nodes: Readonly<Record<string, FrameNode>>;

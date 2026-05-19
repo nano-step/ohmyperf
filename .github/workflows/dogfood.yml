@@ -34,7 +34,7 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - run: pnpm exec turbo run build --filter=@nhonh/website --filter=@nhonh/cli
+      - run: pnpm exec turbo run build --filter=@ohmyperf/website --filter=@ohmyperf/cli
 
       - name: Serve static SPA on :4173
         run: |

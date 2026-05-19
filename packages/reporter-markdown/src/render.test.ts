@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { renderMarkdown } from "./index.js";
-import type { Report } from "@nhonh/core";
+import type { Report } from "@ohmyperf/core";
 
 function makeReport(overrides: Partial<Report> = {}): Report {
   const base: Report = {

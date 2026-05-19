@@ -177,7 +177,7 @@ The recorder MUST pass captured `storageState` through a redactor function befor
 
 #### Scenario: Default redactor is share-client's `redactStorageState`
 - **WHEN** `opts.replay.redactStorageState` is unset
-- **THEN** the engine wires the default redactor from `@nhonh/share-client/redact` (`redactStorageState`)
+- **THEN** the engine wires the default redactor from `@ohmyperf/share-client/redact` (`redactStorageState`)
 - **AND** cookie values matching `/secret|token|jwt|password|api[_-]?key/i` keys, and localStorage values that look like JWTs or `eyJ...` patterns, are replaced with `<REDACTED>`
 - **AND** the redacted storageState is what gets persisted to `.ohmyperf/cache/<bundle_hash>/storage-state.json`
 
@@ -202,8 +202,8 @@ Every record-mode run MUST produce a `reproduce.ts` next to `report.json` and su
 
 #### Scenario: `reproduce.ts` is self-contained
 - **WHEN** `reproduce.ts` is opened
-- **THEN** it imports only from `playwright` and `@nhonh/replay-cache/standalone`
-- **AND** it does NOT import from `@nhonh/core`, `@nhonh/plugins-builtin`, or any other workspace package
+- **THEN** it imports only from `playwright` and `@ohmyperf/replay-cache/standalone`
+- **AND** it does NOT import from `@ohmyperf/core`, `@ohmyperf/plugins-builtin`, or any other workspace package
 - **AND** it embeds calibration constants (CPU throttle factor, network profile name, viewport, UA, headless flag) as plain `const` literals
 
 #### Scenario: `reproduce.ts` verifies fingerprint at start
@@ -291,7 +291,7 @@ The MCP `measure` tool MUST accept a `replay` sub-object and return `bundleHash`
 The new package MUST ship with a gzipped runtime bundle no larger than 80 KB total and 30 KB for the standalone subpath.
 
 #### Scenario: Bundle budget enforced in CI
-- **WHEN** `pnpm test --filter @nhonh/replay-cache --grep "bundle-budget"` runs
+- **WHEN** `pnpm test --filter @ohmyperf/replay-cache --grep "bundle-budget"` runs
 - **THEN** `dist/index.js.gz` is at most 80 KB
 - **AND** `dist/standalone.js.gz` is at most 30 KB
 - **AND** the test fails CI on regression with an actionable error including the current and target sizes

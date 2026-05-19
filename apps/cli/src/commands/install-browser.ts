@@ -1,7 +1,7 @@
 import { spawn } from "node:child_process";
 import { createRequire } from "node:module";
 import { defineCommand } from "citty";
-import { createConsoleLogger } from "@nhonh/core";
+import { createConsoleLogger } from "@ohmyperf/core";
 import { EXIT_CODES } from "../exit-codes.js";
 
 export const installBrowserCommand = defineCommand({

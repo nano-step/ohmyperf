@@ -1,5 +1,5 @@
 {
-  "name": "@nhonh/tests-oopif-corpus",
+  "name": "@ohmyperf/tests-oopif-corpus",
   "version": "0.0.0-pre",
   "description": "Synthetic OOPIF/iframe/SW/SPA/popup test fixtures + expectations. CI-gated.",
   "license": "Apache-2.0",
@@ -21,10 +21,10 @@
     "clean": "rimraf dist .turbo *.tsbuildinfo"
   },
   "devDependencies": {
-    "@nhonh/cli": "workspace:*",
-    "@nhonh/core": "workspace:*",
-    "@nhonh/driver-playwright": "workspace:*",
-    "@nhonh/plugins-builtin": "workspace:*",
+    "@ohmyperf/cli": "workspace:*",
+    "@ohmyperf/core": "workspace:*",
+    "@ohmyperf/driver-playwright": "workspace:*",
+    "@ohmyperf/plugins-builtin": "workspace:*",
     "playwright": "catalog:",
     "vitest": "catalog:"
   },

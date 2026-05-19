@@ -88,7 +88,7 @@ Notes:
 
 ```json
 {
-  "name": "@nhonh/website",
+  "name": "@ohmyperf/website",
   "version": "0.0.0-pre",
   "private": true,
   "type": "module",
@@ -106,9 +106,9 @@ Notes:
     "clean": "rimraf .next out .turbo *.tsbuildinfo node_modules/.cache"
   },
   "dependencies": {
-    "@nhonh/core": "workspace:*",
-    "@nhonh/shared-types": "workspace:*",
-    "@nhonh/viewer": "workspace:*",
+    "@ohmyperf/core": "workspace:*",
+    "@ohmyperf/shared-types": "workspace:*",
+    "@ohmyperf/viewer": "workspace:*",
     "@hookform/resolvers": "3.10.0",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
@@ -147,7 +147,7 @@ Catalog-vs-direct rationale:
 - `react`, `react-dom`, `@types/react*` are pinned **direct** here (19.0.0), overriding the workspace catalog (which currently pins 18.3.1 — see `pnpm-workspace.yaml:17-20`). β.3 also updates the catalog. Direct pins on website prevent accidental downgrade if another app stays on 18.
 - `zod`, `playwright`/`@playwright/test`, `vitest` come from catalog (already shared).
 - All Next/Tailwind/shadcn churn lives in this package only — exact (no `^`) per REVIEW.md N1.
-- Workspace deps (`@nhonh/core`, `@nhonh/viewer`, `@nhonh/shared-types`) are `dependencies`, not `devDependencies` — they're imported at runtime by client components.
+- Workspace deps (`@ohmyperf/core`, `@ohmyperf/viewer`, `@ohmyperf/shared-types`) are `dependencies`, not `devDependencies` — they're imported at runtime by client components.
 
 ---
 
@@ -170,7 +170,7 @@ const nextConfig = {
   poweredByHeader: false,
   images: { unoptimized: true },         // required for `output: 'export'`
   experimental: {
-    optimizePackageImports: ['lucide-react', '@nhonh/viewer'],
+    optimizePackageImports: ['lucide-react', '@ohmyperf/viewer'],
     // Note: do NOT enable serverActions — incompatible with `output: 'export'`.
   },
   // No `headers()` or `redirects()` — those are server-only and silently dropped in export mode.
@@ -530,7 +530,7 @@ export default async function LandingPage() {
         {/* ─── Install / CLI / Extension ─── */}
         <section className="mb-16 grid grid-cols-1 md:grid-cols-3 gap-4">
           <InstallCard icon={<Container />} title={t('install.cli.title')} badge="CLI">
-            <pre className="rounded-md bg-muted p-3 text-xs overflow-x-auto"><code>{`npm i -g @nhonh/cli
+            <pre className="rounded-md bg-muted p-3 text-xs overflow-x-auto"><code>{`npm i -g @ohmyperf/cli
 ohmyperf install-browser
 ohmyperf run https://example.com`}</code></pre>
           </InstallCard>
@@ -583,7 +583,7 @@ function InstallCard({ icon, title, badge, children }: { icon: React.ReactNode; 
 **Cut from `/` (lazy-load on `/measure` and `/report`)**:
 - `zustand` — only needed when results come in (γ phase)
 - `idb` — only needed for storage hydration
-- `@nhonh/viewer` React export — only `/report/[[...id]]`
+- `@ohmyperf/viewer` React export — only `/report/[[...id]]`
 - Recharts, uPlot — `next/dynamic({ ssr: false })` on `/report` only
 - `dialog`, `tabs`, `tooltip`, `progress`, `skeleton` shadcn — not installed in β
 
@@ -1009,7 +1009,7 @@ export function ReportPageClient() {
 ```
 
 **Next.js 15 known bugs to watch for (as of 2026-05)** — verified during β prototype:
-- `[[...slug]]` + `output: 'export'` + `generateStaticParams: () => []` historically emitted **no HTML** (vercel/next.js issue #54393 lineage). Verify by running `pnpm --filter @nhonh/website build` and confirming `out/report/index.html` exists. If missing, that's the fallback signal.
+- `[[...slug]]` + `output: 'export'` + `generateStaticParams: () => []` historically emitted **no HTML** (vercel/next.js issue #54393 lineage). Verify by running `pnpm --filter @ohmyperf/website build` and confirming `out/report/index.html` exists. If missing, that's the fallback signal.
 - `useParams()` inside catch-all returns `{ id: undefined }` rather than `{ id: [] }` when no segments — the hook handles both.
 - `trailingSlash: true` adds `/index.html` everywhere; Cloudflare Pages serves these correctly, GitHub Pages requires `_redirects` config (document in deploy doc).
 
@@ -1267,7 +1267,7 @@ Add to `package.json` scripts:
 **O.1 — Dev server health (curl)**:
 ```bash
 # In one terminal
-pnpm --filter @nhonh/website dev
+pnpm --filter @ohmyperf/website dev
 
 # In another
 curl -fsS http://localhost:3000/ | grep -q 'OhMyPerf'                                  # body renders
@@ -1277,7 +1277,7 @@ curl -fsS -o /dev/null -w '%{http_code}\n' http://localhost:3000/report/        
 curl -fsS -o /dev/null -w '%{http_code}\n' http://localhost:3000/report/abc-123/                    # 200 (catch-all)
 
 # Build + verify static output
-pnpm --filter @nhonh/website build
+pnpm --filter @ohmyperf/website build
 ls apps/website/out/
 test -f apps/website/out/index.html
 test -f apps/website/out/report/index.html         # catch-all empty params

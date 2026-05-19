@@ -1,6 +1,6 @@
 {
-  "name": "@nhonh/reporter-deck",
-  "version": "0.1.1",
+  "name": "@ohmyperf/reporter-deck",
+  "version": "0.1.0",
   "description": "Multi-slide HTML presentation reporter. Swiss-grid layout grammar + Calibre palette. Single file, light-locked, print-to-PDF first-class.",
   "license": "Apache-2.0",
   "engines": {
@@ -29,13 +29,13 @@
     "clean": "rimraf dist .turbo *.tsbuildinfo"
   },
   "peerDependencies": {
-    "@nhonh/core": "workspace:*",
-    "@nhonh/viewer": "workspace:*"
+    "@ohmyperf/core": "workspace:*",
+    "@ohmyperf/viewer": "workspace:*"
   },
   "devDependencies": {
-    "@nhonh/core": "workspace:*",
-    "@nhonh/design-tokens": "workspace:*",
-    "@nhonh/viewer": "workspace:*",
+    "@ohmyperf/core": "workspace:*",
+    "@ohmyperf/design-tokens": "workspace:*",
+    "@ohmyperf/viewer": "workspace:*",
     "vitest": "catalog:"
   },
   "publishConfig": {

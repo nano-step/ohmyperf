@@ -1,4 +1,4 @@
-import type { Report } from "@nhonh/core";
+import type { Report } from "@ohmyperf/core";
 
 export interface RedactionSummary {
   readonly headers: number;

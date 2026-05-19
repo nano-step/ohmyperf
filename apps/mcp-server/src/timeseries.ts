@@ -1,7 +1,7 @@
 import { appendFile, mkdir, readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { join } from "node:path";
-import type { Report } from "@nhonh/core";
+import type { Report } from "@ohmyperf/core";
 
 export interface TimeSeriesPoint {
   readonly at: string;

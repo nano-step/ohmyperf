@@ -7,33 +7,33 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const repoRoot = join(__dirname, "..");
 
 const PACKAGES = [
-  { dir: "packages/core",                pkg: "@nhonh/core",                role: "Engine, types, plugin runtime. Reentrant. Public API frozen at 1.0.0-stable end of P0." },
-  { dir: "packages/driver-playwright",   pkg: "@nhonh/driver-playwright",   role: "Playwright Driver implementation. Wraps newCDPSession() for Chromium-deep work.", deps: { peer: ["playwright"] } },
-  { dir: "packages/driver-extension",    pkg: "@nhonh/driver-extension",    role: "Driver implementation backed by chrome.debugger. Used by the Chrome extension surface." },
-  { dir: "packages/plugins-builtin",     pkg: "@nhonh/plugins-builtin",     role: "Built-in plugins: cwv, axe, lh-audits (vendored), seo, best-practices.", deps: { peer: ["@nhonh/core"], dev: ["axe-core", "web-vitals"] } },
-  { dir: "packages/reporter-json",       pkg: "@nhonh/reporter-json",       role: "Canonical Report JSON reporter (the source of truth)." },
-  { dir: "packages/reporter-html",       pkg: "@nhonh/reporter-html",       role: "Self-contained HTML reporter via Vite single-file. Embeds the React viewer." },
-  { dir: "packages/reporter-markdown",   pkg: "@nhonh/reporter-markdown",   role: "Markdown summary reporter, PR-comment friendly." },
-  { dir: "packages/reporter-junit",      pkg: "@nhonh/reporter-junit",      role: "JUnit XML reporter; one testcase per budget threshold." },
-  { dir: "packages/reporter-csv",        pkg: "@nhonh/reporter-csv",        role: "CSV reporter (long format, per-metric-per-run)." },
-  { dir: "packages/reporter-har",        pkg: "@nhonh/reporter-har",        role: "HTTP Archive (HAR) reporter with redaction applied." },
-  { dir: "packages/reporter-trace",      pkg: "@nhonh/reporter-trace",      role: "Chrome trace .json.gz reporter (loadable in chrome://tracing)." },
-  { dir: "packages/reporter-lh-compat",  pkg: "@nhonh/reporter-lh-compat",  role: "Lighthouse-compatible JSON reporter (lossy)." },
-  { dir: "packages/viewer",              pkg: "@nhonh/viewer",              role: "React + Vite + Tailwind viewer. Consumes Report JSON only.", browser: true },
-  { dir: "packages/share-client",        pkg: "@nhonh/share-client",        role: "Upload/fetch shareable reports; runs the redaction pipeline before upload." },
-  { dir: "packages/share-server",        pkg: "@nhonh/share-server",        role: "Hono backend for shareable links. CF Workers + R2 + D1; Hono+S3+Postgres for self-host." },
-  { dir: "packages/trace-utils",         pkg: "@nhonh/trace-utils",         role: "Vendored tracium-equivalent. MainThreadTasks parsing, function attribution." },
+  { dir: "packages/core",                pkg: "@ohmyperf/core",                role: "Engine, types, plugin runtime. Reentrant. Public API frozen at 1.0.0-stable end of P0." },
+  { dir: "packages/driver-playwright",   pkg: "@ohmyperf/driver-playwright",   role: "Playwright Driver implementation. Wraps newCDPSession() for Chromium-deep work.", deps: { peer: ["playwright"] } },
+  { dir: "packages/driver-extension",    pkg: "@ohmyperf/driver-extension",    role: "Driver implementation backed by chrome.debugger. Used by the Chrome extension surface." },
+  { dir: "packages/plugins-builtin",     pkg: "@ohmyperf/plugins-builtin",     role: "Built-in plugins: cwv, axe, lh-audits (vendored), seo, best-practices.", deps: { peer: ["@ohmyperf/core"], dev: ["axe-core", "web-vitals"] } },
+  { dir: "packages/reporter-json",       pkg: "@ohmyperf/reporter-json",       role: "Canonical Report JSON reporter (the source of truth)." },
+  { dir: "packages/reporter-html",       pkg: "@ohmyperf/reporter-html",       role: "Self-contained HTML reporter via Vite single-file. Embeds the React viewer." },
+  { dir: "packages/reporter-markdown",   pkg: "@ohmyperf/reporter-markdown",   role: "Markdown summary reporter, PR-comment friendly." },
+  { dir: "packages/reporter-junit",      pkg: "@ohmyperf/reporter-junit",      role: "JUnit XML reporter; one testcase per budget threshold." },
+  { dir: "packages/reporter-csv",        pkg: "@ohmyperf/reporter-csv",        role: "CSV reporter (long format, per-metric-per-run)." },
+  { dir: "packages/reporter-har",        pkg: "@ohmyperf/reporter-har",        role: "HTTP Archive (HAR) reporter with redaction applied." },
+  { dir: "packages/reporter-trace",      pkg: "@ohmyperf/reporter-trace",      role: "Chrome trace .json.gz reporter (loadable in chrome://tracing)." },
+  { dir: "packages/reporter-lh-compat",  pkg: "@ohmyperf/reporter-lh-compat",  role: "Lighthouse-compatible JSON reporter (lossy)." },
+  { dir: "packages/viewer",              pkg: "@ohmyperf/viewer",              role: "React + Vite + Tailwind viewer. Consumes Report JSON only.", browser: true },
+  { dir: "packages/share-client",        pkg: "@ohmyperf/share-client",        role: "Upload/fetch shareable reports; runs the redaction pipeline before upload." },
+  { dir: "packages/share-server",        pkg: "@ohmyperf/share-server",        role: "Hono backend for shareable links. CF Workers + R2 + D1; Hono+S3+Postgres for self-host." },
+  { dir: "packages/trace-utils",         pkg: "@ohmyperf/trace-utils",         role: "Vendored tracium-equivalent. MainThreadTasks parsing, function attribution." },
 ];
 
 const APPS = [
-  { dir: "apps/cli",              pkg: "@nhonh/cli",              role: "ohmyperf CLI binary (citty). Default entry point.",          bin: { "ohmyperf": "./bin/ohmyperf.mjs" } },
-  { dir: "apps/website",          pkg: "@nhonh/website",          role: "ohmyperf.dev landing + drag-drop viewer + extension download + hosted share UI.", browser: true, private: true },
-  { dir: "apps/extension-chrome", pkg: "@nhonh/extension-chrome", role: "MV3 Chrome extension; chrome.debugger-backed real-device runner.",                browser: true, private: true },
-  { dir: "apps/ide-vscode",       pkg: "@nhonh/ide-vscode",       role: "VSCode extension; spawns CLI subprocess; embeds viewer in webview.",              private: true },
+  { dir: "apps/cli",              pkg: "@ohmyperf/cli",              role: "ohmyperf CLI binary (citty). Default entry point.",          bin: { "ohmyperf": "./bin/ohmyperf.mjs" } },
+  { dir: "apps/website",          pkg: "@ohmyperf/website",          role: "ohmyperf.dev landing + drag-drop viewer + extension download + hosted share UI.", browser: true, private: true },
+  { dir: "apps/extension-chrome", pkg: "@ohmyperf/extension-chrome", role: "MV3 Chrome extension; chrome.debugger-backed real-device runner.",                browser: true, private: true },
+  { dir: "apps/ide-vscode",       pkg: "@ohmyperf/ide-vscode",       role: "VSCode extension; spawns CLI subprocess; embeds viewer in webview.",              private: true },
 ];
 
 const TESTS = [
-  { dir: "tests/oopif-corpus", pkg: "@nhonh/tests-oopif-corpus", role: "Synthetic OOPIF/iframe/SW/SPA/popup test fixtures + expectations. CI-gated.", private: true },
+  { dir: "tests/oopif-corpus", pkg: "@ohmyperf/tests-oopif-corpus", role: "Synthetic OOPIF/iframe/SW/SPA/popup test fixtures + expectations. CI-gated.", private: true },
 ];
 
 function ensureDir(p) {
@@ -85,7 +85,7 @@ function makePackageJson({ pkg, role, browser = false, bin, private: isPrivate =
     json.bin = bin;
   }
   if (deps.peer && deps.peer.length) {
-    json.peerDependencies = Object.fromEntries(deps.peer.map((d) => [d, d.startsWith("@nhonh/") ? "workspace:*" : "*"]));
+    json.peerDependencies = Object.fromEntries(deps.peer.map((d) => [d, d.startsWith("@ohmyperf/") ? "workspace:*" : "*"]));
   }
   if (deps.dev && deps.dev.length) {
     json.devDependencies = Object.fromEntries(deps.dev.map((d) => [d, "catalog:"]));

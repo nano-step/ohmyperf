@@ -1,6 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
-import type { Report } from "@nhonh/core";
+import type { Report } from "@ohmyperf/core";
 import {
   renderMarkdown,
   type MarkdownReporterOptions,

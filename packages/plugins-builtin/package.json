@@ -1,6 +1,6 @@
 {
-  "name": "@nhonh/plugins-builtin",
-  "version": "0.1.1",
+  "name": "@ohmyperf/plugins-builtin",
+  "version": "0.1.0",
   "description": "Built-in plugins: cwv, axe, lh-audits (vendored), seo, best-practices.",
   "license": "Apache-2.0",
   "engines": {
@@ -44,11 +44,11 @@
     "third-party-web": "^0.29.2"
   },
   "peerDependencies": {
-    "@nhonh/core": "workspace:*"
+    "@ohmyperf/core": "workspace:*"
   },
   "devDependencies": {
-    "@nhonh/core": "workspace:*",
-    "@nhonh/driver-playwright": "workspace:*",
+    "@ohmyperf/core": "workspace:*",
+    "@ohmyperf/driver-playwright": "workspace:*",
     "axe-core": "catalog:",
     "playwright": "catalog:",
     "vitest": "catalog:"

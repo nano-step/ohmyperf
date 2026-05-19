@@ -4,7 +4,7 @@
 
 ### Requirement: Interactive URL measurement on landing page
 
-The website surface SHALL accept a user-supplied URL on the landing page and produce a complete `Report` (per frozen `@nhonh/core` 1.0 schema) using a real CDP-driven measurement engine. The measurement SHALL NOT be a synthetic emulation; it SHALL use the same engine code paths as `apps/cli`.
+The website surface SHALL accept a user-supplied URL on the landing page and produce a complete `Report` (per frozen `@ohmyperf/core` 1.0 schema) using a real CDP-driven measurement engine. The measurement SHALL NOT be a synthetic emulation; it SHALL use the same engine code paths as `apps/cli`.
 
 #### Scenario: User submits a valid public URL with extension installed
 
@@ -145,7 +145,7 @@ The SPA SHALL build as a fully static export consumable by Cloudflare Pages, Git
 
 #### Scenario: Production build is static
 
-- **WHEN** `pnpm --filter @nhonh/website build` completes
+- **WHEN** `pnpm --filter @ohmyperf/website build` completes
 - **THEN** the `apps/website/out/` directory SHALL contain only static files (`.html`, `.js`, `.css`, assets)
 - **AND** there SHALL be NO Node.js server entrypoint required to serve them
 - **AND** opening `out/index.html` via `file://` or any static server SHALL render the landing

@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { streamSSE } from "hono/streaming";
-import type { JobPollResponse, ProgressEvent } from "@nhonh/shared-types";
+import type { JobPollResponse, ProgressEvent } from "@ohmyperf/shared-types";
 import type { Config } from "../config.js";
 import type { JobStore } from "../queue.js";
 import type { AppVariables } from "../app.js";

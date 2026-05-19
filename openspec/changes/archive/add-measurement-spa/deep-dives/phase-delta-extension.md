@@ -134,7 +134,7 @@ export type PortEvent =
   | { protocolVersion: ProtocolVersion; type: "navigation"; jobId: string; runIndex: 0; phase: "started" | "committed" | "loaded" | "idle"; ts: number }
   | { protocolVersion: ProtocolVersion; type: "metric"; jobId: string; runIndex: 0; name: string; value: number; ts: number }
   | { protocolVersion: ProtocolVersion; type: "run-complete"; jobId: string; runIndex: 0; ts: number }
-  | { protocolVersion: ProtocolVersion; type: "complete"; jobId: string; report: import("@nhonh/core").Report; ts: number }
+  | { protocolVersion: ProtocolVersion; type: "complete"; jobId: string; report: import("@ohmyperf/core").Report; ts: number }
   | { protocolVersion: ProtocolVersion; type: "error"; jobId: string; error: BridgeError; ts: number };
 ```
 

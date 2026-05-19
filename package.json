@@ -1,6 +1,6 @@
 {
   "name": "ohmyperf",
-  "version": "0.1.1",
+  "version": "0.1.0",
   "description": "Real-machine, real-browser web performance measurement platform with ~99% iframe coverage via CDP OOPIF deep-inspection.",
   "license": "Apache-2.0",
   "homepage": "https://github.com/hoainho/ohmyperf#readme",
@@ -23,7 +23,7 @@
     "test": "turbo run test",
     "test:oopif-corpus": "turbo run test:oopif-corpus",
     "test:parity": "turbo run test:parity",
-    "test:visual": "turbo run test:visual --filter @nhonh/tests-visual-regression",
+    "test:visual": "turbo run test:visual --filter @ohmyperf/tests-visual-regression",
     "license:audit": "node scripts/license-audit.mjs",
     "check:design-tokens": "node scripts/check-design-tokens.mjs",
     "check:brand-licenses": "node scripts/check-brand-licenses.mjs",

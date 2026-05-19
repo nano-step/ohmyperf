@@ -1,7 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
-import type { Report } from "@nhonh/core";
-import { renderReportHtml, type RenderViewerOptions } from "@nhonh/viewer";
+import type { Report } from "@ohmyperf/core";
+import { renderReportHtml, type RenderViewerOptions } from "@ohmyperf/viewer";
 
 export const REPORTER_ID = "html" as const;
 

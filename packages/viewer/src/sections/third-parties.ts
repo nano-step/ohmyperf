@@ -1,4 +1,4 @@
-import type { Report } from "@nhonh/core";
+import type { Report } from "@ohmyperf/core";
 import { donutColorSlot, renderDonut } from "../charts/donut.js";
 import { escapeHtml } from "../escape.js";
 import { renderEmptyState } from "./empty-state.js";

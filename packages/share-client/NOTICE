@@ -17,7 +17,7 @@ axe-core (MPL-2.0)
 --------------------------------------------------------------------------------
   Project: https://github.com/dequelabs/axe-core
   License: Mozilla Public License 2.0
-  Usage:   linked, not modified. Loaded at runtime in @nhonh/plugin-axe.
+  Usage:   linked, not modified. Loaded at runtime in @ohmyperf/plugin-axe.
 
   This Source Code Form is subject to the terms of the Mozilla Public License,
   v. 2.0. If a copy of the MPL was not distributed with this file, you can
@@ -25,7 +25,7 @@ axe-core (MPL-2.0)
 
   Per MPL-2.0 §3.3, recipients of MPL-licensed files retain MPL obligations on
   those files. OhMyPerf does not modify axe-core source files; we re-export the
-  upstream package via @nhonh/plugin-axe. The unmodified axe-core source
+  upstream package via @ohmyperf/plugin-axe. The unmodified axe-core source
   remains under MPL-2.0.
 
 --------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ Playwright (Apache-2.0)
   Project: https://github.com/microsoft/playwright
   License: Apache License, Version 2.0
   Copyright: Copyright (c) Microsoft Corporation
-  Usage:   runtime dependency of @nhonh/driver-playwright; orchestration
+  Usage:   runtime dependency of @ohmyperf/driver-playwright; orchestration
            layer for browser launch + CDP session creation.
 
 --------------------------------------------------------------------------------
@@ -43,7 +43,7 @@ web-vitals (Apache-2.0)
   Project: https://github.com/GoogleChrome/web-vitals
   License: Apache License, Version 2.0
   Copyright: Copyright (c) Google LLC
-  Usage:   runtime dependency of @nhonh/plugin-cwv; the
+  Usage:   runtime dependency of @ohmyperf/plugin-cwv; the
            "web-vitals/attribution" build is injected into measured pages
            via CDP Page.addScriptToEvaluateOnNewDocument.
 
@@ -55,7 +55,7 @@ Lighthouse audit modules (Apache-2.0, vendored subset)
   Copyright: Copyright (c) Google LLC
   Usage:   a curated subset of audit modules (SEO, best-practices, HTTPS,
            manifest, robots) is vendored into
-           @nhonh/plugins-builtin/lh-audits/ under the original Apache-2.0
+           @ohmyperf/plugins-builtin/lh-audits/ under the original Apache-2.0
            license. The vendored copies preserve upstream copyright headers and
            are updated on the OhMyPerf release schedule.
 
@@ -65,14 +65,14 @@ tracium-equivalent (Apache-2.0, vendored)
   Project: https://github.com/aslushnikov/tracium (reference implementation)
   License: Apache License, Version 2.0
   Usage:   trace-event utilities for MainThreadTasks parsing are vendored into
-           @nhonh/trace-utils. Upstream copyright headers preserved.
+           @ohmyperf/trace-utils. Upstream copyright headers preserved.
 
 --------------------------------------------------------------------------------
 Vendored open-design brand tokens (Apache-2.0)
 --------------------------------------------------------------------------------
   Project: https://github.com/nexu-io/open-design
   License: Apache License, Version 2.0
-  Usage:   CSS token files vendored into @nhonh/design-tokens/brands/<id>/
+  Usage:   CSS token files vendored into @ohmyperf/design-tokens/brands/<id>/
            to power the --style flag (CLI), MCP rendering tool style arg, and
            website /report brand picker. Vendored copies carry the upstream
            SPDX-License-Identifier header and a provenance comment citing the

@@ -95,7 +95,7 @@ Carried forward from this proposal's deep-design synthesis (2026-05-19):
 
 ## Success criteria
 
-1. **`pnpm test --filter @nhonh/core` green**, including new `stats/`, `counterfactual/`, and `counterfactual-collector` unit tests.
+1. **`pnpm test --filter @ohmyperf/core` green**, including new `stats/`, `counterfactual/`, and `counterfactual-collector` unit tests.
 2. **`pnpm test:counterfactual-corpus` green** on 10 fixtures with MAPE < 15% across the corpus.
 3. **Synthetic fixture passes**: page with 1 hero image deliberately too large → `intervention: 'fulfill-cached'` produces `|Δ_predicted − Δ_real_preload| < 100 ms` (real Δ measured by manually applying `<link rel=preload>` to the fixture and re-running baseline).
 4. **4× wall-clock budget honored** on ≥ 80% of corpus pages; breaches surface as `partialFailure: true` and an engine warning (no silent skips).

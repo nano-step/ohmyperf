@@ -44,7 +44,7 @@ pnpm test:parity
 If you see a fixture fail, run with `--reporter=verbose`:
 
 ```bash
-pnpm --filter @nhonh/tests-parity exec vitest run --reporter=verbose
+pnpm --filter @ohmyperf/tests-parity exec vitest run --reporter=verbose
 ```
 
 The harness logs each metric pair like `lcp: ours=820.4 lh=798.1 rel=2.8% (tolerance 10%)`.

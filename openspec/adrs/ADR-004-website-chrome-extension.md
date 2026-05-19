@@ -17,7 +17,7 @@ Metis flagged scope risk on (3): Chrome Web Store review pain, the visible "DevT
 
 ## Decision
 
-The website surface uses an **MV3 Chrome extension** as the local runner. The website (`ohmyperf.dev`) is a thin UI that postMessages with the extension's content script, which communicates with the background service-worker, which calls `chrome.debugger.attach({ tabId }, '1.3')` and bootstraps `@nhonh/core` (browser build) against the target.
+The website surface uses an **MV3 Chrome extension** as the local runner. The website (`ohmyperf.dev`) is a thin UI that postMessages with the extension's content script, which communicates with the background service-worker, which calls `chrome.debugger.attach({ tabId }, '1.3')` and bootstraps `@ohmyperf/core` (browser build) against the target.
 
 Acceptable trade-offs:
 
@@ -36,7 +36,7 @@ Acceptable trade-offs:
 
 - (+) 2-click install via Chrome Web Store; casual users can try the tool in 30 seconds.
 - (+) Real CDP via `chrome.debugger` including `Target.setAutoAttach` for cross-origin OOPIFs (parity with the Playwright driver, with documented gaps).
-- (+) Single codebase per surface; the extension and CLI share `@nhonh/core`.
+- (+) Single codebase per surface; the extension and CLI share `@ohmyperf/core`.
 - (-) Chrome/Edge only on the Website surface in v1. Firefox/WebKit users are directed to the CLI.
 - (-) Profile contamination by other extensions; mitigated with a banner.
 - (-) Service-worker termination is a real concern (MV3 SWs can be killed mid-run); spec mandates `chrome.storage.session` checkpointing.

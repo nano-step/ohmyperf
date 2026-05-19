@@ -91,7 +91,7 @@ export interface InterventionDriver {
 
 ```ts
 import type { BaselineRun } from '../engine';
-import type { InterventionKind } from '@nhonh/shared-types';
+import type { InterventionKind } from '@ohmyperf/shared-types';
 
 export interface RankedCandidate {
   cause: string;
@@ -118,7 +118,7 @@ export function rankLcp(input: RankerInput): RankedCandidate[];
 ### `core/src/collectors-impl/counterfactual-collector.ts`
 
 ```ts
-import type { InterventionDriver, InterventionSpec } from '@nhonh/driver-playwright';
+import type { InterventionDriver, InterventionSpec } from '@ohmyperf/driver-playwright';
 
 export interface InterventionMeasurement {
   lcpMs: number;
@@ -178,7 +178,7 @@ export function bootstrapDeltaCI(
 ### `core/src/counterfactual/verdict.ts`
 
 ```ts
-import type { Verdict } from '@nhonh/shared-types';
+import type { Verdict } from '@ohmyperf/shared-types';
 
 export interface VerdictInput {
   delta: number;

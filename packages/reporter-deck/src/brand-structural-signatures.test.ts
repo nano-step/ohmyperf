@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import type { Report } from "@nhonh/core";
+import type { Report } from "@ohmyperf/core";
 import { renderReportDeck } from "./render.js";
 
 function loadFixture(name: string): Report {

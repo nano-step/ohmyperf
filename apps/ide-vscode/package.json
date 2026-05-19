@@ -53,8 +53,8 @@
     "clean": "rimraf dist .turbo extension-out *.tsbuildinfo"
   },
   "devDependencies": {
-    "@nhonh/core": "workspace:*",
-    "@nhonh/viewer": "workspace:*",
+    "@ohmyperf/core": "workspace:*",
+    "@ohmyperf/viewer": "workspace:*",
     "@types/vscode": "^1.85.0",
     "esbuild": "^0.24.0",
     "vitest": "catalog:"

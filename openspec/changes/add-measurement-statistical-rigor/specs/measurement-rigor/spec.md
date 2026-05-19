@@ -173,7 +173,7 @@ Every Report SHALL include `report.meta.captureFingerprint` computed as `'sha256
 - **THEN** their `meta.captureFingerprint` values differ
 
 #### Scenario: Sensitivity to `ohmyperfVersion`
-- **WHEN** two reports are produced by different `@nhonh/core` package versions
+- **WHEN** two reports are produced by different `@ohmyperf/core` package versions
 - **THEN** their `meta.captureFingerprint` values differ
 
 #### Scenario: Sensitivity to `taxonomyVersion`
@@ -197,17 +197,17 @@ Every Report SHALL include `report.meta.captureFingerprint` computed as `'sha256
 All new fields introduced by this change SHALL be optional. The `SchemaVersion` constant SHALL remain `"1.0.0"`. `api-extractor` SHALL confirm an additive-only diff against the prior `core.api.md` snapshot.
 
 #### Scenario: `api:check` passes
-- **WHEN** `pnpm api:check --filter @nhonh/core` runs after this change
+- **WHEN** `pnpm api:check --filter @ohmyperf/core` runs after this change
 - **THEN** exit code is 0
 - **AND** the diff against `packages/core/etc/core.api.md` contains only `+` lines for existing exports (no removed/renamed exports)
 
 #### Scenario: Legacy v1.0 Reports still load in this codebase
-- **WHEN** a Report serialized by the pre-change `@nhonh/core` (no `meta.sampling`, no `meta.crux`, no `meta.captureFingerprint`, no `diagnostics`) is deserialized and rendered by the post-change viewer
+- **WHEN** a Report serialized by the pre-change `@ohmyperf/core` (no `meta.sampling`, no `meta.crux`, no `meta.captureFingerprint`, no `diagnostics`) is deserialized and rendered by the post-change viewer
 - **THEN** no `TypeError` is thrown
 - **AND** the viewer renders the report with the new fields visually absent (not "undefined" strings)
 
 #### Scenario: `SchemaVersion` constant is unchanged
-- **WHEN** `@nhonh/core` is built after this change
+- **WHEN** `@ohmyperf/core` is built after this change
 - **THEN** the exported `SchemaVersion` type literal is still `"1.0.0"`
 
 ### Requirement: Validation evidence ships with the change

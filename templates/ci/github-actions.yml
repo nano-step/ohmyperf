@@ -22,7 +22,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22.x
-      - run: npm install -g @nhonh/cli
+      - run: npm install -g @ohmyperf/cli
       - name: Install Chromium for OhMyPerf
         run: ohmyperf install-browser
       - name: Locate Playwright Chromium binary

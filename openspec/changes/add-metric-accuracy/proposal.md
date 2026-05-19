@@ -6,7 +6,7 @@ The post-MVP audit (Sisyphus 2026-05-17, four parallel agents) uncovered **corre
 
 The biggest concrete findings:
 
-1. **INP is computed wrong.** [`cwv-inline-script.ts`](../../../packages/core/src/collectors-impl/cwv-inline-script.ts) tracks `max(event.duration)` across all events. The actual Web Vitals INP algorithm requires interaction grouping (pointerdown + pointerup + click as one interaction), 98th-percentile selection, and an `interactionId` guard. The `web-vitals` package is already a declared dependency of `@nhonh/plugins-builtin` but is **never imported**. Every INP number OhMyPerf has reported to date is wrong.
+1. **INP is computed wrong.** [`cwv-inline-script.ts`](../../../packages/core/src/collectors-impl/cwv-inline-script.ts) tracks `max(event.duration)` across all events. The actual Web Vitals INP algorithm requires interaction grouping (pointerdown + pointerup + click as one interaction), 98th-percentile selection, and an `interactionId` guard. The `web-vitals` package is already a declared dependency of `@ohmyperf/plugins-builtin` but is **never imported**. Every INP number OhMyPerf has reported to date is wrong.
 
 2. **No attribution data is captured.** The `MetricAttribution` type exists in `packages/core/src/types.ts` with fields for `element`, `url`, `subparts`, but no collector ever populates it. Users cannot see "which DOM element is the LCP" or "which iframe caused the CLS shift."
 
@@ -28,7 +28,7 @@ This change fixes the correctness bug, populates attribution, captures the free 
 - `packages/plugins-builtin/src/cwv.ts` — bundle `web-vitals/attribution` via `Page.addScriptToEvaluateOnNewDocument`.
 
 ### Added
-- `tests/parity/lighthouse-parity.test.ts` — runs both `@nhonh/core` and Lighthouse 13.x against fixture URLs (using `lighthouse` programmatic API) and asserts LCP/FCP/TTFB medians within ±10%, TBT within ±5%.
+- `tests/parity/lighthouse-parity.test.ts` — runs both `@ohmyperf/core` and Lighthouse 13.x against fixture URLs (using `lighthouse` programmatic API) and asserts LCP/FCP/TTFB medians within ±10%, TBT within ±5%.
 - `tests/oopif-corpus/fixtures/` — 9 new fixtures: BFCache, prerender, SW-precache, SPA-soft-nav, popup, worker, iframe-resize-causes-parent-shift, fenced-frame, 5xx-error.
 - `tests/oopif-corpus/expectations/*.ts` — for each new fixture: assertions on attach/detach counts AND metric availability (LCP/CLS/INP present per the spec frame) AND attribution shape (LCP must have `element` and `url`).
 - `packages/core/src/cls-frame-attribution.ts` — derive iframe-resize attribution from web-vitals CLS `largestShiftEntry.sources[].node` correlated with frame ownership (NOT a phantom `Page.frameResized` event — that event does not exist in CDP). Populate `Metric.attribution.cause = "frame-resize"` and `frameId` when the source node is an iframe element.
@@ -57,7 +57,7 @@ This change fixes the correctness bug, populates attribution, captures the free 
 
 ## Success criteria
 
-1. `pnpm test --filter @nhonh/core` green, including new parity test.
+1. `pnpm test --filter @ohmyperf/core` green, including new parity test.
 2. INP numbers on a known fixture match `web-vitals/attribution` reference within float epsilon.
 3. Lighthouse parity test passes: ±10% LCP/FCP/TTFB, ±5% TBT, on 3 static fixture URLs.
 4. OOPIF corpus 13/13 fixtures with metric-availability assertions green.

@@ -1,9 +1,9 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { createServer, type Server } from "node:http";
 import type { AddressInfo } from "node:net";
-import { createSilentLogger } from "@nhonh/core";
+import { createSilentLogger } from "@ohmyperf/core";
 import { createPlaywrightDriver, pageHandleAsTarget, type PlaywrightDriverInstance } from "./index.js";
-import type { BrowserHandle } from "@nhonh/core";
+import type { BrowserHandle } from "@ohmyperf/core";
 import type { AttachedTarget } from "./oopif-attach.js";
 
 let server: Server | undefined;

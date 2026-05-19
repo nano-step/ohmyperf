@@ -141,7 +141,7 @@ Reusable: `components/empty-state.tsx`.
 ### E.1 Install
 
 ```bash
-pnpm --filter @nhonh/website add -D @axe-core/playwright @playwright/test
+pnpm --filter @ohmyperf/website add -D @axe-core/playwright @playwright/test
 ```
 
 ### E.2 `tests/a11y.spec.ts`
@@ -187,7 +187,7 @@ export default defineConfig({
   timeout: 30_000,
   use: { baseURL: process.env.OMO_TEST_URL ?? 'http://127.0.0.1:3000' },
   webServer: process.env.OMO_TEST_URL ? undefined : {
-    command: 'pnpm --filter @nhonh/website start',
+    command: 'pnpm --filter @ohmyperf/website start',
     port: 3000,
     reuseExistingServer: !process.env.CI,
     timeout: 60_000,
@@ -276,7 +276,7 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 22.x, cache: pnpm }
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter @nhonh/website build
+      - run: pnpm --filter @ohmyperf/website build
       - run: node scripts/check-bundle-budgets.mjs
 ```
 
@@ -311,7 +311,7 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 22.x, cache: pnpm }
       - run: pnpm install --frozen-lockfile
-      - run: pnpm exec turbo run build --filter=@nhonh/website --filter=@nhonh/cli
+      - run: pnpm exec turbo run build --filter=@ohmyperf/website --filter=@ohmyperf/cli
 
       - name: Serve static SPA on :4173
         run: |
@@ -354,7 +354,7 @@ const BUDGETS = {
 // Fail if any median > budget.max.
 ```
 
-Verify accessor against `@nhonh/core` 1.0 frozen Report schema before merging workflow.
+Verify accessor against `@ohmyperf/core` 1.0 frozen Report schema before merging workflow.
 
 ---
 
@@ -449,7 +449,7 @@ Replace surface row 4: `**Website (SPA)**` → Next.js SPA. Add note: legacy sta
 - `apps/website/tests/e2e/measure-runner.spec.ts` (mocked runner via `page.route()` + SSE body)
 - `apps/website/tests/e2e/viewer.spec.ts`
 - `apps/website/tests/e2e/history.spec.ts`
-- `apps/website/tests/fixtures/sample-report.json` (from `@nhonh/core` fixtures)
+- `apps/website/tests/fixtures/sample-report.json` (from `@ohmyperf/core` fixtures)
 
 ### Cases
 

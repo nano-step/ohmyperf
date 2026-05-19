@@ -4,7 +4,7 @@
 
 ```
 packages/
-├── agent-loop/             NEW  @nhonh/agent-loop
+├── agent-loop/             NEW  @ohmyperf/agent-loop
 │   src/
 │   ├── index.ts            verifyFix, proposeFix exports
 │   ├── verify-fix.ts       SPRT-driven verify loop
@@ -15,7 +15,7 @@ packages/
 │   ├── idempotency.ts      verifyKey/proposalId hashing
 │   └── types.ts            VerifyResult, RepairProposal
 │
-├── repair-archetypes/      NEW  @nhonh/repair-archetypes
+├── repair-archetypes/      NEW  @ohmyperf/repair-archetypes
 │   src/
 │   ├── index.ts            registry export + resolve(diagnosis, framework)
 │   ├── framework-detect.ts package.json + heuristic + confidence score
@@ -30,14 +30,14 @@ packages/
 │   │   └── cls.image-no-dimensions/
 │   └── schema.ts           Archetype/EditTemplate types
 │
-├── worktree-manager/       NEW  @nhonh/worktree-manager
+├── worktree-manager/       NEW  @ohmyperf/worktree-manager
 │   src/
 │   ├── index.ts            create/destroy worktree, apply patch
 │   ├── safety.ts           path validation, refusal list, symlink detection
 │   ├── janitor.ts          /tmp sweep on startup
 │   └── lock.ts             PID-based lock file
 │
-└── patch-applier/          NEW  @nhonh/patch-applier
+└── patch-applier/          NEW  @ohmyperf/patch-applier
     src/
     ├── index.ts            apply(canonicalPatch, worktreeRoot)
     ├── json-patch.ts       RFC 6902 → CanonicalPatch
@@ -198,7 +198,7 @@ agent-loop.verifyFix(args)
 ## 3. Key types
 
 ```ts
-// @nhonh/agent-loop/types.ts
+// @ohmyperf/agent-loop/types.ts
 
 // v1 public surface: `apply` is a literal narrowed to 'worktree' only.
 // v1.1 will broaden the union to include 'in-place' when that work lands.
@@ -287,7 +287,7 @@ export type RepairProposal =
 ```
 
 ```ts
-// @nhonh/repair-archetypes/schema.ts
+// @ohmyperf/repair-archetypes/schema.ts
 
 export type Framework = 'next.js@14' | 'remix' | 'astro' | 'vite' | 'plain-html';
 
@@ -311,7 +311,7 @@ export type DetectedFramework = {
 ```
 
 ```ts
-// @nhonh/patch-applier
+// @ohmyperf/patch-applier
 export type CanonicalPatch = {
   id: string;                          // content hash
   edits: CanonicalEdit[];
@@ -561,9 +561,9 @@ A delta exactly at the noiseFloor boundary causes SPRT to oscillate. **Mitigatio
 
 ## 11. Validation strategy
 
-- **Unit tests** (`@nhonh/agent-loop`): SPRT verdict on synthetic delta streams; Holm-Bonferroni correction correctness; idempotency hash determinism; CanonicalPatch normalization invariants across the 3 input formats.
-- **Unit tests** (`@nhonh/repair-archetypes`): each archetype template is a pure function; evidence schema validates known-good and rejects known-bad evidence; predictedDelta within sane bounds; bundle size CI gate.
-- **Unit tests** (`@nhonh/worktree-manager`): path traversal rejection (every refusal-list entry tested); symlink rejection; janitor correctness (mock filesystem + mock process tree); atexit handler fires.
+- **Unit tests** (`@ohmyperf/agent-loop`): SPRT verdict on synthetic delta streams; Holm-Bonferroni correction correctness; idempotency hash determinism; CanonicalPatch normalization invariants across the 3 input formats.
+- **Unit tests** (`@ohmyperf/repair-archetypes`): each archetype template is a pure function; evidence schema validates known-good and rejects known-bad evidence; predictedDelta within sane bounds; bundle size CI gate.
+- **Unit tests** (`@ohmyperf/worktree-manager`): path traversal rejection (every refusal-list entry tested); symlink rejection; janitor correctness (mock filesystem + mock process tree); atexit handler fires.
 - **Integration tests** (corpus): for each of 10 fixtures, run the full agent loop (propose → verify) up to 3 iterations; assert verdict matches `expected-verdict.json`; assert `newInsights` matches expected on the side-effect fixture.
 - **End-to-end (MCP)**: spawn `mcp-server` as subprocess; client calls `propose_fix` and `verify_fix` via MCP transport; assert canonical responses.
 - **Performance budget**: verify wall-clock on the `lcp-preload-missing-next` fixture must be < 90s cold (fresh pnpm-store), < 30s warm. CI runs both modes.

@@ -1,6 +1,6 @@
 'use client';
 
-import type { AuditResult } from '@nhonh/core';
+import type { AuditResult } from '@ohmyperf/core';
 
 interface Props {
   audits: ReadonlyArray<AuditResult>;

@@ -3,8 +3,8 @@ import { mkdir, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import * as vscode from "vscode";
-import { renderReportHtml } from "@nhonh/viewer";
-import type { Report } from "@nhonh/core";
+import { renderReportHtml } from "@ohmyperf/viewer";
+import type { Report } from "@ohmyperf/core";
 
 interface CliResult {
   exitCode: number;

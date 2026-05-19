@@ -1,5 +1,5 @@
-import type { LongTask, Report, Resource } from "@nhonh/core";
-import { diffReports, type MetricDiff } from "@nhonh/core";
+import type { LongTask, Report, Resource } from "@ohmyperf/core";
+import { diffReports, type MetricDiff } from "@ohmyperf/core";
 
 export interface ResourceDelta {
   readonly kind: "added" | "removed" | "grew" | "slowed";

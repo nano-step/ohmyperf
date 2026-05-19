@@ -1,4 +1,4 @@
-# @nhonh/tests-oopif-corpus
+# @ohmyperf/tests-oopif-corpus
 
 Synthetic OOPIF/iframe/SW/SPA/popup test fixtures + expectations. CI-gated.
 

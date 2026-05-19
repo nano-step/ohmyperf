@@ -1,6 +1,6 @@
 {
-  "name": "@nhonh/reporter-junit",
-  "version": "0.1.1",
+  "name": "@ohmyperf/reporter-junit",
+  "version": "0.1.0",
   "description": "JUnit XML reporter; one testcase per budget threshold.",
   "license": "Apache-2.0",
   "engines": {
@@ -28,10 +28,10 @@
     "clean": "rimraf dist .turbo *.tsbuildinfo"
   },
   "peerDependencies": {
-    "@nhonh/core": "workspace:*"
+    "@ohmyperf/core": "workspace:*"
   },
   "devDependencies": {
-    "@nhonh/core": "workspace:*"
+    "@ohmyperf/core": "workspace:*"
   },
   "publishConfig": {
     "access": "public"

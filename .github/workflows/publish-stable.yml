@@ -1,6 +1,8 @@
 name: Publish Stable
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
     inputs:
       bump:
@@ -87,21 +89,21 @@ jobs:
         run: |
           set -euo pipefail
           CURRENT=$(node -p "require('./package.json').version")
-          PINNED=$(grep -oE '@nhonh/cli@[0-9]+\.[0-9]+\.[0-9]+' README.md | head -1 || true)
-          PINNED_MCP=$(grep -oE '@nhonh/mcp-server@[0-9]+\.[0-9]+\.[0-9]+' README.md | head -1 || true)
+          PINNED=$(grep -oE '@ohmyperf/cli@[0-9]+\.[0-9]+\.[0-9]+' README.md | head -1 || true)
+          PINNED_MCP=$(grep -oE '@ohmyperf/mcp-server@[0-9]+\.[0-9]+\.[0-9]+' README.md | head -1 || true)
           if [ -n "$PINNED" ]; then
             PINNED_VER=$(echo "$PINNED" | cut -d@ -f3)
             if [ "$PINNED_VER" != "$CURRENT" ]; then
-              echo "::error::README.md pins @nhonh/cli@$PINNED_VER but root package.json is at $CURRENT."
+              echo "::error::README.md pins @ohmyperf/cli@$PINNED_VER but root package.json is at $CURRENT."
               echo "Per docs/HARNESS.md PUMP VERSION SOP: a release commit MUST update README in the same commit."
-              echo "Either bump README to $CURRENT or remove the version pin (use @latest implicitly: 'npm install -g @nhonh/cli')."
+              echo "Either bump README to $CURRENT or remove the version pin (use @latest implicitly: 'npm install -g @ohmyperf/cli')."
               exit 1
             fi
           fi
           if [ -n "$PINNED_MCP" ]; then
             PINNED_VER=$(echo "$PINNED_MCP" | cut -d@ -f3)
             if [ "$PINNED_VER" != "$CURRENT" ]; then
-              echo "::error::README.md pins @nhonh/mcp-server@$PINNED_VER but root package.json is at $CURRENT."
+              echo "::error::README.md pins @ohmyperf/mcp-server@$PINNED_VER but root package.json is at $CURRENT."
               exit 1
             fi
           fi
@@ -240,7 +242,7 @@ jobs:
               repo: context.repo.repo,
               tag_name: `v${version}`,
               name: `ohmyperf v${version}`,
-              body: `${body}\n\n---\n\n**Install:**\n\`\`\`bash\nnpm install -g @nhonh/cli\n\`\`\`\n\nAll \`@nhonh/*\` packages published at this version.`,
+              body: `${body}\n\n---\n\n**Install:**\n\`\`\`bash\nnpm install -g @ohmyperf/cli\n\`\`\`\n\nAll \`@ohmyperf/*\` packages published at this version.`,
               prerelease: false,
               target_commitish: context.sha,
             });

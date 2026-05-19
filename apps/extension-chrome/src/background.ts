@@ -3,8 +3,8 @@ import {
   type Report,
   type EngineLaunchAdapter,
   type EnginePageContext,
-} from "@nhonh/core";
-import { createExtensionDriver, pageHandleAsTargetExtension } from "@nhonh/driver-extension";
+} from "@ohmyperf/core";
+import { createExtensionDriver, pageHandleAsTargetExtension } from "@ohmyperf/driver-extension";
 import {
   PROTOCOL_VERSION,
   type BridgeCapability,
@@ -20,7 +20,7 @@ import {
   type PingRequest,
   type PingResponse,
   type PortEvent,
-} from "@nhonh/shared-types";
+} from "@ohmyperf/shared-types";
 
 interface ChromeTab {
   id?: number;

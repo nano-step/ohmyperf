@@ -1,4 +1,4 @@
-import { definePlugin, type Metric, type Plugin } from "@nhonh/core";
+import { definePlugin, type Metric, type Plugin } from "@ohmyperf/core";
 
 export interface CustomMetricExampleOptions {
   readonly id?: string;

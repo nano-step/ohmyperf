@@ -1,6 +1,6 @@
 {
-  "name": "@nhonh/reporter-markdown",
-  "version": "0.1.1",
+  "name": "@ohmyperf/reporter-markdown",
+  "version": "0.1.0",
   "description": "Markdown reporter for ohmyperf. ~2KB PR-comment-friendly summary with CWV table + audits.",
   "license": "Apache-2.0",
   "engines": {
@@ -33,10 +33,10 @@
     "clean": "rimraf dist .turbo *.tsbuildinfo"
   },
   "peerDependencies": {
-    "@nhonh/core": "workspace:*"
+    "@ohmyperf/core": "workspace:*"
   },
   "devDependencies": {
-    "@nhonh/core": "workspace:*",
+    "@ohmyperf/core": "workspace:*",
     "vitest": "catalog:"
   },
   "publishConfig": {

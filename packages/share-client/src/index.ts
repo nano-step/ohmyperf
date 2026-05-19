@@ -1,4 +1,4 @@
-import type { Report } from "@nhonh/core";
+import type { Report } from "@ohmyperf/core";
 import { redactReport, type RedactionOptions, type RedactionResult } from "./redact.js";
 
 export { redactReport, type RedactionOptions, type RedactionResult, type RedactionSummary } from "./redact.js";

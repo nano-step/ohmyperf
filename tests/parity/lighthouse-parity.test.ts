@@ -4,9 +4,9 @@ import { dirname, extname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { chromium } from "playwright";
-import { runEngine, createSilentLogger, type Report } from "@nhonh/core";
-import { createPlaywrightAdapter } from "@nhonh/driver-playwright";
-import { cwvPlugin } from "@nhonh/plugins-builtin";
+import { runEngine, createSilentLogger, type Report } from "@ohmyperf/core";
+import { createPlaywrightAdapter } from "@ohmyperf/driver-playwright";
+import { cwvPlugin } from "@ohmyperf/plugins-builtin";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const fixturesDir = join(here, "fixtures");

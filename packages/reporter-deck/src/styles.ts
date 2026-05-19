@@ -1,4 +1,4 @@
-import { PALETTE_CSS } from "@nhonh/design-tokens";
+import { PALETTE_CSS } from "@ohmyperf/design-tokens";
 
 const DECK_STRUCTURAL_CSS = `
 *, *::before, *::after { box-sizing: border-box; }

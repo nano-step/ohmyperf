@@ -23,7 +23,7 @@ import {
   type ReportSummary,
   type StoredReport,
 } from '@/lib/storage';
-import type { Report } from '@nhonh/core';
+import type { Report } from '@ohmyperf/core';
 
 function ReportContent() {
   const searchParams = useSearchParams();

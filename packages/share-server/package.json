@@ -1,5 +1,5 @@
 {
-  "name": "@nhonh/share-server",
+  "name": "@ohmyperf/share-server",
   "version": "0.0.0-pre",
   "description": "Hono backend for shareable links. Runs on Cloudflare Workers (R2 + D1) or Node (S3-compatible + SQLite).",
   "license": "Apache-2.0",
@@ -38,13 +38,13 @@
     "clean": "rimraf dist .turbo *.tsbuildinfo"
   },
   "peerDependencies": {
-    "@nhonh/core": "workspace:*",
-    "@nhonh/viewer": "workspace:*",
+    "@ohmyperf/core": "workspace:*",
+    "@ohmyperf/viewer": "workspace:*",
     "hono": "catalog:"
   },
   "devDependencies": {
-    "@nhonh/core": "workspace:*",
-    "@nhonh/viewer": "workspace:*",
+    "@ohmyperf/core": "workspace:*",
+    "@ohmyperf/viewer": "workspace:*",
     "hono": "catalog:",
     "vitest": "catalog:"
   },

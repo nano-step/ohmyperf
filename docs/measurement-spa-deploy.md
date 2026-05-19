@@ -14,7 +14,7 @@ Zero cost on the free tier. Unlimited bandwidth for static assets.
    | Setting | Value |
    |---------|-------|
    | Framework preset | None (custom) |
-   | Build command | `pnpm --filter @nhonh/website build` |
+   | Build command | `pnpm --filter @ohmyperf/website build` |
    | Build output directory | `apps/website/out` |
    | Root directory | `/` |
    | Node.js version | 22 |
@@ -56,7 +56,7 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 22.x, cache: pnpm }
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter @nhonh/website build
+      - run: pnpm --filter @ohmyperf/website build
       - uses: actions/upload-pages-artifact@v3
         with: { path: apps/website/out }
       - uses: actions/deploy-pages@v4
@@ -147,7 +147,7 @@ For teams or shared CI environments:
 
 ## Deploy share-server (optional, for hosted Share button)
 
-The Share button on `/report` requires a running `@nhonh/share-server`. Two deploy paths:
+The Share button on `/report` requires a running `@ohmyperf/share-server`. Two deploy paths:
 
 ### Cloudflare Workers + R2 + D1 (recommended)
 
@@ -188,7 +188,7 @@ The header pill flips to "Share connected" and the Share button on `/report` bec
 
 ## Bundle baseline (2026-05-17)
 
-After Tracks A/B/C land. Measured via `pnpm --filter @nhonh/website build`:
+After Tracks A/B/C land. Measured via `pnpm --filter @ohmyperf/website build`:
 
 | Route | Route size | First Load JS | Budget | Status |
 |---|---|---|---|---|

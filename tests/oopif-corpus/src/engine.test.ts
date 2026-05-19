@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { createSilentLogger, runEngine, type Report } from "@nhonh/core";
-import { createPlaywrightAdapter } from "@nhonh/driver-playwright";
+import { createSilentLogger, runEngine, type Report } from "@ohmyperf/core";
+import { createPlaywrightAdapter } from "@ohmyperf/driver-playwright";
 import { startFixtureServer, type FixtureServerHandle } from "./index.js";
 
 let server: FixtureServerHandle | undefined;
@@ -134,7 +134,7 @@ describe("runEngine() end-to-end", () => {
   it(
     "rejects measure-options-invalid URL before any browser launch",
     async () => {
-      const { measure } = await import("@nhonh/core");
+      const { measure } = await import("@ohmyperf/core");
       await expect(measure({ url: "not-a-url" })).rejects.toMatchObject({
         name: "MeasureOptionsError",
         field: "url",

@@ -1,14 +1,14 @@
 # Capability: npm-sdk-surface
 
-The `@nhonh/core` public API: stable contract for all downstream surfaces.
+The `@ohmyperf/core` public API: stable contract for all downstream surfaces.
 
 ## ADDED Requirements
 
 ### Requirement: `measure(opts) → Promise<Report>`
-`@nhonh/core` SHALL export a `measure` function that performs an end-to-end measurement and returns a `Report`. Inputs are validated; invalid inputs throw before any browser launch.
+`@ohmyperf/core` SHALL export a `measure` function that performs an end-to-end measurement and returns a `Report`. Inputs are validated; invalid inputs throw before any browser launch.
 
 ```ts
-import type { MeasureOptions, Report } from '@nhonh/core';
+import type { MeasureOptions, Report } from '@ohmyperf/core';
 export function measure(opts: MeasureOptions): Promise<Report>;
 ```
 
@@ -30,7 +30,7 @@ export function measure(opts: MeasureOptions): Promise<Report>;
 - **AND** the launched browser is fully closed (no orphan processes)
 
 ### Requirement: `defineScenario` helper
-`@nhonh/core` SHALL export `defineScenario(scenario)` which returns the scenario unchanged but provides full TypeScript inference for `step.run({ page })` against Playwright's `Page` type.
+`@ohmyperf/core` SHALL export `defineScenario(scenario)` which returns the scenario unchanged but provides full TypeScript inference for `step.run({ page })` against Playwright's `Page` type.
 
 #### Scenario: Type inference works
 - **WHEN** a user writes `defineScenario({ steps: [{ name: 's', run: async ({ page }) => page.goto('https://x') }] })` in TypeScript
@@ -38,14 +38,14 @@ export function measure(opts: MeasureOptions): Promise<Report>;
 - **AND** `tsc --noEmit` produces zero errors against the example
 
 ### Requirement: `definePlugin` helper
-`@nhonh/core` SHALL export `definePlugin(plugin)` which returns the plugin unchanged with full type inference on hook signatures.
+`@ohmyperf/core` SHALL export `definePlugin(plugin)` which returns the plugin unchanged with full type inference on hook signatures.
 
 #### Scenario: Type inference on hooks
 - **WHEN** a user writes `definePlugin({ id: 'x', version: '1.0.0', apiVersion: '1', hooks: { onMetric: async (ctx, m) => {} } })`
 - **THEN** `ctx` is typed `RunCtx` and `m` is typed `Metric`
 
 ### Requirement: `Driver` interface
-`@nhonh/core` SHALL export a `Driver` interface and SHALL accept any object satisfying it as the `driver` option of `measure`. Drivers SHALL declare capabilities via `supports(capability)` and SHALL expose `browserVersion` as the source of truth.
+`@ohmyperf/core` SHALL export a `Driver` interface and SHALL accept any object satisfying it as the `driver` option of `measure`. Drivers SHALL declare capabilities via `supports(capability)` and SHALL expose `browserVersion` as the source of truth.
 
 ```ts
 export interface Driver {
@@ -64,29 +64,29 @@ export interface Driver {
 - **AND** the run completes with frame-tree containing only the root frame
 
 ### Requirement: `Report` shape
-The `Report` type SHALL be exported from `@nhonh/core/types` and SHALL include at minimum: `schemaVersion`, `meta`, `runs[]`, `aggregated`, `frames`, `audits[]`, `budgets?`, `artifacts`, `pluginData`. The shape SHALL be JSON-serializable (no functions, no circular references, no class instances).
+The `Report` type SHALL be exported from `@ohmyperf/core/types` and SHALL include at minimum: `schemaVersion`, `meta`, `runs[]`, `aggregated`, `frames`, `audits[]`, `budgets?`, `artifacts`, `pluginData`. The shape SHALL be JSON-serializable (no functions, no circular references, no class instances).
 
 #### Scenario: Report round-trips through JSON
 - **WHEN** any returned report is `JSON.stringify`'d and `JSON.parse`'d back
 - **THEN** the parsed value `deep-equal`s the original
 
 ### Requirement: No CDP types in public API
-The `@nhonh/core` public API SHALL NOT expose any types from `playwright/types/protocol`, `chrome-remote-interface`, or `puppeteer-core/protocol`. CDP shapes used internally SHALL be translated to neutral domain types (`FrameNode`, `Metric`, `LongTask`, `Resource`, etc.) at the boundary.
+The `@ohmyperf/core` public API SHALL NOT expose any types from `playwright/types/protocol`, `chrome-remote-interface`, or `puppeteer-core/protocol`. CDP shapes used internally SHALL be translated to neutral domain types (`FrameNode`, `Metric`, `LongTask`, `Resource`, etc.) at the boundary.
 
 #### Scenario: API surface free of CDP types
-- **WHEN** `tsc --noEmit --strict` is run against a consumer project that imports only from `@nhonh/core`
-- **THEN** no symbol named with prefix `Protocol.` appears in the project's resolved type graph for `@nhonh/core` exports
+- **WHEN** `tsc --noEmit --strict` is run against a consumer project that imports only from `@ohmyperf/core`
+- **THEN** no symbol named with prefix `Protocol.` appears in the project's resolved type graph for `@ohmyperf/core` exports
 
 ### Requirement: API frozen at P0/P1 boundary
-At the end of P0 the public API surface of `@nhonh/core` SHALL be marked `1.0.0-stable` and recorded in `docs/api-contract-1.0.md`. Subsequent additions SHALL be additive only within the `1.x` major. Breaking changes SHALL bump to `2.0.0` and SHALL trigger cross-surface impact review.
+At the end of P0 the public API surface of `@ohmyperf/core` SHALL be marked `1.0.0-stable` and recorded in `docs/api-contract-1.0.md`. Subsequent additions SHALL be additive only within the `1.x` major. Breaking changes SHALL bump to `2.0.0` and SHALL trigger cross-surface impact review.
 
 #### Scenario: API drift caught in CI
-- **WHEN** a PR removes or renames an exported symbol from `@nhonh/core`
-- **AND** the PR does not bump `@nhonh/core` to `2.0.0`
+- **WHEN** a PR removes or renames an exported symbol from `@ohmyperf/core`
+- **AND** the PR does not bump `@ohmyperf/core` to `2.0.0`
 - **THEN** the `api-extractor` CI step fails with a list of breaking exports
 
 ### Requirement: Reentrant — no globals/singletons
-The engine core SHALL be reentrant. Multiple concurrent `measure()` calls in the same process SHALL NOT share mutable state. The engine SHALL NOT use module-level mutable globals or singletons in `@nhonh/core`.
+The engine core SHALL be reentrant. Multiple concurrent `measure()` calls in the same process SHALL NOT share mutable state. The engine SHALL NOT use module-level mutable globals or singletons in `@ohmyperf/core`.
 
 #### Scenario: Two concurrent measure calls
 - **WHEN** two `measure({ url, runs: 1 })` calls are awaited in `Promise.all([m1, m2])` against two different fixtures
@@ -94,9 +94,9 @@ The engine core SHALL be reentrant. Multiple concurrent `measure()` calls in the
 - **AND** no shared state corrupts either report
 
 ### Requirement: Browser build target
-`@nhonh/core` SHALL provide a browser-targeted build (`exports.browser`) that omits Node-only APIs (`fs`, `path`, child-process spawn) so the package can be bundled into the Chrome extension's service-worker context.
+`@ohmyperf/core` SHALL provide a browser-targeted build (`exports.browser`) that omits Node-only APIs (`fs`, `path`, child-process spawn) so the package can be bundled into the Chrome extension's service-worker context.
 
 #### Scenario: Browser bundle excludes fs
-- **WHEN** a Vite build of the Chrome extension imports `@nhonh/core` (browser target)
+- **WHEN** a Vite build of the Chrome extension imports `@ohmyperf/core` (browser target)
 - **THEN** the resulting bundle does NOT include `node:fs` or any direct `fs` requires
 - **AND** the bundle is < 500 KB minified+gzipped (excluding the `web-vitals` payload)

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import type { Backend } from './backend-detector';
-import type { ProgressEvent } from '@nhonh/shared-types';
+import type { ProgressEvent } from '@ohmyperf/shared-types';
 import type { StoredReport } from './storage';
 
 export type JobPhase =

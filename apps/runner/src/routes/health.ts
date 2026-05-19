@@ -1,6 +1,6 @@
 import { Hono } from "hono";
-import { SCHEMA_VERSION } from "@nhonh/core";
-import type { HealthResponse } from "@nhonh/shared-types";
+import { SCHEMA_VERSION } from "@ohmyperf/core";
+import type { HealthResponse } from "@ohmyperf/shared-types";
 import type { Config } from "../config.js";
 import type { AppVariables } from "../app.js";
 import { RUNNER_VERSION } from "../version.js";

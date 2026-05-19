@@ -1,5 +1,5 @@
-import type { Report } from "@nhonh/core";
-import { escapeHtml } from "@nhonh/viewer/escape";
+import type { Report } from "@ohmyperf/core";
+import { escapeHtml } from "@ohmyperf/viewer/escape";
 import { slideWrapper } from "../deck-shell.js";
 
 export function renderMethodologySlide(report: Report): string {

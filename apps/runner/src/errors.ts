@@ -1,4 +1,4 @@
-import type { ErrorCode, ErrorEnvelope } from "@nhonh/shared-types";
+import type { ErrorCode, ErrorEnvelope } from "@ohmyperf/shared-types";
 
 export type { ErrorCode, ErrorEnvelope };
 

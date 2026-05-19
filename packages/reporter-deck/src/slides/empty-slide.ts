@@ -1,4 +1,4 @@
-import { escapeHtml } from "@nhonh/viewer/escape";
+import { escapeHtml } from "@ohmyperf/viewer/escape";
 import { slideWrapper } from "../deck-shell.js";
 
 export function renderEmptyStateSlide(

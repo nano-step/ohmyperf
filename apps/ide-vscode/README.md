@@ -1,4 +1,4 @@
-# @nhonh/ide-vscode
+# @ohmyperf/ide-vscode
 
 VSCode extension; spawns CLI subprocess; embeds viewer in webview.
 

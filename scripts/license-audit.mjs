@@ -112,7 +112,7 @@ function main() {
 
   for (const { pkg } of packages) {
     if (!pkg.name) continue;
-    if (pkg.name.startsWith("@nhonh/")) continue;
+    if (pkg.name.startsWith("@ohmyperf/")) continue;
     const licenses = normalizeLicense(pkg.license || pkg.licenses);
     if (licenses.length === 0) {
       violations.push({ name: pkg.name, version: pkg.version, reason: "no license declared" });

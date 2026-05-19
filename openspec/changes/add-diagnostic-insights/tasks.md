@@ -85,7 +85,7 @@
 - [x] B5.2 Update `packages/reporter-markdown/src/index.ts`:
   - Add `## Insights` section after `## Metrics`.
   - Sub-sections: LCP breakdown, INP breakdown, CLS culprits, Long tasks (top 5), Render-blocking (top 5), Third parties (top 5 by main-thread time).
-- [x] B5.3 `pnpm test --filter @nhonh/reporter-markdown` covering the new sections.
+- [x] B5.3 `pnpm test --filter @ohmyperf/reporter-markdown` covering the new sections.
 
 ## B6. Documentation
 

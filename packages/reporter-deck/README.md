@@ -1,4 +1,4 @@
-# @nhonh/reporter-deck
+# @ohmyperf/reporter-deck
 
 Multi-slide HTML presentation reporter for OhMyPerf Reports.
 
@@ -18,7 +18,7 @@ When a section's underlying data is empty, the slide renders an empty-state body
 ## Usage (CLI / Node)
 
 ```ts
-import { writeDeckReport } from "@nhonh/reporter-deck";
+import { writeDeckReport } from "@ohmyperf/reporter-deck";
 
 await writeDeckReport(report, "./out", { title: "Weekly perf — example.com" });
 // → ./out/report-deck.html
@@ -27,7 +27,7 @@ await writeDeckReport(report, "./out", { title: "Weekly perf — example.com" })
 Or render to a string:
 
 ```ts
-import { renderReportDeck } from "@nhonh/reporter-deck";
+import { renderReportDeck } from "@ohmyperf/reporter-deck";
 const html = renderReportDeck(report);
 ```
 
@@ -54,7 +54,7 @@ In Chrome / Edge:
 
 ## Design boundary — Swiss layout, Calibre palette
 
-This package uses the **Swiss International** layout grammar (16-column grid, large display type, sparse decoration, single accent stripe per slide) BUT overrides the Swiss skill's locked palette (Klein Blue / Lemon / Mint / Safety Orange) to use the **Calibre OKLCH** palette from `@nhonh/design-tokens`.
+This package uses the **Swiss International** layout grammar (16-column grid, large display type, sparse decoration, single accent stripe per slide) BUT overrides the Swiss skill's locked palette (Klein Blue / Lemon / Mint / Safety Orange) to use the **Calibre OKLCH** palette from `@ohmyperf/design-tokens`.
 
 This is an intentional skill-rule override:
 - Swiss's hex lock is the skill's *internal* rule for new decks that don't have a brand.
@@ -65,7 +65,7 @@ If a v1.1 design-picker ships, it MAY introduce alternative palettes including S
 
 ## Charts
 
-Charts are imported from `@nhonh/viewer/charts`:
+Charts are imported from `@ohmyperf/viewer/charts`:
 
 - `renderDonut` — third-parties slide
 - `renderHorizontalBars` — opportunities + long-tasks slides

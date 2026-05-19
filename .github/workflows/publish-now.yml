@@ -41,7 +41,7 @@ jobs:
         run: pnpm install --no-frozen-lockfile
 
       - name: Build all publishables
-        run: pnpm -r --filter "!@nhonh/website" --filter "!@nhonh/runner" --filter "!@nhonh/extension-chrome" --filter "!ohmyperf-vscode" build
+        run: pnpm -r --filter "!@ohmyperf/website" --filter "!@ohmyperf/runner" --filter "!@ohmyperf/extension-chrome" --filter "!ohmyperf-vscode" build
 
       - name: Dry-run preview (final sanity)
         run: pnpm -r publish --dry-run --no-git-checks 2>&1 | grep -E "^\+ @ohmyperf|public access" | head -40
@@ -65,7 +65,7 @@ jobs:
                 repo: context.repo.repo,
                 tag_name: 'v0.1.1',
                 name: 'ohmyperf v0.1.1 — fix trace-utils missing publish',
-                body: body + '\n\n---\n\n**Install:**\n```bash\nnpm install -g @nhonh/cli\n# or for AI agent integration:\nnpm install -g @nhonh/mcp-server\n```\n\nAll 15 `@nhonh/*` packages (incl. `@nhonh/trace-utils`) published with tag `latest`.',
+                body: body + '\n\n---\n\n**Install:**\n```bash\nnpm install -g @ohmyperf/cli\n# or for AI agent integration:\nnpm install -g @ohmyperf/mcp-server\n```\n\nAll 15 `@ohmyperf/*` packages (incl. `@ohmyperf/trace-utils`) published with tag `latest`.',
                 prerelease: false,
                 target_commitish: '${{ github.sha }}',
               });
@@ -87,7 +87,7 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: 1,
-                body: 'Closed by automated v0.1.1 publish. 14 `@nhonh/*` packages live on npm registry; GitHub Release created at v0.1.1.',
+                body: 'Closed by automated v0.1.1 publish. 14 `@ohmyperf/*` packages live on npm registry; GitHub Release created at v0.1.1.',
               });
               await github.rest.issues.update({
                 owner: context.repo.owner,

@@ -1,4 +1,4 @@
-import type { Opportunity } from '@nhonh/core';
+import type { Opportunity } from '@ohmyperf/core';
 
 interface Props {
   opportunity: Opportunity;

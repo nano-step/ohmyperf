@@ -99,7 +99,7 @@ For each of `linear-app`, `stripe`, `vercel`:
   - `generate_deck` tool gains optional `style: BrandId` arg (enum validated). Defaults to `calibre`.
   - NEW `generate_html_report` tool — mirrors `generate_deck` but for the viewer HTML (file-writing, returns path). Writes to `<reportsDir>/html/<measurementId>.html`. Same input schema (reportPath OR uri + style + theme + title).
   - NEW `list_styles` tool — zero args. Returns the 4 brand manifests as structured JSON (id, displayName, supportedThemes, preferredTheme, license, description). Enables AI agents to discover styles without docs.
-- `apps/mcp-server/package.json` — already has `@nhonh/reporter-deck` from Commit 4 of `add-beautiful-report`; viewer is workspace-resolved via core.
+- `apps/mcp-server/package.json` — already has `@ohmyperf/reporter-deck` from Commit 4 of `add-beautiful-report`; viewer is workspace-resolved via core.
 
 ### Added — Website brand picker
 
@@ -143,7 +143,7 @@ The following are NOT new constraints — they are invariants from `add-beautifu
 - Vendor-only-tokens: never import `components.html` or `DESIGN.md` from open-design.
 - Calibre lifecycle separate from open-design (no `design-systems/calibre/` upstream).
 - Report schema 1.0.0 FROZEN; no `Report.style` field. Style is a render-time option only.
-- `@nhonh/design-tokens` API additive-only (api-extractor enforced).
+- `@ohmyperf/design-tokens` API additive-only (api-extractor enforced).
 - WCAG-AA contrast pre-gate on shipped artifacts.
 
 ## Genuinely deferred to v1.1+ (5 items)
@@ -166,7 +166,7 @@ These ARE real defers — not architectural invariants, not stale.
 
 | Risk | Mitigation |
 |---|---|
-| Bridge API churn breaks `@nhonh/design-tokens` consumers | api-extractor snapshot enforced; additive-only contract; existing `CALIBRE_LIGHT`/`PALETTE_CSS`/`TOKEN_NAMES` exports UNCHANGED. |
+| Bridge API churn breaks `@ohmyperf/design-tokens` consumers | api-extractor snapshot enforced; additive-only contract; existing `CALIBRE_LIGHT`/`PALETTE_CSS`/`TOKEN_NAMES` exports UNCHANGED. |
 | stripe/vercel/linear-app fails WCAG-AA at integration | Contrast gate runs in Commit 2 (BEFORE viewer/deck integration). If a brand fails, decision point at merge: ship with documented darker-accent override OR drop the brand from v1.0. NOT punted to later. |
 | Brand-list creep to 17 or 151 | `BrandId` is a strict TypeScript union literal; expansion requires type change + new change proposal. Hard guardrail in `packages/design-tokens/brands/README.md`. |
 | Hard-coded `CALIBRE_LIGHT` imports leak past chart refactor | Commit 3 acceptance gate: `grep -r "CALIBRE_LIGHT\|CALIBRE_DARK" packages/viewer/src packages/reporter-deck/src` MUST return zero matches. |

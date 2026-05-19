@@ -1,4 +1,4 @@
-import type { Report } from "@nhonh/core";
+import type { Report } from "@ohmyperf/core";
 import { escapeHtml } from "../escape.js";
 
 export function renderHero(report: Report): string {

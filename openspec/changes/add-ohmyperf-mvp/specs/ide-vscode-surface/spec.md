@@ -13,7 +13,7 @@ The repository SHALL ship an `apps/ide-vscode/` package that builds a VSCode ext
 - **AND** the extension activates lazily on the registered commands (cold-start activation < 500 ms)
 
 ### Requirement: `Measure URL` command
-The extension SHALL register a command `OhMyPerf: Measure URL` (palette and right-click on a URL string in the editor) that prompts for/uses the URL, spawns the `ohmyperf` CLI as a subprocess (`@nhonh/cli`), streams progress to a status-bar item, and on completion opens a webview hosting the `@nhonh/viewer` package with the resulting report.
+The extension SHALL register a command `OhMyPerf: Measure URL` (palette and right-click on a URL string in the editor) that prompts for/uses the URL, spawns the `ohmyperf` CLI as a subprocess (`@ohmyperf/cli`), streams progress to a status-bar item, and on completion opens a webview hosting the `@ohmyperf/viewer` package with the resulting report.
 
 #### Scenario: Palette → measure
 - **WHEN** the user invokes `OhMyPerf: Measure URL` from the palette and enters `http://localhost:5173/`
@@ -22,16 +22,16 @@ The extension SHALL register a command `OhMyPerf: Measure URL` (palette and righ
 - **AND** the webview renders the same panels as the HTML reporter
 
 ### Requirement: CLI subprocess management
-The extension SHALL locate the `ohmyperf` binary via (in order): `${workspaceFolder}/node_modules/.bin/ohmyperf`, the user's `OHMYPERF_BIN` setting, the global `ohmyperf` on PATH. If none are found, the extension SHALL surface a notification with a "Install" button that runs `npm install -D @nhonh/cli` in the workspace.
+The extension SHALL locate the `ohmyperf` binary via (in order): `${workspaceFolder}/node_modules/.bin/ohmyperf`, the user's `OHMYPERF_BIN` setting, the global `ohmyperf` on PATH. If none are found, the extension SHALL surface a notification with a "Install" button that runs `npm install -D @ohmyperf/cli` in the workspace.
 
 #### Scenario: CLI auto-located in workspace
-- **WHEN** a workspace has `@nhonh/cli` as a devDependency
+- **WHEN** a workspace has `@ohmyperf/cli` as a devDependency
 - **THEN** the extension uses `${workspaceFolder}/node_modules/.bin/ohmyperf`
 
 #### Scenario: CLI missing prompts install
-- **WHEN** the workspace has no `@nhonh/cli` and no global `ohmyperf` on PATH
+- **WHEN** the workspace has no `@ohmyperf/cli` and no global `ohmyperf` on PATH
 - **THEN** invoking `OhMyPerf: Measure URL` shows a notification with an "Install" action button
-- **AND** clicking the button triggers `npm install -D @nhonh/cli` in the workspace's terminal
+- **AND** clicking the button triggers `npm install -D @ohmyperf/cli` in the workspace's terminal
 
 ### Requirement: Source-map decorations
 On report completion, when the report's `sourceAttribution` section maps metric data to source files in the workspace, the extension SHALL place `editor.decorations` and `CodeLens` on the affected lines:

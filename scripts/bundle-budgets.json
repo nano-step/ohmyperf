@@ -7,7 +7,7 @@
     { "route": "/report", "maxGzipKB": 100 }
   ],
   "artifacts": [
-    { "name": "report.html", "maxGzipKB": 200, "source": "@nhonh/viewer renderReportHtml(fixtures/rich.json)" },
-    { "name": "report-deck.html", "maxGzipKB": 500, "source": "@nhonh/reporter-deck renderReportDeck(fixtures/rich.json)" }
+    { "name": "report.html", "maxGzipKB": 200, "source": "@ohmyperf/viewer renderReportHtml(fixtures/rich.json)" },
+    { "name": "report-deck.html", "maxGzipKB": 500, "source": "@ohmyperf/reporter-deck renderReportDeck(fixtures/rich.json)" }
   ]
 }

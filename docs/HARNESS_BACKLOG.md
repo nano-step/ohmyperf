@@ -181,7 +181,7 @@ version-aware text) in the SAME commit that bumps `package.json` versions.
 
 ### Current Pain
 
-If README documents `npm install -g @nhonh/cli@0.1.0` but the bumped
+If README documents `npm install -g @ohmyperf/cli@0.1.0` but the bumped
 version is 0.2.0, users install the wrong version. Manual `update README
 after bump` separates the two operations and drifts.
 

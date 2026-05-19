@@ -1,4 +1,4 @@
-# @nhonh/trace-utils
+# @ohmyperf/trace-utils
 
 Vendored tracium-equivalent. MainThreadTasks parsing, function attribution.
 

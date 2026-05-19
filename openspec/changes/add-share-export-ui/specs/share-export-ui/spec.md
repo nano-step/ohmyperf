@@ -12,7 +12,7 @@ The `/report/?id=<id>` route SHALL render a Share button in the toolbar.
 #### Scenario: Share with configured endpoint uploads and copies URL
 - **WHEN** `NEXT_PUBLIC_SHARE_ENDPOINT` is set to a valid share-server URL
 - **AND** the user clicks Share
-- **THEN** the SPA calls `uploadReport({ endpoint, report })` from `@nhonh/share-client`
+- **THEN** the SPA calls `uploadReport({ endpoint, report })` from `@ohmyperf/share-client`
 - **AND** on success, the returned `url` is written to `navigator.clipboard`
 - **AND** a success toast appears showing the URL
 
@@ -121,6 +121,6 @@ The following `components/metrics/` components SHALL be imported by `ReportViewe
 The SPA `/report/[[...id]]` route (the key used in `scripts/bundle-budgets.json`) SHALL stay under 250 KB First Load JS (gzipped) after adding share-client + the new toolbar + shadcn refactor.
 
 #### Scenario: Bundle budget check passes
-- **WHEN** `pnpm --filter @nhonh/website analyze:check` runs after this change
+- **WHEN** `pnpm --filter @ohmyperf/website analyze:check` runs after this change
 - **THEN** the `/report/[[...id]]` route bundle is ≤ 250 KB gzip
 - **AND** the existing CI gate (`.github/workflows/website-budgets.yml` running `scripts/check-bundle-budgets.mjs`) fails the build on overage

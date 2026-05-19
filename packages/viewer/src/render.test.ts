@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { renderReportHtml } from "./render.js";
 import { escapeHtml, escapeJsonForHtml } from "./escape.js";
-import type { Report } from "@nhonh/core";
+import type { Report } from "@ohmyperf/core";
 
 function makeReport(overrides: Partial<Report> = {}): Report {
   const base: Report = {
@@ -104,7 +104,7 @@ describe("renderReportHtml()", () => {
     expect(html.startsWith("<!doctype html>")).toBe(true);
     expect(html).toContain("<title>OhMyPerf — example.com/path</title>");
     expect(html).toContain("<style>");
-    expect(html).toContain("@nhonh/viewer");
+    expect(html).toContain("@ohmyperf/viewer");
   });
 
   it("makes no external network requests", () => {

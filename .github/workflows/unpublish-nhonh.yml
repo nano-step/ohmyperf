@@ -1,4 +1,4 @@
-name: Unpublish @nhonh/* (one-shot cleanup)
+name: Unpublish @ohmyperf/* (one-shot cleanup)
 
 on:
   workflow_dispatch:
@@ -17,14 +17,14 @@ jobs:
           node-version: "22"
           registry-url: "https://registry.npmjs.org"
 
-      - name: Unpublish all @nhonh/* versions
+      - name: Unpublish all @ohmyperf/* versions
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           set -uo pipefail
           PKGS=(
-            "@nhonh/trace-utils"
-            "@nhonh/design-tokens"
+            "@ohmyperf/trace-utils"
+            "@ohmyperf/design-tokens"
           )
           FAILED=()
           for pkg in "${PKGS[@]}"; do
@@ -62,11 +62,11 @@ jobs:
         run: |
           set -u
           PKGS=(
-            "@nhonh/cli" "@nhonh/mcp-server" "@nhonh/core" "@nhonh/design-tokens"
-            "@nhonh/driver-playwright" "@nhonh/plugins-builtin" "@nhonh/viewer"
-            "@nhonh/share-client" "@nhonh/reporter-json" "@nhonh/reporter-html"
-            "@nhonh/reporter-deck" "@nhonh/reporter-markdown" "@nhonh/reporter-junit"
-            "@nhonh/reporter-csv" "@nhonh/trace-utils"
+            "@ohmyperf/cli" "@ohmyperf/mcp-server" "@ohmyperf/core" "@ohmyperf/design-tokens"
+            "@ohmyperf/driver-playwright" "@ohmyperf/plugins-builtin" "@ohmyperf/viewer"
+            "@ohmyperf/share-client" "@ohmyperf/reporter-json" "@ohmyperf/reporter-html"
+            "@ohmyperf/reporter-deck" "@ohmyperf/reporter-markdown" "@ohmyperf/reporter-junit"
+            "@ohmyperf/reporter-csv" "@ohmyperf/trace-utils"
           )
           for pkg in "${PKGS[@]}"; do
             URL="https://registry.npmjs.org/${pkg//\//%2F}"

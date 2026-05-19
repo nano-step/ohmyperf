@@ -1,5 +1,5 @@
 {
-  "name": "@nhonh/website",
+  "name": "@ohmyperf/website",
   "version": "0.0.0-pre",
   "description": "ohmyperf.dev landing, measurement SPA, drag-drop viewer, hosted share UI.",
   "license": "Apache-2.0",
@@ -20,10 +20,10 @@
   },
   "dependencies": {
     "@hookform/resolvers": "3.10.0",
-    "@nhonh/core": "workspace:*",
-    "@nhonh/design-tokens": "workspace:*",
-    "@nhonh/shared-types": "workspace:*",
-    "@nhonh/viewer": "workspace:*",
+    "@ohmyperf/core": "workspace:*",
+    "@ohmyperf/design-tokens": "workspace:*",
+    "@ohmyperf/shared-types": "workspace:*",
+    "@ohmyperf/viewer": "workspace:*",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "idb": "catalog:",
@@ -41,8 +41,8 @@
     "tailwind-merge": "2.6.0",
     "zod": "catalog:",
     "zustand": "catalog:",
-    "@nhonh/share-client": "workspace:*",
-    "@nhonh/reporter-markdown": "workspace:*"
+    "@ohmyperf/share-client": "workspace:*",
+    "@ohmyperf/reporter-markdown": "workspace:*"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.1",

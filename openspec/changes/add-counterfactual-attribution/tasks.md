@@ -7,7 +7,7 @@
 
 - [ ] C0.1 Confirm `add-sprt-baseline` (#1) merged. Read `packages/core/src/sprt/` exports. Verify `BaselineRun[]` shape includes per-run LCP element URL, transferSize, RTT, render-blocking flag (the four features the ranker consumes). If missing any feature, file a follow-up in #1 BEFORE starting C1.
 - [ ] C0.2 Confirm `add-hermetic-replay` (#4) merged. Read `packages/driver-playwright/src/replay/` exports. Verify `ReplayCache.getCached(url): CachedResponse | undefined` and `ReplayCache.getCspForOrigin(origin): string | undefined` exist. If missing, file a follow-up in #4.
-- [ ] C0.3 `shared-types` schema dry-run: add `CounterfactualEvidence`, `Verdict`, `InterventionKind` interfaces (no consumer yet); run `pnpm --filter @nhonh/shared-types api:check` to ensure additive-only API extractor diff. Commit as standalone "shared-types: counterfactual interfaces" so reviewers can audit schema in isolation.
+- [ ] C0.3 `shared-types` schema dry-run: add `CounterfactualEvidence`, `Verdict`, `InterventionKind` interfaces (no consumer yet); run `pnpm --filter @ohmyperf/shared-types api:check` to ensure additive-only API extractor diff. Commit as standalone "shared-types: counterfactual interfaces" so reviewers can audit schema in isolation.
 - [ ] C0.4 Defensive `?.` audit in reporters: search `packages/reporter-html`, `reporter-markdown`, `reporter-deck`, `viewer` for any code path that would crash if `report.counterfactuals` were `undefined`. Default-guard via `report.counterfactuals ?? []`. This guarantees v2.0 reports rendered by v2.1+ viewers do not throw.
 
 ## C1. Stats module (pure, no I/O, easy to TDD first)
@@ -123,9 +123,9 @@
 
 ## C12. Final acceptance gate
 
-- [ ] C12.1 `pnpm test --filter @nhonh/core` green.
-- [ ] C12.2 `pnpm test --filter @nhonh/driver-playwright` green.
-- [ ] C12.3 `pnpm test --filter @nhonh/shared-types` green (api:check additive).
+- [ ] C12.1 `pnpm test --filter @ohmyperf/core` green.
+- [ ] C12.2 `pnpm test --filter @ohmyperf/driver-playwright` green.
+- [ ] C12.3 `pnpm test --filter @ohmyperf/shared-types` green (api:check additive).
 - [ ] C12.4 `pnpm test:counterfactual-corpus` green; MAPE < 15%; Lighthouse-opportunities MAPE > 40% on same corpus (moat assertion).
 - [ ] C12.5 `pnpm test:counterfactual-synthetic` green; `|Δ_predicted − Δ_real| < 100 ms`.
 - [ ] C12.6 Snapshot tests on existing (non-counterfactual) reports unchanged.

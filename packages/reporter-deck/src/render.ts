@@ -1,5 +1,5 @@
-import type { Report } from "@nhonh/core";
-import { isBrandId, type BrandId } from "@nhonh/design-tokens";
+import type { Report } from "@ohmyperf/core";
+import { isBrandId, type BrandId } from "@ohmyperf/design-tokens";
 import { renderDeckShell } from "./deck-shell.js";
 import {
   renderCoverSlide,

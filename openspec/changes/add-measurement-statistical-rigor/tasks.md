@@ -80,7 +80,7 @@ Each `M*` task is intended to be its own commit using:
 ## M6. Provenance fingerprint
 
 - [ ] **M6.1** Create `packages/core/src/fingerprint.ts` exporting `computeCaptureFingerprint(inputs: FingerprintInputs): string`. Inputs type: `{ url: string; calibration?: { observedScore: number; throttleRate: number }; configHash: string; ohmyperfVersion: string; taxonomyVersion: string }`. URL is pre-normalized via `sanitizeUrlForFingerprint(url)` which strips userinfo (`https://user:pass@host` → `https://host`) and lowercases the protocol+host. Returns `'sha256:' + crypto.createHash('sha256').update(stableStringify(inputs)).digest('hex')` where `stableStringify` is `safe-stable-stringify`.
-- [ ] **M6.2** Compute `configHash = sha256(stableStringify({ runs: opts.runs, sampling: opts.sampling, ghostRun: opts.ghostRun, emulation: opts.emulation, mode: opts.mode, plugins: opts.plugins?.map(p => ({ id: normalizePluginId(p), version: refVersion(p) })).sort((a, b) => a.id.localeCompare(b.id)) }))`. Pure inputs only — no `Date.now()`, no `randomUUID()`, no run-time outputs. `normalizePluginId(p)` returns the plugin's `package.json` `name` field when `p` is a `Plugin` object; the string verbatim when `p` is a string ref; `ref.id` when `p` is `PluginRefByName`. This avoids `"@nhonh/cwv"` vs `"cwv"` ambiguity producing two fingerprints for the same config.
+- [ ] **M6.2** Compute `configHash = sha256(stableStringify({ runs: opts.runs, sampling: opts.sampling, ghostRun: opts.ghostRun, emulation: opts.emulation, mode: opts.mode, plugins: opts.plugins?.map(p => ({ id: normalizePluginId(p), version: refVersion(p) })).sort((a, b) => a.id.localeCompare(b.id)) }))`. Pure inputs only — no `Date.now()`, no `randomUUID()`, no run-time outputs. `normalizePluginId(p)` returns the plugin's `package.json` `name` field when `p` is a `Plugin` object; the string verbatim when `p` is a string ref; `ref.id` when `p` is `PluginRefByName`. This avoids `"@ohmyperf/cwv"` vs `"cwv"` ambiguity producing two fingerprints for the same config.
 - [ ] **M6.3** Wire into `engine.ts` finalize: set `report.meta.captureFingerprint = computeCaptureFingerprint({ url: opts.url, calibration: calibration ? { observedScore, throttleRate } : undefined, configHash, ohmyperfVersion: PACKAGE_VERSION, taxonomyVersion: TAXONOMY_VERSION })`. Also set `report.meta.taxonomyVersion = TAXONOMY_VERSION`.
 - [ ] **M6.4** Tests in `packages/core/src/fingerprint.test.ts`:
   - Determinism: 100 calls with identical inputs → identical hash.
@@ -112,7 +112,7 @@ Each `M*` task is intended to be its own commit using:
   - `captureFingerprint` input list + `taxonomyVersion` bump policy
   - Reproduction steps for V1–V7
   - Known deltas vs Lighthouse on ground-truth fixture
-- [ ] **M8.2** Run `pnpm api:check --filter @nhonh/core`. Confirm additive-only diff in `core.api.md` (only `+` lines for existing exports).
+- [ ] **M8.2** Run `pnpm api:check --filter @ohmyperf/core`. Confirm additive-only diff in `core.api.md` (only `+` lines for existing exports).
 - [ ] **M8.3** Update `packages/core/etc/core.api.md` snapshot.
 - [ ] **M8.4** Update root `README.md` Accuracy section: add one paragraph describing SPRT and ghost-corrected LCP, with a link to `docs/measurement-rigor.md`. No marketing language; cite the V4 truth-tracking criterion.
 - [ ] **M8.5** Regenerate JSON schema (`schemas/report.schema.json` if exists; flag for v1.1 if absent) and confirm additive-only diff.
@@ -121,10 +121,10 @@ Each `M*` task is intended to be its own commit using:
 
 - [ ] **M9.1** `pnpm typecheck` clean across workspace.
 - [ ] **M9.2** `pnpm lint` clean on changed packages.
-- [ ] **M9.3** `pnpm test --filter @nhonh/core` includes `sampling.test.ts`, `fingerprint.test.ts`, refactored `engine.test.ts` snapshot — all green.
-- [ ] **M9.4** `pnpm test --filter @nhonh/plugins-builtin` includes `crux.test.ts` — green.
+- [ ] **M9.3** `pnpm test --filter @ohmyperf/core` includes `sampling.test.ts`, `fingerprint.test.ts`, refactored `engine.test.ts` snapshot — all green.
+- [ ] **M9.4** `pnpm test --filter @ohmyperf/plugins-builtin` includes `crux.test.ts` — green.
 - [ ] **M9.5** `pnpm test:rigor` green (V1, V2, V3, V7).
 - [ ] **M9.6** `pnpm test:rigor:browser` green (V4, V5) — local Chromium run; deferred from CI.
-- [ ] **M9.7** `pnpm api:check --filter @nhonh/core` exit 0.
+- [ ] **M9.7** `pnpm api:check --filter @ohmyperf/core` exit 0.
 - [ ] **M9.8** Real-page smoke (`https://blog.thnkandgrow.com/`) with `{ sampling: { mode: 'sprt' }, ghostRun: true, crux: { apiKey: $OHMYPERF_CRUX_KEY } }` produces a Report containing all six new meta/diagnostics fields per success-criterion 5 of `proposal.md`. Save artifact to `scripts/smoke/logs/v2-rigor.json`.
 - [ ] **M9.9** Legacy-call smoke (default options, no v2 fields set): identical run shape as pre-change; viewer renders without console errors.

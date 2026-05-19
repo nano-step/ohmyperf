@@ -1,5 +1,5 @@
 {
-  "name": "@nhonh/shared-types",
+  "name": "@ohmyperf/shared-types",
   "version": "0.0.0-pre",
   "description": "Shared TypeScript types for SPA <-> runner <-> extension wire contracts. Pure types, no runtime.",
   "license": "Apache-2.0",
@@ -29,10 +29,10 @@
     "clean": "rimraf dist .turbo *.tsbuildinfo"
   },
   "peerDependencies": {
-    "@nhonh/core": "workspace:*"
+    "@ohmyperf/core": "workspace:*"
   },
   "devDependencies": {
-    "@nhonh/core": "workspace:*",
+    "@ohmyperf/core": "workspace:*",
     "vitest": "catalog:"
   },
   "private": true

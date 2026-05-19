@@ -43,7 +43,7 @@ open "report.html?theme=dark"
 Themes can also be set programmatically:
 
 ```ts
-import { renderReportHtml } from "@nhonh/viewer";
+import { renderReportHtml } from "@ohmyperf/viewer";
 
 const html = renderReportHtml(report, { theme: "light" });
 ```
@@ -127,7 +127,7 @@ The existing `html` reporter is reachable via the run tool — no `generate_html
 
 ## Design boundary — Calibre palette across all surfaces
 
-The OKLCH tokens (`oklch(0.50 0.18 245)` accent, success/warning/danger at L=0.55, dark variants at L=0.65/0.70) live in [`apps/website/app/globals.css`](../apps/website/app/globals.css) as the canonical source. The [`@nhonh/design-tokens`](../packages/design-tokens) package reflects them for non-Next consumers.
+The OKLCH tokens (`oklch(0.50 0.18 245)` accent, success/warning/danger at L=0.55, dark variants at L=0.65/0.70) live in [`apps/website/app/globals.css`](../apps/website/app/globals.css) as the canonical source. The [`@ohmyperf/design-tokens`](../packages/design-tokens) package reflects them for non-Next consumers.
 
 The interactive `/report` route, the static `report.html`, and the slide `report-deck.html` all share the same palette via `scripts/check-design-tokens.mjs` CI drift gate.
 
@@ -217,7 +217,7 @@ The `/report/<id>` route has a **Style** picker in the toolbar. Selected style:
 
 ### Architecture
 
-- Calibre lives in `@nhonh/design-tokens/src/index.ts` (authored source)
+- Calibre lives in `@ohmyperf/design-tokens/src/index.ts` (authored source)
 - Vendored brands at `packages/design-tokens/brands/<id>/{tokens.css,bridge.css,README.md}`
 - `bridge.css` aliases open-design (`--bg`, `--fg`, `--accent`, ...) onto ohmyperf (`--color-*`) namespace
 - Charts use `data-status` / `data-donut-slice` / `data-bar` attributes; CSS selectors provide palette per brand

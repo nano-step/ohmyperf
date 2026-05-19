@@ -1,4 +1,4 @@
-# `@nhonh/mcp-server`
+# `@ohmyperf/mcp-server`
 
 [MCP](https://modelcontextprotocol.io/) server for [ohmyperf](https://github.com/hoainho/ohmyperf) — exposes real-machine, real-browser web performance measurement to AI coding agents (Claude in OpenCode, Cursor, GitHub Copilot, etc.) as **12 tools** and **7 prompts**.
 
@@ -7,9 +7,9 @@
 ## Install
 
 ```bash
-npm install -g @nhonh/mcp-server
+npm install -g @ohmyperf/mcp-server
 # or use directly via npx
-npx -y @nhonh/mcp-server
+npx -y @ohmyperf/mcp-server
 ```
 
 Requires Node ≥ 22. Playwright Chromium is downloaded on first measurement (~150 MB).
@@ -23,7 +23,7 @@ Requires Node ≥ 22. Playwright Chromium is downloaded on first measurement (~1
   "mcp": {
     "ohmyperf": {
       "command": "npx",
-      "args": ["-y", "@nhonh/mcp-server"]
+      "args": ["-y", "@ohmyperf/mcp-server"]
     }
   }
 }
@@ -36,7 +36,7 @@ Requires Node ≥ 22. Playwright Chromium is downloaded on first measurement (~1
   "mcpServers": {
     "ohmyperf": {
       "command": "npx",
-      "args": ["-y", "@nhonh/mcp-server"]
+      "args": ["-y", "@ohmyperf/mcp-server"]
     }
   }
 }
@@ -47,7 +47,7 @@ Requires Node ≥ 22. Playwright Chromium is downloaded on first measurement (~1
 ```jsonc
 {
   "mcpServers": {
-    "ohmyperf": { "command": "npx", "args": ["-y", "@nhonh/mcp-server"] }
+    "ohmyperf": { "command": "npx", "args": ["-y", "@ohmyperf/mcp-server"] }
   }
 }
 ```
@@ -100,7 +100,7 @@ The two MCP servers are complementary — run both for the strongest agent loop.
 ## Verify locally
 
 ```bash
-npx -y @nhonh/mcp-server <<< '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"manual","version":"0"}}}'
+npx -y @ohmyperf/mcp-server <<< '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"manual","version":"0"}}}'
 ```
 
 You should see a JSON-RPC initialize response on stdout.
@@ -112,5 +112,5 @@ Apache-2.0 — see [LICENSE](./LICENSE) and [NOTICE](./NOTICE).
 ## Links
 
 - GitHub: <https://github.com/hoainho/ohmyperf>
-- CLI: [`@nhonh/cli`](https://www.npmjs.com/package/@nhonh/cli)
+- CLI: [`@ohmyperf/cli`](https://www.npmjs.com/package/@ohmyperf/cli)
 - Docs: <https://github.com/hoainho/ohmyperf#readme>

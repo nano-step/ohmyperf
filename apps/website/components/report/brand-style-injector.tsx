@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { getBrandCss } from '@nhonh/design-tokens';
+import { getBrandCss } from '@ohmyperf/design-tokens';
 import { useSelectedStyle } from './style-picker';
 
 const STYLE_ID = 'ohmyperf-brand-css';

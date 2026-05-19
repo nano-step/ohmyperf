@@ -1,6 +1,6 @@
 'use client';
 
-import type { Resource } from '@nhonh/core';
+import type { Resource } from '@ohmyperf/core';
 import {
   BarChart,
   Bar,

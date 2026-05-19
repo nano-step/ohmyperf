@@ -44,8 +44,8 @@ We pinned **Calibre / SpeedCurve** in Track C. The interactive `/report` route a
 
 ### Added — Viewer restyle
 
-- `packages/viewer/src/styles.ts` — rewritten to consume `@nhonh/design-tokens`. Adds: hex fallback before every OKLCH declaration; `@media print` stylesheet for B&W stakeholder PDFs (CWV cards stay legible via icon + pattern redundancy); empty-state card styles; deck `prefers-color-scheme: dark` preserved.
-- `packages/viewer/src/charts/` — NEW directory exposed via subpath export `@nhonh/viewer/charts`:
+- `packages/viewer/src/styles.ts` — rewritten to consume `@ohmyperf/design-tokens`. Adds: hex fallback before every OKLCH declaration; `@media print` stylesheet for B&W stakeholder PDFs (CWV cards stay legible via icon + pattern redundancy); empty-state card styles; deck `prefers-color-scheme: dark` preserved.
+- `packages/viewer/src/charts/` — NEW directory exposed via subpath export `@ohmyperf/viewer/charts`:
   - `donut.ts` — inline SVG arc chart for third-parties share
   - `cwv-traffic-light.ts` — three-state colored swatch with icon (✓/!/✗) for color-blind safety
   - `bar-chart.ts` — horizontal stacked bar for opportunities/long-tasks
@@ -62,7 +62,7 @@ We pinned **Calibre / SpeedCurve** in Track C. The interactive `/report` route a
   - `rich.json` — every section populated (full visual showcase)
   - `broken.json` — missing optional fields (`pluginData.thirdParties` empty, `opportunities` undefined, `screenshotsRef` absent)
 - `packages/viewer/src/render.test.ts` — extended with vitest snapshot tests against all three fixtures.
-- `packages/viewer/package.json` — add `"./charts"` subpath export; add workspace dep on `@nhonh/design-tokens`.
+- `packages/viewer/package.json` — add `"./charts"` subpath export; add workspace dep on `@ohmyperf/design-tokens`.
 - `packages/viewer/etc/viewer.api.md` — additive update for new charts subpath exports.
 - `scripts/check-bundle-budgets.mjs` — extend to gate generated artifact file size (not just Next.js routes).
 - `scripts/bundle-budgets.json` — add `report.html` ≤ 200 KB gzipped.
@@ -81,8 +81,8 @@ We pinned **Calibre / SpeedCurve** in Track C. The interactive `/report` route a
     - `third-parties.ts` — Donut + entity list
     - `long-tasks.ts` — Top long tasks ordered by duration
     - `methodology.ts` — Mode, runs, calibration, parity info
-  - `src/escape.ts` — re-export from `@nhonh/viewer/escape` (no duplication)
-  - `package.json` — Apache-2.0, peerDep `@nhonh/core`, workspace deps `@nhonh/viewer` + `@nhonh/design-tokens`, mirrors `packages/reporter-html/package.json` shape
+  - `src/escape.ts` — re-export from `@ohmyperf/viewer/escape` (no duplication)
+  - `package.json` — Apache-2.0, peerDep `@ohmyperf/core`, workspace deps `@ohmyperf/viewer` + `@ohmyperf/design-tokens`, mirrors `packages/reporter-html/package.json` shape
   - `etc/reporter-deck.api.md` — api-extractor snapshot from day 1
   - `README.md` — documents Swiss-layout-grammar + Calibre-palette boundary, lists v1.0 limits + v1.1 stretch items
 - `packages/reporter-deck/src/render.test.ts` — vitest snapshot tests against viewer fixtures, asserts ≥ 6 `<section class="slide">` elements.
@@ -91,11 +91,11 @@ We pinned **Calibre / SpeedCurve** in Track C. The interactive `/report` route a
 ### Added — CLI + MCP integration
 
 - `apps/cli/src/commands/run.ts` — invoke `writeDeckReport` alongside existing reporters (always-emit, per Q3=a decision). Produces `report-deck.html` next to `report.html`.
-- `apps/cli/package.json` — add workspace dep on `@nhonh/reporter-deck`.
+- `apps/cli/package.json` — add workspace dep on `@ohmyperf/reporter-deck`.
 - `apps/cli/tsconfig.json` — add `packages/reporter-deck` to project references.
 - `apps/mcp-server/src/server.ts` — add NEW tool `generate_deck` that writes the deck HTML to disk and returns the file path. Does NOT return the body inline (avoids ~75K-token MCP response overflow per Q5c-style file-writing pattern).
-- `apps/mcp-server/package.json` — add workspace dep on `@nhonh/reporter-deck`.
-- `apps/website/components/report/export-menu.tsx` — extend with "Download as deck" item that triggers a Blob download of the deck HTML (rendered client-side from the IndexedDB report via `@nhonh/reporter-deck`).
+- `apps/mcp-server/package.json` — add workspace dep on `@ohmyperf/reporter-deck`.
+- `apps/website/components/report/export-menu.tsx` — extend with "Download as deck" item that triggers a Blob download of the deck HTML (rendered client-side from the IndexedDB report via `@ohmyperf/reporter-deck`).
 
 ### Documentation
 
@@ -118,7 +118,7 @@ We pinned **Calibre / SpeedCurve** in Track C. The interactive `/report` route a
 - ❌ **Filmstrip section** — Report schema 1.0.0 has no inline filmstrip frames (only `screenshotsRef`); section omitted entirely (NO placeholder card) until Track A v1.1 captures filmstrip data
 - ❌ **Detailed LCP/INP/CLS breakdown sections in viewer** — keep these as website-only React components (`apps/website/components/insights/*`); viewer shows traffic-light + opportunities only
 - ❌ **MCP `generate_html_report` tool** — existing `html` reporter is reachable via the run tool; no new MCP surface needed
-- ❌ **`@nhonh/design-primitives` package extraction** — charts live in `packages/viewer/src/charts/` subpath, consumed by reporter-deck; extract only if a third consumer emerges
+- ❌ **`@ohmyperf/design-primitives` package extraction** — charts live in `packages/viewer/src/charts/` subpath, consumed by reporter-deck; extract only if a third consumer emerges
 - ❌ **Schema changes to `packages/core/src/types.ts`** — schemaVersion 1.0.0 FROZEN; additive-only
 - ❌ **Restructuring `renderReportHtml`'s top-level composition** — restyle, don't refactor
 - ❌ **Vietnamese locale of new strings** — v1.1 i18n track owns this; new English strings get `// __I18N_KEY__:` comments for later extraction

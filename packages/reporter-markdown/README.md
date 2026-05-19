@@ -1,4 +1,4 @@
-# `@nhonh/reporter-markdown`
+# `@ohmyperf/reporter-markdown`
 
 Markdown reporter for ohmyperf. ~2 KB PR-comment-friendly summary.
 
@@ -6,12 +6,12 @@ Markdown reporter for ohmyperf. ~2 KB PR-comment-friendly summary.
 - Designed for GitHub Actions PR comments + Slack snippets. Renders cleanly on GitHub, GitLab, and Bitbucket.
 - Use via `ohmyperf run --format=markdown` or wire into GitHub Actions to post on every PR.
 
-Part of the [ohmyperf](https://github.com/hoainho/ohmyperf) monorepo. Most users install the [`@nhonh/cli`](https://www.npmjs.com/package/@nhonh/cli) or [`@nhonh/mcp-server`](https://www.npmjs.com/package/@nhonh/mcp-server) binary rather than this package directly.
+Part of the [ohmyperf](https://github.com/hoainho/ohmyperf) monorepo. Most users install the [`@ohmyperf/cli`](https://www.npmjs.com/package/@ohmyperf/cli) or [`@ohmyperf/mcp-server`](https://www.npmjs.com/package/@ohmyperf/mcp-server) binary rather than this package directly.
 
 ## Install
 
 ```bash
-npm install @nhonh/reporter-markdown
+npm install @ohmyperf/reporter-markdown
 ```
 
 Requires Node ≥ 22.

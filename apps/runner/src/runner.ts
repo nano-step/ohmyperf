@@ -1,7 +1,7 @@
-import { runEngine, type EngineLaunchAdapter, type Logger, type Report } from "@nhonh/core";
-import { createPlaywrightAdapter } from "@nhonh/driver-playwright";
-import { axePlugin, cwvPlugin, thirdPartiesPlugin } from "@nhonh/plugins-builtin";
-import type { ProgressEvent } from "@nhonh/shared-types";
+import { runEngine, type EngineLaunchAdapter, type Logger, type Report } from "@ohmyperf/core";
+import { createPlaywrightAdapter } from "@ohmyperf/driver-playwright";
+import { axePlugin, cwvPlugin, thirdPartiesPlugin } from "@ohmyperf/plugins-builtin";
+import type { ProgressEvent } from "@ohmyperf/shared-types";
 import type { Job } from "./queue.js";
 
 export type EngineRunner = (

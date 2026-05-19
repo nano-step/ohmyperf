@@ -17,9 +17,9 @@ COPY packages/shared-types/package.json packages/shared-types/
 COPY packages/ packages/
 COPY apps/runner/ apps/runner/
 
-RUN pnpm install --frozen-lockfile --ignore-scripts --filter @nhonh/runner...
-RUN pnpm --filter @nhonh/runner... build
-RUN pnpm --filter @nhonh/runner deploy --prod --legacy /out
+RUN pnpm install --frozen-lockfile --ignore-scripts --filter @ohmyperf/runner...
+RUN pnpm --filter @ohmyperf/runner... build
+RUN pnpm --filter @ohmyperf/runner deploy --prod --legacy /out
 
 FROM mcr.microsoft.com/playwright:v1.60.0-jammy AS runtime
 

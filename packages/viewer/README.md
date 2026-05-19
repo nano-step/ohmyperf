@@ -1,11 +1,11 @@
-# @nhonh/viewer
+# @ohmyperf/viewer
 
 Static single-file HTML viewer for OhMyPerf Reports. **No runtime dependencies. No React. No JS framework.** Just a string-returning function that emits a self-contained HTML document with inline CSS, inline SVG charts, and an inert JSON payload.
 
 ## Usage
 
 ```ts
-import { renderReportHtml } from "@nhonh/viewer";
+import { renderReportHtml } from "@ohmyperf/viewer";
 
 const html = renderReportHtml(report, {
   title: "Weekly perf — example.com",
@@ -20,16 +20,16 @@ Default reporter for the CLI: `ohmyperf run --format json,html` produces `report
 The package exposes three entry points:
 
 ```ts
-import { renderReportHtml } from "@nhonh/viewer";
-import { renderDonut, renderCwvCard, renderHorizontalBars, classifyCwv, CWV_THRESHOLDS } from "@nhonh/viewer/charts";
-import { escapeHtml, safeUrl, safeNumeric } from "@nhonh/viewer/escape";
+import { renderReportHtml } from "@ohmyperf/viewer";
+import { renderDonut, renderCwvCard, renderHorizontalBars, classifyCwv, CWV_THRESHOLDS } from "@ohmyperf/viewer/charts";
+import { escapeHtml, safeUrl, safeNumeric } from "@ohmyperf/viewer/escape";
 ```
 
-- `@nhonh/viewer` — main viewer entry (`renderReportHtml`)
-- `@nhonh/viewer/charts` — hand-rolled inline SVG chart primitives, framework-agnostic
-- `@nhonh/viewer/escape` — HTML/URL/numeric escape helpers used in all rendering surfaces
+- `@ohmyperf/viewer` — main viewer entry (`renderReportHtml`)
+- `@ohmyperf/viewer/charts` — hand-rolled inline SVG chart primitives, framework-agnostic
+- `@ohmyperf/viewer/escape` — HTML/URL/numeric escape helpers used in all rendering surfaces
 
-`@nhonh/reporter-deck` consumes the `/charts` and `/escape` subpaths.
+`@ohmyperf/reporter-deck` consumes the `/charts` and `/escape` subpaths.
 
 ## Visual sections
 
@@ -60,7 +60,7 @@ renderReportHtml(report, { theme: "system" });
 
 ## Palette + design tokens
 
-Tokens are imported from [`@nhonh/design-tokens`](../design-tokens/README.md), which reflects the canonical [`apps/website/app/globals.css`](../../apps/website/app/globals.css). Drift is gated by `scripts/check-design-tokens.mjs` in CI.
+Tokens are imported from [`@ohmyperf/design-tokens`](../design-tokens/README.md), which reflects the canonical [`apps/website/app/globals.css`](../../apps/website/app/globals.css). Drift is gated by `scripts/check-design-tokens.mjs` in CI.
 
 Every OKLCH declaration has a hex fallback ahead of it for stale-browser safety:
 

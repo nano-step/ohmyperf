@@ -108,7 +108,7 @@ Momus declined the OpenSpec stress-test (scope = `.sisyphus/plans/` only). Pragm
 - **N2**: `apps/runner/Dockerfile.slim` (α.14) needs explicit Chromium pin via apt to maintain reproducibility — `chromium=130.0.x` not bare `chromium`.
 - **N3**: spec.md "Bundle and performance budgets" requirement combines two things (bundle KB + CWV). Could split into two requirements for cleaner test coverage.
 - **N4**: ε.15 says "Playwright Test driving the SPA end-to-end" — explicitly mark headed-vs-headless requirements (extension needs headed unless using ext loading workaround).
-- **N5**: design.md D6 schema names `OmoDB` — fine but inconsistent with `@nhonh/*` naming. Use `OhMyPerfDB` for clarity.
+- **N5**: design.md D6 schema names `OmoDB` — fine but inconsistent with `@ohmyperf/*` naming. Use `OhMyPerfDB` for clarity.
 - **N6**: tasks α.12 says "already present" for `zod`, `ipaddr.js`, `hono` — verify. `hono` likely present (share-server), `ipaddr.js` likely NEW, `zod` confirmed in pnpm-workspace.yaml.
 - **N7**: β.13 mentions next-intl "middleware (no, static export — use ...)" — wording confused. Clarify: use client-side `<NextIntlClientProvider>` since middleware is not available in `output: 'export'`.
 
@@ -152,7 +152,7 @@ End-to-end runner against real Playwright + a local 127.0.0.1 fixture server pro
 
 ### Vitest integration tests
 
-31 tests pass (`pnpm --filter @nhonh/runner test`):
+31 tests pass (`pnpm --filter @ohmyperf/runner test`):
 
 - 19 SSRF unit tests (all blocked CIDRs, host blocklist, allow-private bypass, DNS failure classification).
 - 12 HTTP integration tests covering health, validation 400s, SSRF 403, SSE replay → complete, CORS preflight (PNA echo + disallowed origin), rate-limit 429, DELETE cancel emitting `cancelled`, and 404 paths.
@@ -185,7 +185,7 @@ The integration suite injects a fake `EngineRunner` via `JobStore({ engineRunner
 
 2. **TypeScript version**: `^6.0.3` from spec §P does not exist (TypeScript latest is 5.x as of 2026-05). Used `^5.7.3` instead. No functional difference.
 
-3. **`@nhonh/core` and `@nhonh/viewer` deps removed from website**: The spec §B lists them as dependencies, but Phase β SPA doesn't import from either (viewer is Phase γ, core types come from `@nhonh/shared-types`). Including them caused pnpm resolution issues. Added back when γ begins.
+3. **`@ohmyperf/core` and `@ohmyperf/viewer` deps removed from website**: The spec §B lists them as dependencies, but Phase β SPA doesn't import from either (viewer is Phase γ, core types come from `@ohmyperf/shared-types`). Including them caused pnpm resolution issues. Added back when γ begins.
 
 4. **shadcn `@ts-expect-error` in `sonner.tsx`**: `exactOptionalPropertyTypes: true` inherited from `tsconfig.base.json` is incompatible with shadcn-generated `sonner.tsx`'s ToasterProps spread. Per spec §D guidance ("add per-file `// @ts-expect-error`"), one `@ts-expect-error` added on the `<Sonner>` JSX element. Tracking: resolve when shadcn canary fixes its ToasterProps types.
 
@@ -193,7 +193,7 @@ The integration suite injects a fake `EngineRunner` via `JobStore({ engineRunner
 
 6. **Landing page uses native HTML instead of shadcn Button/Card/Badge** — Radix UI focus management (`aria-hidden` package) pulled into landing via `Button`'s `Slot` import caused a 71 KB gz chunk. Replaced with semantic HTML + Tailwind classes on the landing page only. shadcn components (Button, Card, Badge) remain available for /measure and /report routes. Result: landing went from 183 KB → 112 KB gzip (budget: 150 KB ✅).
 
-7. **Playwright smoke test deferred** — Chromium binary not installed in sandbox. Test file `apps/website/tests/smoke.spec.ts` is fully written and ready to run. Run `pnpm --filter @nhonh/website exec playwright install chromium` then `pnpm --filter @nhonh/website test:smoke` to execute locally.
+7. **Playwright smoke test deferred** — Chromium binary not installed in sandbox. Test file `apps/website/tests/smoke.spec.ts` is fully written and ready to run. Run `pnpm --filter @ohmyperf/website exec playwright install chromium` then `pnpm --filter @ohmyperf/website test:smoke` to execute locally.
 
 ### Bundle budget summary (Phase β)
 | Route | First Load JS (gzip) | Budget | Status |
@@ -231,7 +231,7 @@ The integration suite injects a fake `EngineRunner` via `JobStore({ engineRunner
 10. **`backend-detector.ts` updated**: ping request now carries `protocolVersion: PROTOCOL_VERSION`, and detection requires the response's `protocolVersion` to match. Older or mismatched extensions are treated as "no extension detected" → falls back to runner.
 
 ### Build verification (Phase δ)
-- `pnpm --filter @nhonh/shared-types build`: PASS
-- `pnpm --filter @nhonh/extension-chrome build`: PASS (bundle contains `onMessageExternal` + `onConnectExternal`)
-- `pnpm --filter @nhonh/website typecheck`: PASS
+- `pnpm --filter @ohmyperf/shared-types build`: PASS
+- `pnpm --filter @ohmyperf/extension-chrome build`: PASS (bundle contains `onMessageExternal` + `onConnectExternal`)
+- `pnpm --filter @ohmyperf/website typecheck`: PASS
 

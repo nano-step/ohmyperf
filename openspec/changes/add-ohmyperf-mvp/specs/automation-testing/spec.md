@@ -65,7 +65,7 @@ The repo SHALL ship copy-pasteable CI templates under `templates/ci/`:
 - `gitlab-ci.yml`
 - `circleci-config.yml`
 
-Each template SHALL: install `@nhonh/cli`, install the bundled browser, run `ohmyperf <url> --mode ci-stable --frozen-lockfile --output ./ohmyperf-out --format json,html,junit`, upload the `ohmyperf-out/` directory as a build artifact, optionally publish a JUnit summary.
+Each template SHALL: install `@ohmyperf/cli`, install the bundled browser, run `ohmyperf <url> --mode ci-stable --frozen-lockfile --output ./ohmyperf-out --format json,html,junit`, upload the `ohmyperf-out/` directory as a build artifact, optionally publish a JUnit summary.
 
 #### Scenario: GitHub Actions template usable
 - **WHEN** a repo copies `templates/ci/github-actions.yml` and replaces `${URL}`
