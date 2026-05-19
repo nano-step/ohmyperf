@@ -37,14 +37,6 @@ jobs:
           fi
           echo "Confirmed on v0.1.0 source tree"
 
-      - name: Discover npm identity (debug)
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          set -euo pipefail
-          echo "npm whoami (identity check only, no token logged):"
-          npm whoami 2>&1 || echo "(whoami failed)"
-
       - name: Install
         run: pnpm install --no-frozen-lockfile
 
