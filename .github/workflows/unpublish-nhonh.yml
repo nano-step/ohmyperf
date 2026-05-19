@@ -1,0 +1,78 @@
+name: Unpublish @nhonh/* (one-shot cleanup)
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: unpublish-nhonh
+  cancel-in-progress: false
+
+jobs:
+  unpublish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Unpublish all @nhonh/* versions
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          set -uo pipefail
+          PKGS=(
+            "@nhonh/cli"
+            "@nhonh/mcp-server"
+            "@nhonh/core"
+            "@nhonh/design-tokens"
+            "@nhonh/driver-playwright"
+            "@nhonh/plugins-builtin"
+            "@nhonh/viewer"
+            "@nhonh/share-client"
+            "@nhonh/reporter-json"
+            "@nhonh/reporter-html"
+            "@nhonh/reporter-deck"
+            "@nhonh/reporter-markdown"
+            "@nhonh/reporter-junit"
+            "@nhonh/reporter-csv"
+            "@nhonh/trace-utils"
+          )
+          FAILED=()
+          for pkg in "${PKGS[@]}"; do
+            echo ""
+            echo "=== Unpublishing $pkg ==="
+            if npm unpublish "$pkg" --force 2>&1; then
+              echo "  → unpublished $pkg (all versions)"
+            else
+              echo "  → FAILED to unpublish $pkg"
+              FAILED+=("$pkg")
+            fi
+          done
+          echo ""
+          echo "=== Summary ==="
+          if [ ${#FAILED[@]} -eq 0 ]; then
+            echo "All ${#PKGS[@]} packages unpublished successfully."
+          else
+            echo "Failed: ${FAILED[*]}"
+            echo "::warning::Some unpublishes failed. May be outside 72h window or already gone."
+          fi
+
+      - name: Verify removal
+        run: |
+          set -u
+          PKGS=(
+            "@nhonh/cli" "@nhonh/mcp-server" "@nhonh/core" "@nhonh/design-tokens"
+            "@nhonh/driver-playwright" "@nhonh/plugins-builtin" "@nhonh/viewer"
+            "@nhonh/share-client" "@nhonh/reporter-json" "@nhonh/reporter-html"
+            "@nhonh/reporter-deck" "@nhonh/reporter-markdown" "@nhonh/reporter-junit"
+            "@nhonh/reporter-csv" "@nhonh/trace-utils"
+          )
+          for pkg in "${PKGS[@]}"; do
+            URL="https://registry.npmjs.org/${pkg//\//%2F}"
+            CODE=$(curl --max-time 8 -s -o /dev/null -w "%{http_code}" "$URL")
+            echo "  $pkg → $CODE"
+          done
+          echo ""
+          echo "Expected: 404 for fully-unpublished packages."
