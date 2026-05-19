@@ -129,14 +129,80 @@ export function paletteCssVars(scheme: PaletteWithHex): string {
   return lines.join("\n");
 }
 
+const CALIBRE_STRUCTURAL_TOKENS_LIGHT = `  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --section-y-desktop: 64px;
+  --section-y-tablet: 48px;
+  --section-y-phone: 32px;
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 18px;
+  --text-xl: 24px;
+  --text-2xl: 32px;
+  --text-3xl: 40px;
+  --text-4xl: 56px;
+  --leading-body: 1.5;
+  --leading-tight: 1.1;
+  --tracking-display: -0.01em;
+  --font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, system-ui, sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, monospace;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-pill: 9999px;
+  --elev-flat: none;
+  --elev-ring: 0 0 0 1px var(--color-border);
+  --elev-raised: 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
+  --focus-ring: 0 0 0 3px color-mix(in oklab, var(--color-accent-primary), transparent 70%);
+  --motion-fast: 150ms;
+  --motion-base: 200ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --container-max: 1100px;
+  --container-gutter-desktop: 24px;
+  --container-gutter-tablet: 16px;
+  --container-gutter-phone: 12px;
+  --bg: var(--color-background);
+  --fg: var(--color-foreground);
+  --fg-2: oklch(0.30 0 0);
+  --surface: var(--color-card);
+  --surface-warm: var(--color-muted);
+  --accent: var(--color-accent-primary);
+  --accent-on: var(--color-primary-foreground);
+  --success: var(--color-accent-success);
+  --warn: var(--color-accent-warning);
+  --danger: var(--color-accent-danger);
+  --meta: var(--color-muted-foreground);
+  --muted: var(--color-muted-foreground);
+  --border: var(--color-border);
+  --border-soft: oklch(0.95 0 0);`;
+
+const CALIBRE_STRUCTURAL_TOKENS_DARK = `  --fg-2: oklch(0.75 0 0);
+  --border-soft: oklch(0.30 0 0);
+  --elev-ring: 0 0 0 1px var(--color-border);
+  --elev-raised: 0 1px 3px rgba(0,0,0,0.20), 0 4px 12px rgba(0,0,0,0.15);
+  --focus-ring: 0 0 0 3px color-mix(in oklab, var(--color-accent-primary), transparent 70%);`;
+
 export const PALETTE_CSS = `:root {
   color-scheme: light dark;
 ${paletteCssVars(CALIBRE_LIGHT)}
+${CALIBRE_STRUCTURAL_TOKENS_LIGHT}
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
 ${paletteCssVars(CALIBRE_DARK)
+  .split("\n")
+  .map((l) => `  ${l}`)
+  .join("\n")}
+${CALIBRE_STRUCTURAL_TOKENS_DARK
   .split("\n")
   .map((l) => `  ${l}`)
   .join("\n")}
@@ -148,10 +214,18 @@ ${paletteCssVars(CALIBRE_LIGHT)
   .split("\n")
   .map((l) => `  ${l}`)
   .join("\n")}
+${CALIBRE_STRUCTURAL_TOKENS_LIGHT
+  .split("\n")
+  .map((l) => `  ${l}`)
+  .join("\n")}
 }
 
 .theme-dark {
 ${paletteCssVars(CALIBRE_DARK)
+  .split("\n")
+  .map((l) => `  ${l}`)
+  .join("\n")}
+${CALIBRE_STRUCTURAL_TOKENS_DARK
   .split("\n")
   .map((l) => `  ${l}`)
   .join("\n")}
@@ -161,6 +235,7 @@ ${paletteCssVars(CALIBRE_DARK)
 export const PALETTE_CSS_LIGHT_ONLY = `:root {
   color-scheme: light only;
 ${paletteCssVars(CALIBRE_LIGHT)}
+${CALIBRE_STRUCTURAL_TOKENS_LIGHT}
 }
 `;
 

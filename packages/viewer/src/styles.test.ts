@@ -31,9 +31,15 @@ describe("VIEWER_CSS", () => {
     expect(VIEWER_CSS).toContain("@media (prefers-color-scheme: dark)");
   });
 
-  it("uses --color-* design tokens (no legacy --bg/--accent vars)", () => {
-    expect(VIEWER_CSS).not.toContain("--bg:");
-    expect(VIEWER_CSS).not.toContain("--accent:");
-    expect(VIEWER_CSS).toContain("--color-accent-primary");
+  it("STRUCTURAL_CSS uses brand-native tokens — var(--accent), var(--surface), etc. (R3 revise-open-design-integration)", () => {
+    expect(VIEWER_CSS).toContain("var(--accent)");
+    expect(VIEWER_CSS).toContain("var(--surface)");
+    expect(VIEWER_CSS).toContain("var(--meta)");
+    expect(VIEWER_CSS).toContain("var(--border)");
+    expect(VIEWER_CSS).toContain("var(--space-6)");
+    expect(VIEWER_CSS).toContain("var(--radius-lg)");
+    expect(VIEWER_CSS).toContain("var(--elev-raised)");
+    expect(VIEWER_CSS).toContain("var(--container-max)");
+    expect(VIEWER_CSS).toContain("var(--font-display)");
   });
 });

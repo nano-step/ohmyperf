@@ -22,22 +22,21 @@ describe("renderReportHtml — brand styles", () => {
       expect(html).toContain(`<meta name="ohmyperf-style" content="${style}"`);
     });
 
-    it(`embeds expected --color-* bridge tokens for style=${style}`, () => {
+    it(`embeds expected --color-* bridge tokens for style=${style} (R3: 6 color-semantics aliases only)`, () => {
       const html = renderReportHtml(rich, { style });
       expect(html).toContain("--color-background");
       expect(html).toContain("--color-foreground");
-      expect(html).toContain("--color-accent-primary");
       expect(html).toContain("--color-accent-success");
       expect(html).toContain("--color-accent-warning");
       expect(html).toContain("--color-accent-danger");
     });
 
-    it(`chart CSS rules pick up brand palette (data-donut-slice / data-bar) for style=${style}`, () => {
+    it(`chart CSS rules pick up brand palette via native tokens (data-donut-slice / data-bar) for style=${style}`, () => {
       const html = renderReportHtml(rich, { style });
       expect(html).toContain('[data-donut-slice="0"]');
       expect(html).toContain('[data-donut-slice="1"]');
       expect(html).toContain('[data-bar="filled"]');
-      expect(html).toContain("var(--color-accent-primary)");
+      expect(html).toContain("var(--accent)");
     });
 
     it(`charts are emitted as palette-agnostic SVG (no hard-coded oklch/hex on SVG attrs) for style=${style}`, () => {

@@ -101,21 +101,33 @@ describe("getBrandCss", () => {
     expect(css).toContain("var(--bg)");
   });
 
-  it("every vendored brand includes a bridge mapping to --color-* tokens", () => {
+  it("every vendored brand bridge maps exactly 6 color-semantics aliases (R3 revise-open-design-integration)", () => {
     const bridgeKeys = [
       "--color-background",
       "--color-foreground",
-      "--color-card",
       "--color-primary",
-      "--color-accent-primary",
       "--color-accent-success",
       "--color-accent-warning",
       "--color-accent-danger",
+    ];
+    const removedKeys = [
+      "--color-card",
+      "--color-card-foreground",
+      "--color-muted",
+      "--color-muted-foreground",
+      "--color-border",
+      "--color-primary-foreground",
+      "--color-accent-primary",
+      "--color-destructive",
+      "--color-destructive-foreground",
     ];
     for (const id of ["linear-app", "stripe", "vercel"] satisfies BrandId[]) {
       const css = getBrandCss(id, "system");
       for (const key of bridgeKeys) {
         expect(css, `${id} missing bridge token ${key}`).toContain(key);
+      }
+      for (const key of removedKeys) {
+        expect(css, `${id} should not contain removed bridge token ${key}`).not.toContain(key);
       }
     }
   });
