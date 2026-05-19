@@ -1,5 +1,5 @@
 import type { Report } from "@ohmyperf/core";
-import { BRAND_MANIFEST, getDeckBrandOverlay, type BrandId } from "@ohmyperf/design-tokens";
+import { BRAND_MANIFEST, getBrandCss, type BrandId } from "@ohmyperf/design-tokens";
 import { escapeHtml, escapeJsonForHtml } from "@ohmyperf/viewer/escape";
 import { DECK_CSS, DECK_NAV_SCRIPT } from "./styles.js";
 
@@ -20,7 +20,7 @@ export function renderDeckShell(slides: ReadonlyArray<string>, opts: RenderDeckS
     .join("\n");
   const embed = opts.embedReportPayload !== false;
   const style: BrandId = opts.style ?? "calibre";
-  const overlayCss = getDeckBrandOverlay(style);
+  const overlayCss = getBrandCss(style, "light");
   const isCalibre = style === "calibre";
   const manifest = BRAND_MANIFEST[style];
   const attributionComment = isCalibre

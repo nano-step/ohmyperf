@@ -12,6 +12,7 @@ import { renderEmptyState } from "./sections/empty-state.js";
 import { renderHero } from "./sections/hero.js";
 import { renderThirdParties } from "./sections/third-parties.js";
 import { STRUCTURAL_CSS } from "./styles.js";
+import { BRAND_STRUCTURAL_OVERRIDES } from "./structural-overrides.js";
 
 export interface RenderViewerOptions {
   readonly title?: string;
@@ -58,7 +59,7 @@ export function renderReportHtml(report: Report, opts: RenderViewerOptions = {})
 <meta name="ohmyperf-style" content="${escapeHtml(style)}" />
 <title>${escapeHtml(title)}</title>
 <style>${paletteCss}
-${STRUCTURAL_CSS}</style>
+${STRUCTURAL_CSS}${BRAND_STRUCTURAL_OVERRIDES[style]}</style>
 </head>
 <body>
 <div class="container">

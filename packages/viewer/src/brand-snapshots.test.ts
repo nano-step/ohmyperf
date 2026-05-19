@@ -87,6 +87,18 @@ describe("renderReportHtml — brand styles", () => {
   });
 });
 
+describe("BRAND_STRUCTURAL_OVERRIDES applied per brand", () => {
+  it("vercel viewer HTML contains .cwv-card { border: none }", () => {
+    const html = renderReportHtml(rich, { style: "vercel" });
+    expect(html).toMatch(/\.cwv-card\s*\{\s*border:\s*none/);
+  });
+
+  it("linear-app viewer HTML does NOT contain .cwv-card { border: none }", () => {
+    const html = renderReportHtml(rich, { style: "linear-app" });
+    expect(html).not.toMatch(/\.cwv-card\s*\{\s*border:\s*none/);
+  });
+});
+
 describe("CALIBRE_LIGHT / CALIBRE_DARK imports purged from viewer + reporter-deck", () => {
   it("does not appear as a runtime import in any rendered HTML", () => {
     for (const style of BRAND_IDS) {

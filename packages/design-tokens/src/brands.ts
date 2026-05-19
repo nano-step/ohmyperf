@@ -103,7 +103,11 @@ export function isBrandId(value: unknown): value is BrandId {
   return typeof value === "string" && (BRAND_IDS as ReadonlyArray<string>).includes(value);
 }
 
-export function getDeckBrandOverlay(id: BrandId): string {
-  if (id === "calibre") return "";
-  return VENDORED_DECK_OVERLAY[id];
+/**
+ * @deprecated As of revise-open-design-integration. Deck now consumes the full brand CSS
+ * via getBrandCss(id). This function returns empty string for back-compat with v1 callers.
+ * Will be REMOVED in v0.1.0 (next minor version bump).
+ */
+export function getDeckBrandOverlay(_id: BrandId): string {
+  return "";
 }

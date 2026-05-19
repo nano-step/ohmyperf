@@ -40,19 +40,19 @@ describe("renderReportDeck — brand styles", () => {
     expect(html).not.toContain("<!-- Styled like");
   });
 
-  it("vendored brand overlay overrides --color-accent-primary with brand --accent", () => {
+  it("linear-app brand CSS includes brand --accent token (#5e6ad2)", () => {
     const html = renderReportDeck(rich, { style: "linear-app" });
-    expect(html).toMatch(/--color-accent-primary:\s*#5e6ad2/);
+    expect(html).toMatch(/--accent:\s*#5e6ad2/);
   });
 
-  it("stripe overlay uses Stripe Purple #533afd", () => {
+  it("stripe brand CSS includes brand --accent token (#533afd)", () => {
     const html = renderReportDeck(rich, { style: "stripe" });
-    expect(html).toMatch(/--color-accent-primary:\s*#533afd/);
+    expect(html).toMatch(/--accent:\s*#533afd/);
   });
 
-  it("vercel overlay uses Vercel Blue #0070f3", () => {
+  it("vercel brand CSS includes brand --accent token (#0070f3)", () => {
     const html = renderReportDeck(rich, { style: "vercel" });
-    expect(html).toMatch(/--color-accent-primary:\s*#0070f3/);
+    expect(html).toMatch(/--accent:\s*#0070f3/);
   });
 
   it("non-calibre brands include hidden attribution comment", () => {
