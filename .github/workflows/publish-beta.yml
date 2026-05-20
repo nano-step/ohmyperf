@@ -15,6 +15,7 @@ jobs:
     timeout-minutes: 20
     permissions:
       contents: write
+      id-token: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -26,9 +27,42 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: "24"
           registry-url: "https://registry.npmjs.org"
           cache: pnpm
+
+      - name: Preflight — verify NPM_TOKEN authenticates (skipped in OIDC-only mode)
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          set +e
+          if [ -z "${NODE_AUTH_TOKEN}" ]; then
+            echo "::notice::NPM_TOKEN secret is empty — preflight skipped. Workflow will publish via OIDC trusted publishing only (see docs/PUBLISH-NPM-OIDC.md). If OIDC is not yet configured for these packages on npmjs.com, the publish step will fail with E404 — that is the signal to either (a) configure trusted publishers per the OIDC doc, or (b) set the NPM_TOKEN secret for token-based publishing."
+            exit 0
+          fi
+          echo "NPM_TOKEN is set — running token-mode preflight."
+          WHOAMI_OUT=$(npm whoami 2>&1)
+          WHOAMI_RC=$?
+          if [ $WHOAMI_RC -ne 0 ]; then
+            {
+              echo "::error::NPM_TOKEN is set but does not authenticate. npm whoami output: $WHOAMI_OUT"
+              echo "::error::This is an E401-class failure (invalid or expired token)."
+              echo "::error::Fix: regenerate the token per docs/PUBLISH-NPM-TOKEN.md, OR remove the secret to use OIDC per docs/PUBLISH-NPM-OIDC.md."
+            }
+            exit 1
+          fi
+          echo "npm whoami: $WHOAMI_OUT"
+          ACCESS_OUT=$(npm access list packages @ohmyperf 2>&1)
+          ACCESS_RC=$?
+          echo "$ACCESS_OUT" | head -20
+          if [ $ACCESS_RC -ne 0 ]; then
+            {
+              echo "::warning::npm access list failed for @ohmyperf (exit=$ACCESS_RC)."
+              echo "::warning::Token may be a Granular Access Token without 'Read and write' on @ohmyperf scope."
+              echo "::warning::If the actual publish step below fails with E404 PUT, that is the symptom — see docs/PUBLISH-NPM-TOKEN.md."
+            }
+          fi
+          echo "Preflight passed: token authenticates."
 
       - name: Install
         run: pnpm install --frozen-lockfile

@@ -8,9 +8,11 @@ After this one-time setup, every future v0.X.Y release flows through OIDC. No mo
 
 These were shipped this session — already on `origin/main`:
 
-- `.github/workflows/publish-stable.yml` declares `permissions: id-token: write`.
-- Same workflow uses `actions/setup-node@v4` with `node-version: "24"` (Node 24 bundles npm 11.12.1, well above the 11.5.1 minimum for trusted publishing — see `https://github.com/npm/cli/issues/8525`).
+- `.github/workflows/publish-stable.yml` declares `permissions: id-token: write` and uses `actions/setup-node@v4` with `node-version: "24"` (Node 24 bundles npm 11.12.1, well above the 11.5.1 minimum for trusted publishing — see `https://github.com/npm/cli/issues/8525`).
+- `.github/workflows/publish-beta.yml` has symmetric OIDC readiness (same Node 24 + `id-token: write` + preflight). So if anh ever wants to migrate beta releases to OIDC too, the workflow side is already ready — only the per-package npm UI config differs.
 - npm CLI auto-detects the OIDC environment and tries OIDC before falling back to `NODE_AUTH_TOKEN`. So the current token-based flow continues to work; OIDC simply takes precedence when configured per-package on npmjs.com.
+
+> **Note on beta vs stable**: npm allows only ONE trusted publisher per package. If anh adds `publish-stable.yml` as the trusted publisher, beta releases via `publish-beta.yml` will fall back to `NPM_TOKEN`. The pragmatic recommendation is: **OIDC for stable releases, token path for beta channel** (betas are short-lived and lower-risk). The workflow infrastructure supports either choice with no further changes.
 
 ## What anh needs to do (one-time, ~10 minutes total)
 
