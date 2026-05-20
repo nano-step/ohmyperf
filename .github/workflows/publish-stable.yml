@@ -206,7 +206,6 @@ jobs:
             | grep -E "^chore(\(.+\))?:" \
             | grep -v "bump version" \
             | grep -v "update CHANGELOG" \
-            | grep -v "\[skip ci\]" \
             | sed 's/^/- /' || true)
           body=""
           [ -n "$breaking" ] && body+=$'### \u26a0 Breaking Changes\n'"$breaking"$'\n\n'
