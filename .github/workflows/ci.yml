@@ -92,6 +92,16 @@ jobs:
       - run: pnpm --filter @ohmyperf/core build
       - run: pnpm --filter @ohmyperf/core api:check
 
+  actionlint:
+    name: actionlint (GitHub Actions workflow files)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download actionlint
+        run: bash <(curl -sSf https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash) 1.7.12
+      - name: Lint all workflow files
+        run: ./actionlint -no-color -oneline
+
   parity:
     name: Lighthouse parity (main push only)
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'

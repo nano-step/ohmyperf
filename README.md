@@ -26,6 +26,7 @@ ohmyperf run https://your-site.com
 npm install -g @ohmyperf/mcp-server
 
 # v0.2.0: ESLint plugin for editor-save-time CWV linting
+# (available after v0.2.0 publishes — see issue #7)
 npm install --save-dev @ohmyperf/eslint-plugin
 ```
 
@@ -225,6 +226,8 @@ OhMyPerf ships an MCP (Model Context Protocol) server so AI agents like **Claude
 ```
 
 ### Tools exposed
+
+> **What's available where**: `@ohmyperf/mcp-server@0.1.0` currently on npm exposes the 12 tools NOT marked `(v0.2.0)`. The 2 v0.2.0-tagged tools (`propose_patch`, `verify_fix`) are committed on `main` and will land when v0.2.0 publishes — track at [issue #7](https://github.com/hoainho/ohmyperf/issues/7).
 
 | Tool | Input | Output |
 |---|---|---|
