@@ -420,4 +420,8 @@ export interface MeasureOptions {
     readonly recalibrate?: boolean;
   };
   readonly collectTrace?: boolean;
+  readonly syntheticInteraction?:
+    | false
+    | "auto-click"
+    | { type: "auto-click"; selector?: string; waitAfterMs?: number };
 }

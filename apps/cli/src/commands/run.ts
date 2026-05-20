@@ -125,6 +125,10 @@ export const runCommand = defineCommand({
       description: "Capture a CDP Tracing.start trace and use it for long-task attribution. Disabled by default in CLI to keep runs lean; SPA + extension enable by default.",
       default: false,
     },
+    "synthetic-interaction": {
+      type: "string",
+      description: "Trigger a synthetic interaction (click) after load-idle to enable INP measurement. Values: 'auto-click' (dispatches pointerdown/up+click on first interactive element), '<css-selector>' (clicks the matched element), or omit to skip.",
+    },
     budget: {
       type: "string",
       description: "Repeatable budget metric=threshold (e.g. lcp=2500); reserved for v0 acceptance",
@@ -262,6 +266,14 @@ export const runCommand = defineCommand({
           plugins,
           ...(args.recalibrate ? { calibration: { recalibrate: true } } : {}),
           ...(args["collect-trace"] ? { collectTrace: true } : {}),
+          ...(typeof args["synthetic-interaction"] === "string" && args["synthetic-interaction"].length > 0
+            ? {
+                syntheticInteraction:
+                  args["synthetic-interaction"] === "auto-click"
+                    ? "auto-click"
+                    : { type: "auto-click" as const, selector: args["synthetic-interaction"] },
+              }
+            : {}),
         },
         driver,
         adapter,

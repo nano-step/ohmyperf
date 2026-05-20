@@ -90,7 +90,6 @@ export async function setupOopifAutoAttach(
 
   const recordFrameAttach = (frame: Frame): void => {
     if (frame === page.mainFrame()) return;
-    if (frame.parentFrame() !== page.mainFrame()) return;
     if (seenFrames.has(frame)) return;
     seenFrames.add(frame);
 
@@ -136,7 +135,6 @@ export async function setupOopifAutoAttach(
 
   const reconcileFrameNavigated = (frame: Frame): void => {
     if (frame === page.mainFrame()) return;
-    if (frame.parentFrame() !== page.mainFrame()) return;
     const synthSessionId = frameToSessionId.get(frame);
     if (synthSessionId === undefined) return;
     const url = frame.url();

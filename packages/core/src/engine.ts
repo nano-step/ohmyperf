@@ -216,6 +216,61 @@ export async function runEngine(input: EngineRunOptions): Promise<Report> {
       await pluginRuntime.onLoad(runCtx);
       await pluginRuntime.onIdle(runCtx);
 
+      if (opts.syntheticInteraction) {
+        const cfg =
+          typeof opts.syntheticInteraction === "string"
+            ? { type: "auto-click" as const, selector: undefined, waitAfterMs: 500 }
+            : { waitAfterMs: 500, ...opts.syntheticInteraction };
+        const selector =
+          cfg.selector ?? 'button,a,[role="button"],input[type="submit"],[tabindex="0"]';
+        try {
+          const boxResult = (await pageCtx.rootSession.send("Runtime.evaluate", {
+            expression: `(function(){
+              const t = document.querySelector(${JSON.stringify(selector)});
+              if (!t) return null;
+              const r = t.getBoundingClientRect();
+              if (r.width === 0 || r.height === 0) return null;
+              return { x: r.left + r.width/2, y: r.top + r.height/2, tag: t.tagName + (t.id ? '#' + t.id : '') };
+            })()`,
+            returnByValue: true,
+            awaitPromise: false,
+          })) as { result?: { value?: { x: number; y: number; tag: string } | null } } | undefined;
+          const box = boxResult?.result?.value;
+          if (box) {
+            await pageCtx.rootSession.send("Input.dispatchMouseEvent", {
+              type: "mousePressed",
+              x: box.x,
+              y: box.y,
+              button: "left",
+              clickCount: 1,
+            });
+            await pageCtx.rootSession.send("Input.dispatchMouseEvent", {
+              type: "mouseReleased",
+              x: box.x,
+              y: box.y,
+              button: "left",
+              clickCount: 1,
+            });
+            logger.debug("engine: syntheticInteraction dispatched", {
+              runIndex: i,
+              selector,
+              target: box.tag,
+            });
+            await new Promise((r) => setTimeout(r, cfg.waitAfterMs ?? 500));
+          } else {
+            logger.warn("engine: syntheticInteraction target not found", {
+              runIndex: i,
+              selector,
+            });
+          }
+        } catch (err) {
+          logger.warn("engine: syntheticInteraction failed", {
+            runIndex: i,
+            error: err instanceof Error ? err.message : String(err),
+          });
+        }
+      }
+
       const frameResults: Record<string, CollectorResult> = {};
       const frameHandles: Array<{ frameId: string; handles: CollectorHandle[] }> = [];
       for (const f of pageCtx.attachedFrames) {
