@@ -1,0 +1,64 @@
+name: deploy-website
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Cloudflare Pages branch (production = main, anything else = preview)'
+        required: false
+        default: 'main'
+  push:
+    branches: [main]
+    paths:
+      - 'apps/website/**'
+      - 'packages/viewer/**'
+      - 'packages/design-tokens/**'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/deploy-website.yml'
+
+concurrency:
+  group: deploy-website-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build website (static export)
+        run: pnpm --filter '@ohmyperf/website...' build
+
+      - name: Verify out/ exists
+        run: |
+          test -d apps/website/out || (echo "Missing apps/website/out — Next.js static export failed" && exit 1)
+          test -f apps/website/out/index.html || (echo "Missing apps/website/out/index.html" && exit 1)
+          echo "Static export OK ($(find apps/website/out -type f | wc -l) files)"
+
+      - name: Deploy to Cloudflare Pages
+        id: deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          command: pages deploy apps/website/out --project-name=ohmyperf --branch=${{ github.event.inputs.branch || github.ref_name }}
+
+      - name: Print deployment URL
+        run: |
+          echo "Deployed to: ${{ steps.deploy.outputs.deployment-url }}"
+          echo "Alias URL:   ${{ steps.deploy.outputs.pages-deployment-alias-url }}"

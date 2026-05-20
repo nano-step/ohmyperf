@@ -1,0 +1,25 @@
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties:
+      reportsDir:
+        type: string
+        description: Directory where measurement reports are saved (default ~/.ohmyperf-mcp/reports)
+      maxReports:
+        type: integer
+        default: 50
+        minimum: 1
+        maximum: 1000
+        description: Max reports to keep in reportsDir (older reports are trimmed)
+    required: []
+  commandFunction: |-
+    (config) => ({
+      command: 'npx',
+      args: ['-y', '@ohmyperf/mcp-server@latest'],
+      env: {
+        ...(config.reportsDir ? { OHMYPERF_MCP_REPORTS_DIR: config.reportsDir } : {}),
+        ...(config.maxReports ? { OHMYPERF_MCP_MAX_REPORTS: String(config.maxReports) } : {})
+      }
+    })
+

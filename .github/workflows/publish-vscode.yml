@@ -1,0 +1,58 @@
+name: publish-vscode
+
+on:
+  workflow_dispatch:
+    inputs:
+      dryRun:
+        description: 'Build .vsix only, do not publish to marketplace'
+        required: false
+        default: 'false'
+
+concurrency:
+  group: publish-vscode
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Build extension bundle
+        run: pnpm --filter ohmyperf-vscode build
+
+      - name: Verify extension-out/extension.js exists
+        run: |
+          test -f apps/ide-vscode/extension-out/extension.js || (echo "extension-out/extension.js missing — build failed" && exit 1)
+          BYTES=$(wc -c < apps/ide-vscode/extension-out/extension.js)
+          echo "Bundle size: ${BYTES} bytes"
+
+      - name: Package .vsix
+        working-directory: apps/ide-vscode
+        run: pnpm exec vsce package --no-dependencies --out ohmyperf-vscode.vsix
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+
+      - name: Upload .vsix artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ohmyperf-vscode-vsix
+          path: apps/ide-vscode/ohmyperf-vscode.vsix
+          retention-days: 30
+
+      - name: Publish to VSCode Marketplace
+        if: github.event.inputs.dryRun != 'true'
+        working-directory: apps/ide-vscode
+        run: pnpm exec vsce publish --no-dependencies --packagePath ohmyperf-vscode.vsix
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}

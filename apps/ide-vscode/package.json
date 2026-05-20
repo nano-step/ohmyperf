@@ -1,12 +1,32 @@
 {
   "name": "ohmyperf-vscode",
-  "displayName": "OhMyPerf",
-  "version": "0.0.1",
-  "description": "Real-machine web performance measurement inside VSCode. Wraps the ohmyperf CLI binary.",
+  "displayName": "OhMyPerf — Real Web Performance",
+  "version": "0.1.0",
+  "description": "Real-machine Core Web Vitals measurement (LCP/INP/CLS/FCP/TTFB/TBT) inside VSCode. Wraps the @ohmyperf/cli binary for one-click LCP traces, render-blocking detection, and OOPIF-aware analysis.",
   "license": "Apache-2.0",
   "publisher": "ohmyperf",
+  "author": "Hoài Nhớ <nhoxtvt@gmail.com>",
+  "homepage": "https://github.com/hoainho/ohmyperf",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hoainho/ohmyperf.git",
+    "directory": "apps/ide-vscode"
+  },
+  "bugs": {
+    "url": "https://github.com/hoainho/ohmyperf/issues"
+  },
   "engines": { "vscode": "^1.85.0" },
-  "categories": ["Other"],
+  "categories": ["Testing", "Other"],
+  "keywords": [
+    "performance",
+    "core-web-vitals",
+    "lcp",
+    "inp",
+    "cls",
+    "web-performance",
+    "lighthouse-alternative",
+    "ohmyperf"
+  ],
   "main": "./extension-out/extension.js",
   "activationEvents": [
     "onCommand:ohmyperf.measureUrl",
@@ -47,15 +67,18 @@
   },
   "scripts": {
     "build": "tsc -b && node scripts/bundle-extension.mjs",
+    "package-vsix": "vsce package --no-dependencies --out ohmyperf-vscode.vsix",
+    "publish-vscode": "vsce publish --no-dependencies --packagePath ohmyperf-vscode.vsix",
     "typecheck": "tsc -b",
     "lint": "eslint src",
     "test": "vitest run --passWithNoTests",
-    "clean": "rimraf dist .turbo extension-out *.tsbuildinfo"
+    "clean": "rimraf dist .turbo extension-out *.tsbuildinfo *.vsix"
   },
   "devDependencies": {
     "@ohmyperf/core": "workspace:*",
     "@ohmyperf/viewer": "workspace:*",
     "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.2.0",
     "esbuild": "^0.24.0",
     "vitest": "catalog:"
   },
