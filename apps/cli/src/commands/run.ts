@@ -487,7 +487,33 @@ export function printBeautifulSummary(report: Report, style: BrandId, writtenPat
     return "·";
   };
 
+  const cwvOrderForVerdict = ["lcp", "inp", "cls", "fcp", "ttfb", "tbt"] as const;
+  const measuredStatuses: Array<"good" | "needs-improvement" | "poor" | "unknown"> = [];
+  for (const m of cwvOrderForVerdict) {
+    const agg = report.aggregated[m];
+    if (!agg) continue;
+    measuredStatuses.push(classifyCwv(m, agg.median));
+  }
+  const overallVerdict: "good" | "needs-improvement" | "poor" | "unknown" =
+    measuredStatuses.includes("poor")
+      ? "poor"
+      : measuredStatuses.includes("needs-improvement")
+        ? "needs-improvement"
+        : measuredStatuses.length === 0
+          ? "unknown"
+          : "good";
+  const verdictBanner =
+    overallVerdict === "good"
+      ? pc.green(pc.bold("● PASS")) + pc.dim(" — all Core Web Vitals are in the good range")
+      : overallVerdict === "needs-improvement"
+        ? pc.yellow(pc.bold("● NEEDS IMPROVEMENT")) + pc.dim(" — at least one CWV is in the needs-improvement range")
+        : overallVerdict === "poor"
+          ? pc.red(pc.bold("● FAIL")) + pc.dim(" — at least one CWV is poor")
+          : pc.gray(pc.bold("● UNKNOWN")) + pc.dim(" — no Core Web Vitals measured");
+
   const headerLines: string[] = [
+    verdictBanner,
+    "",
     `${pc.dim("URL")}     ${pc.cyan(report.meta.url)}`,
     `${pc.dim("Style")}   ${pc.cyan(style)}`,
     `${pc.dim("Browser")} ${report.meta.browser.name} ${report.meta.browser.version} ${pc.dim(`(${report.meta.browser.source})`)}`,
