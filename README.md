@@ -4,7 +4,7 @@
 > Lighthouse and PageSpeed Insights run on synthetic CPUs in a Google datacenter.
 > OhMyPerf runs on **your hardware** with **your browser** and reports what your users actually experience.
 
-**v0.1.0** · **License**: Apache-2.0 · **npm**: [`@ohmyperf/cli`](https://www.npmjs.com/package/@ohmyperf/cli) + [`@ohmyperf/mcp-server`](https://www.npmjs.com/package/@ohmyperf/mcp-server) · **Repo**: [`hoainho/ohmyperf`](https://github.com/hoainho/ohmyperf)
+**v0.1.1** · **License**: Apache-2.0 · **npm**: [`@ohmyperf/cli`](https://www.npmjs.com/package/@ohmyperf/cli) + [`@ohmyperf/mcp-server`](https://www.npmjs.com/package/@ohmyperf/mcp-server) · **Repo**: [`hoainho/ohmyperf`](https://github.com/hoainho/ohmyperf)
 
 ## Install
 

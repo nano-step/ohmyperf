@@ -948,9 +948,12 @@ function extractInsight(report: Report, name: InsightName, limit: number): Insig
     case "audits": {
       const audits = report.audits;
       const failed = audits.filter((a) => !a.passed);
+      const sliced = [...audits]
+        .sort((a, b) => Number(a.passed) - Number(b.passed))
+        .slice(0, limit);
       return {
-        summary: `${String(audits.length)} audit(s), ${String(failed.length)} failed.`,
-        data: audits,
+        summary: `${String(audits.length)} audit(s), ${String(failed.length)} failed; showing ${String(sliced.length)} (failed first).`,
+        data: sliced,
       };
     }
     case "resources": {

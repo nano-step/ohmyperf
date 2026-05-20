@@ -97,7 +97,7 @@ export async function promptInteractive(initial: {
 
   const runsRaw = await p.text({
     message: `Number of runs ${pc.dim("(1-30)")}`,
-    initialValue: String(initial.runs ?? 3),
+    initialValue: String(initial.runs ?? 5),
     validate(value) {
       const n = Number((value ?? "").trim());
       if (!Number.isInteger(n) || n < 1 || n > 30) return "Must be an integer 1-30";

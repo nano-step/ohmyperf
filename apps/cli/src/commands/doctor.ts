@@ -44,11 +44,23 @@ export const doctorCommand = defineCommand({
       );
     } else {
       logger.info("playwright: resolvable");
+      const chromiumPath = await tryGetChromiumPath();
+      if (chromiumPath === null) {
+        issues.push(
+          "Playwright is installed but Chromium binary is not downloaded. Run `npx ohmyperf install-browser` (or `npx playwright install chromium`) to fix.",
+        );
+      } else if (!existsSync(chromiumPath)) {
+        issues.push(
+          `Playwright Chromium binary expected at ${chromiumPath} but file does not exist. Run \`npx ohmyperf install-browser\`.`,
+        );
+      } else {
+        logger.info(`chromium: ${chromiumPath}`);
+      }
     }
 
     const nodeMajor = parseInt(process.versions.node.split(".")[0] ?? "0", 10);
-    if (nodeMajor < 20) {
-      issues.push(`Node.js ${process.version} is older than the supported minimum (20.x).`);
+    if (nodeMajor < 22) {
+      issues.push(`Node.js ${process.version} is older than the supported minimum (22.x). ohmyperf requires Node >= 22.`);
     }
 
     if (issues.length === 0) {
@@ -68,5 +80,16 @@ async function tryImportPlaywright(): Promise<boolean> {
     return true;
   } catch {
     return false;
+  }
+}
+
+async function tryGetChromiumPath(): Promise<string | null> {
+  try {
+    const pw = (await import("playwright")) as { chromium?: { executablePath?: () => string } };
+    if (typeof pw.chromium?.executablePath !== "function") return null;
+    const p = pw.chromium.executablePath();
+    return typeof p === "string" && p.length > 0 ? p : null;
+  } catch {
+    return null;
   }
 }

@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-05-20
+
+Wave 1 of the v0.2.0 plan: bug-fix patch addressing 8 issues surfaced by the comprehensive 8-agent audit (`.sisyphus/plans/v020-comprehensive-plan.md`).
+
+### Fixed
+
+- **CLI**: `ohmyperf --version` returned hardcoded `"0.0.0-pre"` instead of the real package version. Now reads from `apps/cli/package.json` at runtime via `createRequire`. (`apps/cli/src/cli.ts`)
+- **CLI**: `ohmyperf doctor` Node-version check accepted Node 20.x and 21.x but the workspace's `engines.node` requires `>= 22`. Doctor now correctly flags Node < 22 as a blocker. (`apps/cli/src/commands/doctor.ts:50`)
+- **CLI**: `ohmyperf doctor` did not check whether Playwright's bundled Chromium binary was actually downloaded — the most common first-run failure. Doctor now resolves `playwright.chromium.executablePath()` and verifies the file exists, emitting `chromium: <path>` on success or a clear hint to run `npx ohmyperf install-browser`. (`apps/cli/src/commands/doctor.ts:40`)
+- **CLI**: `ohmyperf init --ci <provider>` had a `void readFile()` bug that never awaited the file-existence probe, silently picking the first candidate path even when it didn't exist. Now uses `await stat()` properly. (`apps/cli/src/commands/init.ts:94`)
+- **CLI**: `ohmyperf share` rejected every invocation with `missing share-server --endpoint` because there was no default endpoint. Now defaults to `https://ohmyperf.dev`; users can still override via `--endpoint` or `OHMYPERF_SHARE_ENDPOINT`. (`apps/cli/src/commands/share.ts:46`)
+- **CLI**: Interactive prompt (`@clack/prompts` walk-through) defaulted `runs` to `3` while the non-interactive default was `5` — silent reproducibility drift between modes. Now both default to `5`. (`apps/cli/src/commands/run-interactive.ts:100`)
+- **MCP server**: `analyze_report` tool with `insightName: "audits"` ignored the `limit` parameter and returned the full audit list (50+ entries with axe enabled), potentially overflowing LLM context. Now sorts by failed-first and slices to `limit` (default 20). (`apps/mcp-server/src/server.ts:950`)
+- **Core**: INP `longestScript.url` and `.invoker` fields were swapped in the web-vitals attribution mapping. `longestScript.url` now correctly receives the script `sourceURL` (e.g. `https://cdn.example.com/widget.js`); `longestScript.invoker` now receives the call-site `invoker` string (e.g. `IMG#hero.onload`). AI agents debugging INP regressions were getting the wrong field — this is fixed. (`packages/core/src/collectors-impl/cwv-collector.ts:198-199`)
+
+### Verified
+
+- `node apps/cli/bin/ohmyperf.mjs --version` returns `0.1.1`.
+- `node apps/cli/bin/ohmyperf.mjs doctor` returns `status: OK` with `chromium: <path>` line.
+- All packages typecheck + build clean (`pnpm -r build`).
+
 ## [0.1.0] - 2026-05-19
 
 First public release. **15 `@ohmyperf/*` packages** published to npm.

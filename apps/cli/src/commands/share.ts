@@ -43,11 +43,11 @@ export const shareCommand = defineCommand({
     const logger = createConsoleLogger({ level: "info", prefix: "ohmyperf:share" });
 
     const endpoint = String(
-      args.endpoint ?? process.env["OHMYPERF_SHARE_ENDPOINT"] ?? "",
+      args.endpoint ?? process.env["OHMYPERF_SHARE_ENDPOINT"] ?? "https://ohmyperf.dev",
     );
-    if (!endpoint || !/^https?:\/\//.test(endpoint)) {
+    if (!/^https?:\/\//.test(endpoint)) {
       logger.error(
-        "missing share-server --endpoint (or OHMYPERF_SHARE_ENDPOINT env). Example: --endpoint http://localhost:4170",
+        `invalid --endpoint URL: ${endpoint}. Must be http(s)://. Default: https://ohmyperf.dev`,
       );
       process.exit(EXIT_CODES.invalidUsage);
     }

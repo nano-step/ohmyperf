@@ -57,7 +57,7 @@ export const initCommand = defineCommand({
       process.exit(EXIT_CODES.invalidUsage);
     }
 
-    const sourcePath = resolveTemplate(cfg.source);
+    const sourcePath = await resolveTemplate(cfg.source);
     try {
       await mkdir(dirname(targetPath), { recursive: true });
       await copyFile(sourcePath, targetPath);
@@ -82,7 +82,7 @@ async function pathExists(path: string): Promise<boolean> {
   }
 }
 
-function resolveTemplate(name: string): string {
+async function resolveTemplate(name: string): Promise<string> {
   const here = fileURLToPath(import.meta.url);
   const candidates = [
     resolve(here, "../../../../templates/ci", name),
@@ -91,8 +91,8 @@ function resolveTemplate(name: string): string {
   ];
   for (const path of candidates) {
     try {
-      void readFile(path);
-      return path;
+      const s = await stat(path);
+      if (s.isFile()) return path;
     } catch {}
   }
   return candidates[0]!;
