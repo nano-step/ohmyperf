@@ -18,14 +18,12 @@ jobs:
       matrix:
         os:
           - macos-15
-          - macos-13
+          - macos-14
           - ubuntu-24.04
           - ubuntu-22.04
           - windows-2022
         node: ["22.x", "24.x"]
         exclude:
-          - os: macos-13
-            node: "24.x"
           - os: ubuntu-22.04
             node: "24.x"
     steps:

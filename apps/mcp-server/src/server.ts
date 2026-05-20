@@ -1370,6 +1370,7 @@ async function trimReports(dir: string, max: number): Promise<void> {
 function summarize(report: Report, savedPath: string): string {
   const lines: string[] = [];
   lines.push(`Measured ${report.meta.url}`);
+  lines.push(`Saved to: ${savedPath}`);
   lines.push(
     `Mode: ${report.meta.mode}; runs: ${String(report.meta.runs)}; duration: ${String(report.meta.durationMs)}ms; measurementId: ${report.meta.measurementId}`,
   );
