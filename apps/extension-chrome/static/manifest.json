@@ -3,7 +3,7 @@
   "name": "OhMyPerf",
   "version": "0.2.0",
   "description": "Real-machine, real-browser web performance measurement via chrome.debugger.",
-  "permissions": ["debugger", "storage", "activeTab", "tabs"],
+  "permissions": ["debugger", "storage", "activeTab", "tabs", "scripting"],
   "host_permissions": ["<all_urls>"],
   "externally_connectable": {
     "matches": [

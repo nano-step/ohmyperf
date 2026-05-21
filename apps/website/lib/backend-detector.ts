@@ -12,10 +12,87 @@ const RUNNER_HOSTS = [
   `http://localhost:${env.NEXT_PUBLIC_RUNNER_PORT}`,
 ];
 
-const DETECTION_TIMEOUT_MS = 800;
+const DETECTION_TIMEOUT_MS = 1500;
+const ANNOUNCE_WAIT_MS = 600;
+const STORAGE_KEY = 'ohmyperf:extension-id';
+
+function readStoredExtensionId(): string | null {
+  if (typeof localStorage === 'undefined') return null;
+  try {
+    const v = localStorage.getItem(STORAGE_KEY);
+    if (v && /^[a-p]{32}$/i.test(v)) return v;
+  } catch {
+    return null;
+  }
+  return null;
+}
+
+function writeStoredExtensionId(id: string): void {
+  if (typeof localStorage === 'undefined') return;
+  try {
+    localStorage.setItem(STORAGE_KEY, id);
+  } catch {
+    return;
+  }
+}
+
+let announceListenerInstalled = false;
+let announcedExtensionId: string | null = null;
+const announceWaiters: Array<(id: string) => void> = [];
+
+function installAnnounceListener(): void {
+  if (announceListenerInstalled || typeof window === 'undefined') return;
+  announceListenerInstalled = true;
+  window.addEventListener('message', (evt: MessageEvent) => {
+    if (evt.origin !== window.location.origin) return;
+    const d = evt.data;
+    if (
+      d &&
+      typeof d === 'object' &&
+      (d as { source?: unknown }).source === 'ohmyperf-extension' &&
+      (d as { type?: unknown }).type === 'ohmyperf/announce' &&
+      typeof (d as { extensionId?: unknown }).extensionId === 'string' &&
+      /^[a-p]{32}$/i.test((d as { extensionId: string }).extensionId)
+    ) {
+      const id = (d as { extensionId: string }).extensionId;
+      announcedExtensionId = id;
+      writeStoredExtensionId(id);
+      while (announceWaiters.length > 0) {
+        const w = announceWaiters.shift();
+        if (w) w(id);
+      }
+    }
+  });
+}
+
+function waitForAnnounce(timeoutMs: number): Promise<string | null> {
+  installAnnounceListener();
+  if (announcedExtensionId) return Promise.resolve(announcedExtensionId);
+  return new Promise<string | null>((resolve) => {
+    const timer = setTimeout(() => {
+      const idx = announceWaiters.indexOf(resolver);
+      if (idx >= 0) announceWaiters.splice(idx, 1);
+      resolve(null);
+    }, timeoutMs);
+    const resolver = (id: string): void => {
+      clearTimeout(timer);
+      resolve(id);
+    };
+    announceWaiters.push(resolver);
+  });
+}
+
+export function setExtensionIdOverride(id: string): boolean {
+  if (!/^[a-p]{32}$/i.test(id)) return false;
+  announcedExtensionId = id;
+  writeStoredExtensionId(id);
+  return true;
+}
 
 export async function detectBackend(signal?: AbortSignal): Promise<Backend> {
   if (typeof window === 'undefined') return { kind: 'none' };
+
+  installAnnounceListener();
 
   const ac = new AbortController();
   const linkedSignal = signal ? mergeSignals([ac.signal, signal]) : ac.signal;
@@ -40,9 +117,15 @@ export async function detectBackend(signal?: AbortSignal): Promise<Backend> {
 }
 
 async function pingExtension(signal: AbortSignal): Promise<Backend | null> {
-  const id = env.NEXT_PUBLIC_EXTENSION_ID;
   const runtime = window.chrome?.runtime;
-  if (!id || !runtime || typeof runtime.sendMessage !== 'function') return null;
+  if (!runtime || typeof runtime.sendMessage !== 'function') return null;
+
+  let id = announcedExtensionId ?? readStoredExtensionId();
+  if (!id) {
+    id = await waitForAnnounce(ANNOUNCE_WAIT_MS);
+  }
+  if (!id) id = env.NEXT_PUBLIC_EXTENSION_ID ?? null;
+  if (!id) return null;
 
   return new Promise<Backend | null>((resolve) => {
     let settled = false;

@@ -69,6 +69,7 @@ interface ChromeAPI {
       windowId?: number;
     }): Promise<ChromeTab>;
     get(tabId: number): Promise<ChromeTab>;
+    query(opts: { url?: string | string[]; status?: string }): Promise<ChromeTab[]>;
     onRemoved: {
       addListener(cb: (tabId: number, info: { windowId: number; isWindowClosing: boolean }) => void): void;
       removeListener(cb: (tabId: number, info: { windowId: number; isWindowClosing: boolean }) => void): void;
@@ -83,10 +84,12 @@ interface ChromeAPI {
     };
   };
   runtime: {
+    id: string;
     getURL(path: string): string;
     getManifest(): { version: string };
     onConnect: { addListener(cb: (port: ChromeRuntimePort) => void): void };
     onConnectExternal: { addListener(cb: (port: ChromeRuntimePort) => void): void };
+    onInstalled: { addListener(cb: (details: { reason: string }) => void): void };
     onMessageExternal: {
       addListener(
         cb: (
@@ -97,7 +100,14 @@ interface ChromeAPI {
       ): void;
     };
   };
-  scripting?: unknown;
+  scripting?: {
+    executeScript(opts: {
+      target: { tabId: number };
+      func: (...args: unknown[]) => unknown;
+      args?: unknown[];
+      world?: 'MAIN' | 'ISOLATED';
+    }): Promise<unknown>;
+  };
 }
 
 declare const chrome: ChromeAPI;
@@ -828,5 +838,71 @@ if (typeof chrome !== "undefined" && chrome.runtime && chrome.runtime.onConnectE
       if (job.port === port) job.port = null;
       // Job continues; single-run is short and the replay buffer covers reconnect.
     });
+  });
+}
+
+const ANNOUNCE_URL_PATTERNS = [
+  "https://ohmyperf.dev/*",
+  "https://*.ohmyperf.dev/*",
+  "https://hoainho.github.io/*",
+  "http://localhost:3000/*",
+  "http://127.0.0.1:3000/*",
+];
+
+function announceToTab(tabId: number, extensionId: string, version: string): void {
+  if (!chrome.scripting) return;
+  chrome.scripting
+    .executeScript({
+      target: { tabId },
+      world: "MAIN",
+      func: (id: unknown, ver: unknown) => {
+        try {
+          window.postMessage(
+            {
+              source: "ohmyperf-extension",
+              type: "ohmyperf/announce",
+              protocolVersion: 1,
+              extensionId: id,
+              version: ver,
+            },
+            window.location.origin,
+          );
+        } catch (_e) {
+          /* tab navigated away mid-injection */
+        }
+      },
+      args: [extensionId, version],
+    })
+    .catch(() => undefined);
+}
+
+function announceToAllTabs(): void {
+  if (typeof chrome === "undefined" || !chrome.tabs || !chrome.runtime) return;
+  const extId = chrome.runtime.id;
+  const ver = chrome.runtime.getManifest().version;
+  chrome.tabs
+    .query({ url: ANNOUNCE_URL_PATTERNS })
+    .then((tabs) => {
+      for (const tab of tabs) {
+        if (typeof tab.id === "number") announceToTab(tab.id, extId, ver);
+      }
+    })
+    .catch(() => undefined);
+}
+
+if (typeof chrome !== "undefined" && chrome.runtime && chrome.runtime.onInstalled) {
+  chrome.runtime.onInstalled.addListener(() => announceToAllTabs());
+}
+
+if (typeof chrome !== "undefined" && chrome.tabs && chrome.tabs.onUpdated) {
+  chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
+    if (info.status !== "complete") return;
+    const url = tab.url ?? "";
+    if (
+      !/^https:\/\/(ohmyperf\.dev|[a-z0-9-]+\.ohmyperf\.dev|hoainho\.github\.io)(\/|$)/.test(url)
+      && !/^http:\/\/(localhost|127\.0\.0\.1):3000(\/|$)/.test(url)
+    ) return;
+    if (!chrome.runtime) return;
+    announceToTab(tabId, chrome.runtime.id, chrome.runtime.getManifest().version);
   });
 }

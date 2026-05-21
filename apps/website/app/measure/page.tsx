@@ -344,6 +344,8 @@ function NoBackendGuide({ url }: { url: string }) {
         </div>
       </div>
 
+      <ExtensionIdPaste />
+
       <div className="bg-muted/20 px-5 py-3 border-t border-border text-xs text-muted-foreground">
         Already have a <code className="font-mono text-foreground">report.json</code>?{' '}
         <a href="/viewer/" className="underline underline-offset-2 hover:text-foreground font-medium">
@@ -351,6 +353,54 @@ function NoBackendGuide({ url }: { url: string }) {
         </a>
       </div>
     </div>
+  );
+}
+
+function ExtensionIdPaste() {
+  return (
+    <details className="bg-muted/10 px-5 py-3 border-t border-border text-xs">
+      <summary className="cursor-pointer text-muted-foreground hover:text-foreground transition-colors">
+        Extension installed but still not detected? Paste its ID
+      </summary>
+      <div className="mt-3 flex flex-col sm:flex-row gap-2">
+        <input
+          type="text"
+          inputMode="text"
+          autoComplete="off"
+          spellCheck={false}
+          placeholder="e.g. mdlgknjbmkjondofohmbpkmlnmncbjmg"
+          pattern="[a-p]{32}"
+          maxLength={32}
+          aria-label="Chrome extension ID (32 lowercase a-p chars)"
+          className="flex-1 h-8 rounded-md border border-input bg-background px-2 text-[12px] font-mono focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          id="ext-id-paste"
+        />
+        <button
+          type="button"
+          onClick={() => {
+            const el = document.getElementById('ext-id-paste') as HTMLInputElement | null;
+            const id = el?.value.trim().toLowerCase() ?? '';
+            if (!/^[a-p]{32}$/.test(id)) {
+              alert('Invalid Chrome extension ID. It must be exactly 32 lowercase letters a-p (32 chars).');
+              return;
+            }
+            try {
+              localStorage.setItem('ohmyperf:extension-id', id);
+            } catch {
+              alert('Could not save to localStorage. Try a non-incognito window.');
+              return;
+            }
+            window.location.reload();
+          }}
+          className="h-8 px-3 rounded-md bg-foreground text-background text-[12px] font-medium hover:opacity-90"
+        >
+          Save + reload
+        </button>
+      </div>
+      <p className="mt-2 text-[11px] text-muted-foreground leading-relaxed">
+        Find your ID at <code className="font-mono">chrome://extensions</code> — it&apos;s the 32-char string under <strong className="text-foreground">OhMyPerf</strong>. After saving, the page reloads and the extension is detected automatically. (Unpacked extensions get a per-machine ID — the bundled default only works if you used Chrome Web Store install.)
+      </p>
+    </details>
   );
 }
 
