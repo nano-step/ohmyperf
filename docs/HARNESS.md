@@ -683,6 +683,54 @@ the change becomes part of the trunk.
     in one commit. When debugging "extension not detected", the agent
     MUST verify every layer before guessing — bisecting one layer at a
     time wastes commits.
+18. **`sendMessage`-then-`connect` to a MV3 service worker.** Chrome MV3
+    service workers idle out 30 seconds after the last event handler
+    returns. `chrome.runtime.sendMessage()` wakes a dormant SW; the SW
+    handles the message, calls `sendResponse()`, returns, and immediately
+    enters the idle countdown. `chrome.runtime.connect()` does NOT
+    reliably wake dormant SWs — Chrome's documented behavior is that
+    only sendMessage queues for SW wakeup, connect requires the SW to
+    already be alive. The SPA-side pattern
+        ack = await sendMessage(measure)
+        port = connect(ack.portName)   // ← gap of N ms; SW may be dead
+    is a race condition that fails non-deterministically with
+    "Could not establish connection. Receiving end does not exist."
+    The probability of failure increases with: cold SW (first call),
+    `"type": "module"` background (defer-evaluated), low-end machines
+    (longer microtask queues), browser memory pressure (aggressive
+    reclaim). Session 2026-05-21 is the canonical case: extension was
+    correctly installed, ID was correctly resolved, allowlists were
+    correct, ping succeeded, but the very first measurement crashed
+    because the SW was killed in the ~5ms gap between ack and connect.
+
+    The only correct patterns are:
+
+    Pattern A (connect-first, RECOMMENDED): SPA opens the port FIRST
+    via `chrome.runtime.connect()`, then sends the measure request
+    THROUGH the port via `port.postMessage()`. The port itself wakes
+    the SW, the port keeps the SW alive while a message is in flight,
+    and the SW receives the measure request only when it's guaranteed
+    alive. Mirrors the WebSocket pattern from
+    `chrome-extensions-samples/functional-samples/tutorial.websockets`.
+
+    Pattern B (atomic-callback fusion, ACCEPTABLE for legacy code):
+    Call `chrome.runtime.connect()` SYNCHRONOUSLY inside the
+    `sendMessage` callback, before the Promise resolves. No microtask
+    gap, no await, no React render between ack receipt and connect.
+    SW is guaranteed alive because we haven't returned from its
+    `sendResponse()` callback yet. Used in v0.2.0 as `startMeasureAndStream`
+    (apps/website/lib/extension-bridge.ts) — see commit 27bea87.
+
+    Anti-pattern (NEVER): separate `await startMeasure()` then
+    `streamPort(ack.portName)`. Any async work between (state updates,
+    storage writes, React re-renders) opens the SW kill window.
+
+    Long-running measurements (>30s) must additionally either:
+      - Use `chrome.debugger.attach()` early — Chrome 118+ keeps the
+        SW alive while a debugger session is open
+      - Send periodic `port.postMessage({type: 'ping'})` keepalive
+        every ≤20s
+      - Use `chrome.alarms` with periodInMinutes >= 0.5
 
 ## GitHub Issue Tracking
 
