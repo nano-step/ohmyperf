@@ -3,7 +3,8 @@ import { test, expect } from '@playwright/test';
 test.describe('Phase β smoke', () => {
   test('landing renders hero + form', async ({ page }) => {
     await page.goto('/');
-    await expect(page.locator('h1')).toContainText('OhMyPerf');
+    await expect(page.locator('h1')).toContainText(/LLM agent can actually fix/i);
+    await expect(page.getByText('OhMyPerf').first()).toBeVisible();
     await expect(page.getByLabel('URL to measure')).toBeVisible();
     await expect(page.getByRole('button', { name: /measure/i })).toBeEnabled();
   });
