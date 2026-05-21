@@ -2,6 +2,8 @@
 
 > **The first perf tool an LLM agent can actually fix your site with — statistical proof, not vibes.**
 
+🌐 **Try the viewer live**: [hoainho.github.io/ohmyperf/viewer/](https://hoainho.github.io/ohmyperf/viewer/) — drag any `report.json` onto the page and inspect every metric, every long-task, every render-blocking opportunity in your browser. No install, no signup.
+
 [![npm](https://img.shields.io/npm/v/@ohmyperf/cli?label=%40ohmyperf%2Fcli&color=cb3837)](https://www.npmjs.com/package/@ohmyperf/cli)
 [![MCP](https://img.shields.io/badge/MCP-compatible-7c3aed)](https://modelcontextprotocol.io)
 [![Chromium](https://img.shields.io/badge/real--browser-Chromium-4285f4)](https://www.chromium.org/)

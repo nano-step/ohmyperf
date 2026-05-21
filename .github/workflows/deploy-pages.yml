@@ -1,0 +1,73 @@
+name: deploy-pages
+
+# Zero-credential GitHub Pages deploy of apps/website to
+# https://hoainho.github.io/ohmyperf/ . Parallel to deploy-website.yml
+# (Cloudflare Pages, needs secrets). Keep build steps in lockstep.
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - 'apps/website/**'
+      - 'packages/viewer/**'
+      - 'packages/design-tokens/**'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/deploy-pages.yml'
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build website (static export with basePath=/ohmyperf)
+        env:
+          OHMYPERF_BASE_PATH: /ohmyperf
+        run: pnpm --filter '@ohmyperf/website...' build
+
+      - name: Verify out/ exists
+        run: |
+          test -d apps/website/out || (echo "Missing apps/website/out — Next.js static export failed" && exit 1)
+          test -f apps/website/out/index.html || (echo "Missing apps/website/out/index.html" && exit 1)
+          echo "Static export OK ($(find apps/website/out -type f | wc -l) files)"
+
+      - name: Disable Jekyll on Pages
+        run: touch apps/website/out/.nojekyll
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/website/out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

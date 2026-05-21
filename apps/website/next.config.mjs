@@ -9,6 +9,11 @@ const bundleAnalyzer = withBundleAnalyzer({
   analyzerMode: 'json',
 });
 
+// GitHub Pages serves from /ohmyperf/ subpath. Setting OHMYPERF_BASE_PATH
+// in the deploy workflow keeps Cloudflare Pages (root) and other targets
+// working without changes.
+const basePath = process.env.OHMYPERF_BASE_PATH ?? '';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
@@ -16,6 +21,8 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   images: { unoptimized: true },
+  basePath,
+  assetPrefix: basePath || undefined,
   experimental: {
     optimizePackageImports: ['lucide-react'],
   },
