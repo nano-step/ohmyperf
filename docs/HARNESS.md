@@ -731,6 +731,61 @@ the change becomes part of the trunk.
       - Send periodic `port.postMessage({type: 'ping'})` keepalive
         every ≤20s
       - Use `chrome.alarms` with periodInMinutes >= 0.5
+19. **Node-only globals leaking into a browser bundle.** Any package
+    shared between Node and browser surfaces (e.g. `@ohmyperf/core` is
+    consumed by both the CLI/runner AND the Chrome extension SW + Next.js
+    SPA) MUST NOT reference Node-only globals without a `typeof X !==
+    "undefined"` guard. The bundler's `platform: "browser"` setting
+    aliases `node:*` module imports but does NOT polyfill **globals**.
+    The canonical offenders:
+      - `process.env`, `process.version`, `process.platform`,
+        `process.versions`, `process.cwd()`, `process.nextTick`,
+        `process.exit`, `process.stdout`/`process.stderr`
+      - `Buffer` (use `TextEncoder` for byte counting / `Uint8Array`
+        for binary data)
+      - `__dirname`, `__filename` (use `new URL(import.meta.url)`)
+      - `setImmediate` (use `queueMicrotask` or `setTimeout(fn, 0)`)
+      - `global.X` (use `globalThis.X`)
+
+    Session 2026-05-21 is the canonical case: `runEngine()` worked fine
+    in CLI/Node context but crashed the Chrome extension SW at runtime
+    with `ReferenceError: process is not defined`. Four direct uses of
+    `process.env`/`process.version` + one `Buffer.byteLength` in
+    `@ohmyperf/core` had survived `platform: "browser"` and tree-shaking.
+    Commit 9af7824 fixed via 2-layer defense.
+
+    Required practice — defense in depth:
+
+    Layer 1 (source guards): At every Node-API callsite inside packages
+    intended for cross-runtime use, guard with `typeof process !==
+    "undefined"` (or `globalThis.process` for stricter strict-mode TS).
+    For `Buffer`, prefer Web APIs (`TextEncoder`, `Uint8Array`,
+    `new URL(...)` etc.). Code is self-documenting and works regardless
+    of bundler.
+
+    Layer 2 (bundler `define`): The browser-bundle build config
+    (esbuild/Vite/Rollup `define`) MUST stub Node globals at compile
+    time so unguarded refs from new code or transitive deps fail at
+    build, not at runtime in a user's browser:
+
+        define: {
+          "process.env": "{}",
+          "process.version": "\"browser\"",
+          "process.versions": "{}",
+          "process.platform": "\"browser\"",
+        }
+
+    Do NOT define `process` itself to `undefined` — that breaks the
+    `typeof process !== "undefined"` guards from Layer 1. The two
+    layers reinforce each other; either alone is insufficient.
+
+    When adding new methods to a cross-runtime package, the agent MUST
+    grep the diff for `process\.|Buffer\.|__dirname|setImmediate` and
+    fix-or-guard each hit BEFORE merge. When debugging a browser
+    `ReferenceError`, the agent MUST inspect the BUNDLED output (not
+    source) with `python3 -c "import re; ..." ` filtered to exclude
+    esbuild's `<define:process.X>` comment markers — those are
+    replacement evidence, not runtime references.
 
 ## GitHub Issue Tracking
 
