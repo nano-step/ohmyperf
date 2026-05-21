@@ -246,17 +246,47 @@ test:real-world   (REQUIRED for any user-feature or bug-fix in a tool that
   - A field documented in README/MCP tool description is absent from output
   - The command silently exits 0 but produces no artifact
 
+test:landing-self-measure   (REQUIRED for any change to apps/website,
+                              site content, or any user-facing copy/UI
+                              shipped to the public landing page)
+  Self-referential proof: after deploying the landing page, run
+  `ohmyperf measure` against the deployed URL itself and paste the
+  output. A perf-measurement tool whose own landing page fails its
+  own audit is the canonical Forbidden #14 / Forbidden #12 violation
+  combined: the tool advertises capability it cannot demonstrate on
+  its own surface.
+
+  Concretely, after deploy-pages.yml runs:
+    1. Resolve the live URL (https://hoainho.github.io/ohmyperf/).
+    2. Run `npx -y @ohmyperf/cli@latest run <url> --runs 3 --format json`.
+    3. Verify all of: HTTP 200, valid report.json schema 1.0.0, LCP
+       within CWV "good" or "needs-improvement" band (< 4000 ms),
+       CLS < 0.25, no plugin warnings beyond known-acceptable
+       (axe-core source not bundled is OK; others are not).
+    4. Paste the aggregated CWV block + resource count + render-blocking
+       count into the deploying commit message or PR comment.
+    5. If LCP > 2500ms on the landing, file a tracking issue before
+       deploying the next user-facing change. Don't ship slow demos
+       of a perf tool.
+
+  Landing-self-measure gate fails if:
+  - The deployed URL returns non-200
+  - Measure command exits non-zero
+  - LCP > 4000 ms (poor band)
+  - CLS > 0.25 (poor band)
+  - The output is missing CWV metrics entirely
+
 test:release   (before deploy)
   pnpm -r publish --dry-run --no-git-checks   # must exit 0
 ```
 
 **Lane → required layers:**
 
-| Lane | validate:quick | test:integration | test:e2e | test:real-world |
-|------|:-:|:-:|:-:|:-:|
-| tiny | ✓ | — | — | — |
-| normal | ✓ | ✓ | — | ✓ (if URL-consuming) |
-| high-risk | ✓ | ✓ | ✓ | ✓ |
+| Lane | validate:quick | test:integration | test:e2e | test:real-world | test:landing-self-measure |
+|------|:-:|:-:|:-:|:-:|:-:|
+| tiny | ✓ | — | — | — | — |
+| normal | ✓ | ✓ | — | ✓ (if URL-consuming) | ✓ (if touches apps/website) |
+| high-risk | ✓ | ✓ | ✓ | ✓ | ✓ (if touches apps/website) |
 
 Agents must not claim a layer passes until it has been run and output verified.
 
@@ -530,6 +560,18 @@ the change becomes part of the trunk.
     on that field. Required check after user-flow test: verify every
     documented field appears in the output OR an explicit-absence message
     fires.
+15. **Shipping a landing-page change without self-measure proof.** OhMyPerf
+    is a perf-measurement tool. Its public landing page is the most-visible
+    surface and is implicitly the loudest claim of competence. Any commit
+    touching `apps/website/` or any user-facing copy/UI that lands on
+    `https://hoainho.github.io/ohmyperf/` must include, in the commit
+    message or merged PR description, the result of running
+    `ohmyperf measure` against the deployed URL — at minimum the aggregated
+    CWV block (LCP / CLS / TTFB / TBT median + CoV), resource count, and
+    render-blocking count. If LCP > 2500ms on the landing itself, a tracking
+    issue must be filed before the next user-facing change ships. The tool
+    must demonstrate competence on its own surface; ship slow demo = ship
+    proof the tool doesn't work.
 
 ## GitHub Issue Tracking
 

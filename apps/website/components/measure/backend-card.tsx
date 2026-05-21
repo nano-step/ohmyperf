@@ -70,19 +70,24 @@ export function BackendCard({ className }: Props) {
 
   return (
     <Alert className={cn(className)}>
-      <AlertDescription className="flex flex-col sm:flex-row sm:items-center gap-3">
+      <AlertDescription className="flex flex-col gap-3">
         <span className="text-sm">
-          No backend detected. Install the Chrome extension or start the local runner to measure.
+          <span className="font-medium">No runner detected.</span> To measure live, install the Chrome extension or run the CLI locally — the page above will pick it up automatically.
         </span>
-        <div className="flex gap-2 flex-shrink-0">
+        <div className="flex flex-wrap gap-2">
           <Button asChild variant="outline" size="sm">
             <a href="https://chrome.google.com/webstore/detail/ohmyperf" rel="noopener noreferrer">
-              Install extension
+              Install Chrome extension
             </a>
           </Button>
           <Button asChild variant="outline" size="sm">
-            <a href="https://github.com/ohmyperf/ohmyperf/tree/main/apps/runner" rel="noopener noreferrer">
-              Local runner
+            <a href="https://github.com/hoainho/ohmyperf#install" rel="noopener noreferrer">
+              Install the CLI
+            </a>
+          </Button>
+          <Button asChild variant="secondary" size="sm">
+            <a href="/viewer/" rel="noopener noreferrer">
+              Drop a report.json instead
             </a>
           </Button>
         </div>
