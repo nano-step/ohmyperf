@@ -134,6 +134,7 @@ export function axePlugin(opts: AxePluginOptions = {}): Plugin {
           title: "Accessibility violations (axe-core)",
           score: violations.length === 0 ? 1 : 0,
           passed: violations.length === 0,
+          status: violations.length === 0 ? "pass" : "fail",
           details: { count: violations.length, top: summary.slice(0, 10) },
         };
         ctx.audit(audit);

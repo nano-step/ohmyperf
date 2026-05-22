@@ -278,6 +278,7 @@ describe("createPluginRuntime()", () => {
             title: "X",
             score: 1,
             passed: true,
+            status: "pass",
           });
           ctx.setData({ count: 7 });
           ctx.recordCapabilityUse("audit");

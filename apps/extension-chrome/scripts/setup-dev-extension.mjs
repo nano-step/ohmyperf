@@ -61,4 +61,29 @@ Next steps:
 
 The keypair at .dev-keys/extension.pem is git-ignored. Keep it stable so the
 extension ID stays the same across rebuilds.
+
+────────────────────────────────────────────────────────────────────────────
+IMPORTANT — multi-developer / CI implications:
+────────────────────────────────────────────────────────────────────────────
+
+The keypair is generated locally on first run via 'openssl genrsa'. This means:
+
+  • Each developer running this script gets a DIFFERENT extension ID.
+  • CI runners that don't have the keypair will produce yet another ID
+    (or no key at all → Chrome assigns a path-hash ID at load-unpacked time).
+  • The SPA's NEXT_PUBLIC_EXTENSION_ID in .env.local must match the keypair's
+    ID for the handshake to succeed.
+
+Consequences:
+  • test:e2e:extension passes locally for you but fails on CI / a teammate's
+    machine because the IDs don't match.
+  • Sharing .dev-keys/extension.pem between developers (e.g. via 1Password)
+    is the recommended workaround if you need shared dev environment.
+
+For production / CI builds, scripts/bundle-extension.mjs only injects the
+manifest 'key' field WHEN .dev-keys/extension.pem exists. CI runners don't
+have this directory → no key → Chrome / CWS assigns the ID at install time.
+This dev-only flow exists purely to keep the unpacked-load ID stable across
+rebuilds on a single machine.
+────────────────────────────────────────────────────────────────────────────
 `);

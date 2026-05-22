@@ -81,6 +81,7 @@ export type {
   AggregatedMetrics,
   ArtifactRef,
   AuditResult,
+  AuditStatus,
   Awaitable,
   BrowserHandle,
   BrowserInfo,

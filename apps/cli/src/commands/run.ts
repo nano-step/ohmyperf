@@ -87,7 +87,8 @@ export const runCommand = defineCommand({
     },
     plugins: {
       type: "string",
-      description: "Plugin set: 'all' (cwv+axe+example), 'cwv', 'cwv+axe', or 'none'",
+      description:
+        "Plugin set: preset ('all', 'cwv', 'cwv+axe', 'none') or comma-separated list (e.g. 'cwv,axe,third-parties'). Individual names: cwv, axe, third-parties, example.",
       default: "all",
     },
     "isolate-origins": {
@@ -381,20 +382,55 @@ function optString(value: unknown): string | undefined {
   return value;
 }
 
-function resolvePluginSet(name: string, logger: Logger): ReadonlyArray<Plugin> {
-  switch (name) {
+function resolveSinglePluginToken(token: string): ReadonlyArray<Plugin> | null {
+  switch (token) {
+    case "":
     case "none":
       return [];
     case "cwv":
       return [cwvPlugin()];
+    case "axe":
+      return [axePlugin()];
+    case "third-parties":
+      return [thirdPartiesPlugin()];
+    case "example":
+      return [customMetricExamplePlugin()];
     case "cwv+axe":
       return [cwvPlugin(), axePlugin()];
     case "all":
       return [cwvPlugin(), axePlugin(), thirdPartiesPlugin(), customMetricExamplePlugin()];
     default:
-      logger.warn(`unknown --plugins value '${name}'; defaulting to 'all'`);
-      return [cwvPlugin(), axePlugin(), thirdPartiesPlugin(), customMetricExamplePlugin()];
+      return null;
   }
+}
+
+function resolvePluginSet(name: string, logger: Logger): ReadonlyArray<Plugin> {
+  const trimmed = name.trim();
+  if (trimmed.includes(",")) {
+    const seen = new Set<string>();
+    const result: Plugin[] = [];
+    const unknown: string[] = [];
+    for (const part of trimmed.split(",").map((s) => s.trim()).filter(Boolean)) {
+      const resolved = resolveSinglePluginToken(part);
+      if (resolved === null) {
+        unknown.push(part);
+        continue;
+      }
+      for (const plugin of resolved) {
+        if (seen.has(plugin.id)) continue;
+        seen.add(plugin.id);
+        result.push(plugin);
+      }
+    }
+    if (unknown.length > 0) {
+      logger.warn(`unknown --plugins token(s) ${JSON.stringify(unknown)}; ignored. Known: cwv, axe, third-parties, example, all, cwv+axe, none.`);
+    }
+    return result;
+  }
+  const resolved = resolveSinglePluginToken(trimmed);
+  if (resolved !== null) return resolved;
+  logger.warn(`unknown --plugins value '${name}'; defaulting to 'all'`);
+  return [cwvPlugin(), axePlugin(), thirdPartiesPlugin(), customMetricExamplePlugin()];
 }
 
 function mapErrorToExitCode(err: unknown): number {

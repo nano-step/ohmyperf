@@ -158,11 +158,14 @@ export interface Opportunity {
   }>;
 }
 
+export type AuditStatus = "pass" | "fail" | "na";
+
 export interface AuditResult {
   readonly id: string;
   readonly title: string;
   readonly score: number | null;
   readonly passed: boolean;
+  readonly status: AuditStatus;
   readonly details?: unknown;
 }
 
@@ -244,6 +247,13 @@ export interface FixPlanEntry {
   readonly rank: number;
   readonly archetype: FixArchetypeId;
   readonly target: { readonly url: string; readonly originClass?: OriginClass };
+  /**
+   * All URLs that share this archetype + originClass + expectedMetric. Present when ≥2 URLs collapsed
+   * into a grouped entry. The primary `target` is the highest-ROI representative; `targets` lists every
+   * URL (including the primary) so consumers can apply the patch across all of them. Sorted by
+   * descending impact. Field is OPTIONAL — single-URL entries omit it.
+   */
+  readonly targets?: ReadonlyArray<{ readonly url: string; readonly originClass?: OriginClass; readonly expectedImpactMs: number }>;
   readonly expectedImpactMs: number;
   readonly expectedMetric: "lcp" | "fcp" | "tbt" | "inp" | "cls";
   readonly confidence: "high" | "medium" | "low";

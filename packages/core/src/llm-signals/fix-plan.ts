@@ -206,5 +206,44 @@ export function buildFixPlan(report: Report): ReadonlyArray<FixPlanEntry> {
     return b.roiScore - a.roiScore;
   });
 
-  return drafts.map((d, i) => ({ ...d, rank: i + 1 }));
+  const grouped = collapseSameArchetype(drafts);
+
+  return grouped.map((d, i) => ({ ...d, rank: i + 1 }));
+}
+
+function collapseSameArchetype(drafts: ReadonlyArray<Omit<FixPlanEntry, "rank">>): Array<Omit<FixPlanEntry, "rank">> {
+  type Draft = Omit<FixPlanEntry, "rank">;
+  const byKey = new Map<string, { primary: Draft; siblings: Draft[] }>();
+  const order: string[] = [];
+  for (const d of drafts) {
+    const key = `${d.archetype}|${d.expectedMetric}|${d.target.originClass ?? ""}`;
+    const bucket = byKey.get(key);
+    if (!bucket) {
+      byKey.set(key, { primary: d, siblings: [] });
+      order.push(key);
+    } else {
+      bucket.siblings.push(d);
+    }
+  }
+  return order.map((key) => {
+    const bucket = byKey.get(key)!;
+    if (bucket.siblings.length === 0) return bucket.primary;
+    const all = [bucket.primary, ...bucket.siblings];
+    const totalImpactMs = all.reduce((acc, x) => acc + x.expectedImpactMs, 0);
+    const targets = all
+      .map((x) => {
+        const t: { url: string; originClass?: OriginClass; expectedImpactMs: number } = {
+          url: x.target.url,
+          expectedImpactMs: x.expectedImpactMs,
+        };
+        if (x.target.originClass !== undefined) t.originClass = x.target.originClass;
+        return t;
+      })
+      .sort((a, b) => b.expectedImpactMs - a.expectedImpactMs);
+    return {
+      ...bucket.primary,
+      expectedImpactMs: totalImpactMs,
+      targets,
+    };
+  });
 }

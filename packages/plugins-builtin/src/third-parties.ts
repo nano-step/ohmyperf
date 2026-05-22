@@ -72,6 +72,7 @@ export function thirdPartiesPlugin(opts: ThirdPartiesPluginOptions = {}): Plugin
           id: "third-parties",
           title: `Third-party usage (${String(items.length)} entit${items.length === 1 ? "y" : "ies"})`,
           passed: true,
+          status: "pass" as const,
           score: 1 as number | null,
           details: { items },
         };

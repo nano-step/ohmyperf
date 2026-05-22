@@ -590,13 +590,16 @@ describe("buildFixPlan", () => {
       ],
     });
     const plan = buildFixPlan(r);
-    expect(plan).toHaveLength(4);
-    for (const p of plan) {
-      expect(p.confidence).toBe("medium");
+    expect(plan).toHaveLength(1);
+    expect(plan[0]!.confidence).toBe("medium");
+    expect(plan[0]!.targets).toHaveLength(4);
+    expect(plan[0]!.expectedImpactMs).toBeCloseTo(117 * 4, 1);
+    for (const t of plan[0]!.targets!) {
+      expect(t.originClass).toBe("same-origin");
     }
   });
 
-  it("W5: tradeit.gg fixture — 4 nuxt CSS chunks, all same-origin → 4 first-party stylesheet patches (Q10: confidence downgrade asserted)", () => {
+  it("W5: tradeit.gg fixture — 4 nuxt CSS chunks, all same-origin → 1 grouped first-party stylesheet patch with 4 targets (Q10: confidence downgrade asserted)", () => {
     const r = reportFixture({
       url: "https://tradeit.gg/",
       opportunities: [
@@ -629,16 +632,23 @@ describe("buildFixPlan", () => {
       ],
     });
     const plan = buildFixPlan(r);
-    expect(plan).toHaveLength(4);
-    for (const p of plan) {
-      expect(p.archetype).toBe("render-blocking-stylesheet-media-print");
-      expect(p.applicability).toBe("first-party");
-      expect(p.target.originClass).toBe("same-origin");
-      expect(p.confidence).toBe("low");
-      expect(p.patchPreview).toContain('media="print"');
-    }
+    expect(plan).toHaveLength(1);
+    const entry = plan[0]!;
+    expect(entry.archetype).toBe("render-blocking-stylesheet-media-print");
+    expect(entry.applicability).toBe("first-party");
+    expect(entry.target.originClass).toBe("same-origin");
+    expect(entry.confidence).toBe("low");
+    expect(entry.patchPreview).toContain('media="print"');
+    expect(entry.targets).toHaveLength(4);
+    expect(entry.expectedImpactMs).toBeCloseTo(117 * 4, 1);
+    const urls = entry.targets!.map((t) => t.url).sort();
+    expect(urls).toEqual([
+      "https://tradeit.gg/_nuxt/Confirm.zQ5b604N.css",
+      "https://tradeit.gg/_nuxt/LoginButton.DVfW5dYf.css",
+      "https://tradeit.gg/_nuxt/TextField.C8Qy0XBT.css",
+      "https://tradeit.gg/_nuxt/entry.D8e8F2nM.css",
+    ]);
     expect(plan[0]?.rank).toBe(1);
-    expect(plan[3]?.rank).toBe(4);
   });
 
   it("Q4: LCP image opportunity + image resource → lcp-image-fetchpriority-high archetype", () => {
