@@ -418,7 +418,7 @@ Agents must not claim a layer passes until it has been run and output verified.
 ## Credential-Blocked State
 
 When a required action is gated on a credential only the human can provide
-(NPM_TOKEN, Cloudflare API token, VSCode marketplace PAT, etc.):
+(NHO_NPM_TOKEN, Cloudflare API token, VSCode marketplace PAT, etc.):
 
 1. **Diagnose exactly** before reporting. Run the actual command and capture
    the error code. E404 on npm publish = read-only token scope (not expired).
@@ -439,7 +439,7 @@ When a required action is gated on a credential only the human can provide
    and is honestly knowable.
 
 5. **Never claim the publish step as "pending"** if the token's scope is
-   known to be wrong. State the root cause: "NPM_TOKEN has read-only scope
+   known to be wrong. State the root cause: "NHO_NPM_TOKEN has read-only scope
    on @ohmyperf — E404 on PUT, not E401. Fix: regenerate with Read+Write
    scope per docs/PUBLISH-NPM-TOKEN.md."
 
@@ -490,7 +490,7 @@ Cross-platform release-day checklist — each link points to a single-paste setu
 
 1. **npm registry** (`@ohmyperf/*` packages)
    - **Recommended path (no recurring secrets)**: [`docs/PUBLISH-NPM-OIDC.md`](./PUBLISH-NPM-OIDC.md) — one-time per-package Trusted Publisher config on npmjs.com, then every future release uses GitHub OIDC + provenance attestations.
-   - Token-based path (current, recurring rotation): [`docs/PUBLISH-NPM-TOKEN.md`](./PUBLISH-NPM-TOKEN.md) — `NPM_TOKEN` secret with Read+Write on `@ohmyperf` scope.
+   - Token-based path (current, recurring rotation): [`docs/PUBLISH-NPM-TOKEN.md`](./PUBLISH-NPM-TOKEN.md) — `NHO_NPM_TOKEN` secret with Read+Write on `@ohmyperf` scope.
    - Trigger (either path): `gh workflow run publish-stable.yml --field bump=minor`
    - Verify: `npx -y @ohmyperf/cli@X.Y.Z doctor`
 
@@ -511,7 +511,7 @@ Cross-platform release-day checklist — each link points to a single-paste setu
 
 Defensive engineering already in place:
 - `publish-stable.yml` runs an `npm whoami` + `npm access list` preflight before pipeline cost.
-  If `NPM_TOKEN` is misconfigured, the workflow fails in <2s with an `::error::` pointing
+  If `NHO_NPM_TOKEN` is misconfigured, the workflow fails in <2s with an `::error::` pointing
   at the diagnostic doc instead of burning 3 minutes on install+build+bump only to hit an
   opaque E404.
 

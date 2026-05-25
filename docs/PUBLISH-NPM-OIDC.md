@@ -1,6 +1,6 @@
-# Eliminating NPM_TOKEN via Trusted Publishing (OIDC)
+# Eliminating NHO_NPM_TOKEN via Trusted Publishing (OIDC)
 
-The current `NPM_TOKEN` secret model has a recurring failure mode: tokens expire, get rotated with wrong scopes, leak in logs. **npm Trusted Publishing eliminates the secret entirely** by trusting GitHub's OIDC identity provider to vouch for the workflow.
+The current `NHO_NPM_TOKEN` secret model has a recurring failure mode: tokens expire, get rotated with wrong scopes, leak in logs. **npm Trusted Publishing eliminates the secret entirely** by trusting GitHub's OIDC identity provider to vouch for the workflow.
 
 After this one-time setup, every future v0.X.Y release flows through OIDC. No more E401, no more E404-from-wrong-scope, no more "anh has to rotate the token."
 
@@ -12,7 +12,7 @@ These were shipped this session — already on `origin/main`:
 - `.github/workflows/publish-beta.yml` has symmetric OIDC readiness (same Node 24 + `id-token: write` + preflight). So if anh ever wants to migrate beta releases to OIDC too, the workflow side is already ready — only the per-package npm UI config differs.
 - npm CLI auto-detects the OIDC environment and tries OIDC before falling back to `NODE_AUTH_TOKEN`. So the current token-based flow continues to work; OIDC simply takes precedence when configured per-package on npmjs.com.
 
-> **Note on beta vs stable**: npm allows only ONE trusted publisher per package. If anh adds `publish-stable.yml` as the trusted publisher, beta releases via `publish-beta.yml` will fall back to `NPM_TOKEN`. The pragmatic recommendation is: **OIDC for stable releases, token path for beta channel** (betas are short-lived and lower-risk). The workflow infrastructure supports either choice with no further changes.
+> **Note on beta vs stable**: npm allows only ONE trusted publisher per package. If anh adds `publish-stable.yml` as the trusted publisher, beta releases via `publish-beta.yml` will fall back to `NHO_NPM_TOKEN`. The pragmatic recommendation is: **OIDC for stable releases, token path for beta channel** (betas are short-lived and lower-risk). The workflow infrastructure supports either choice with no further changes.
 
 ## What anh needs to do (one-time, ~10 minutes total)
 
@@ -52,7 +52,7 @@ Repeat for each of these 17 packages:
 @ohmyperf/viewer
 ```
 
-> Note: For the two new packages (`@ohmyperf/eslint-plugin`, `@ohmyperf/fixers`), trusted publishing only works **after the first publish** — npm has no "pending publisher" feature. The current `NPM_TOKEN` (with Read+Write) must successfully publish v0.2.0 first. After that, anh can switch all 17 packages to trusted publishers, and the NPM_TOKEN secret becomes unnecessary for future releases.
+> Note: For the two new packages (`@ohmyperf/eslint-plugin`, `@ohmyperf/fixers`), trusted publishing only works **after the first publish** — npm has no "pending publisher" feature. The current `NHO_NPM_TOKEN` (with Read+Write) must successfully publish v0.2.0 first. After that, anh can switch all 17 packages to trusted publishers, and the NHO_NPM_TOKEN secret becomes unnecessary for future releases.
 
 ## Verifying it works
 
@@ -83,10 +83,10 @@ The `with OIDC authentication` line confirms OIDC took over (vs. `with tag lates
 
 Once trusted publishing is confirmed working, anh can:
 
-1. Remove the `NPM_TOKEN` secret from `https://github.com/hoainho/ohmyperf/settings/secrets/actions`.
-2. Remove the `Preflight — verify NPM_TOKEN authenticates against registry` step from `publish-stable.yml` (since there's nothing to preflight).
+1. Remove the `NHO_NPM_TOKEN` secret from `https://github.com/hoainho/ohmyperf/settings/secrets/actions`.
+2. Remove the `Preflight — verify NHO_NPM_TOKEN authenticates against registry` step from `publish-stable.yml` (since there's nothing to preflight).
 
-The workflow's `NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}` env var becomes empty/undefined, which npm CLI handles gracefully (it just uses OIDC).
+The workflow's `NODE_AUTH_TOKEN: ${{ secrets.NHO_NPM_TOKEN }}` env var becomes empty/undefined, which npm CLI handles gracefully (it just uses OIDC).
 
 ## References
 

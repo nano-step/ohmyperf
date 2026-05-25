@@ -1,4 +1,4 @@
-# Diagnosing the NPM_TOKEN failure (v0.2.0 publish blocker)
+# Diagnosing the NHO_NPM_TOKEN failure (v0.2.0 publish blocker)
 
 ## Symptom
 
@@ -21,11 +21,11 @@ npm error 404  '@ohmyperf/design-tokens@0.1.1' is not in this registry.
 | `26136471633` | whoami debug | `E401` | The previous token (before rotation) was outright invalid. |
 | `26136317983` onwards | publish-stable | `E404` on PUT | The current token (rotated some time between 01:51 and 01:54 on 2026-05-20) **does authenticate** with the registry — otherwise it would also return E401 — but **cannot write to the `@ohmyperf` scope**. |
 
-The NPM_TOKEN secret was last updated at 2026-05-19T15:22:09Z, confirmed via:
+The NHO_NPM_TOKEN secret was last updated at 2026-05-19T15:22:09Z, confirmed via:
 
 ```bash
 gh secret list -R hoainho/ohmyperf
-# NPM_TOKEN	2026-05-19T15:22:09Z
+# NHO_NPM_TOKEN	2026-05-19T15:22:09Z
 ```
 
 ## What anh needs to do
@@ -42,9 +42,9 @@ The current token has **Read-only** access on `@ohmyperf`. Generate a new token 
 6. Copy the new token (shown once).
 7. Replace the GitHub secret:
    ```bash
-   gh secret set NPM_TOKEN -R hoainho/ohmyperf --body 'npm_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+   gh secret set NHO_NPM_TOKEN -R hoainho/ohmyperf --body 'npm_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
    ```
-   Or via the GitHub UI: `https://github.com/hoainho/ohmyperf/settings/secrets/actions` → `NPM_TOKEN` → **Update secret**.
+   Or via the GitHub UI: `https://github.com/hoainho/ohmyperf/settings/secrets/actions` → `NHO_NPM_TOKEN` → **Update secret**.
 
 ## Trigger the publish
 

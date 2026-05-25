@@ -56,24 +56,24 @@ jobs:
             echo "skip=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Preflight — verify NPM_TOKEN authenticates against registry (skipped in OIDC-only mode)
+      - name: Preflight — verify NHO_NPM_TOKEN authenticates against registry (skipped in OIDC-only mode)
         if: steps.guard.outputs.skip == 'false'
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NHO_NPM_TOKEN }}
         run: |
           set +e
           if [ -z "${NODE_AUTH_TOKEN}" ]; then
-            echo "::notice::NPM_TOKEN secret is empty — preflight skipped. Workflow will publish via OIDC trusted publishing only (see docs/PUBLISH-NPM-OIDC.md). If OIDC is not yet configured for these packages on npmjs.com, the publish step will fail with E404 — that is the signal to either (a) configure trusted publishers per the OIDC doc, or (b) set the NPM_TOKEN secret for token-based publishing."
+            echo "::notice::NHO_NPM_TOKEN secret is empty — preflight skipped. Workflow will publish via OIDC trusted publishing only (see docs/PUBLISH-NPM-OIDC.md). If OIDC is not yet configured for these packages on npmjs.com, the publish step will fail with E404 — that is the signal to either (a) configure trusted publishers per the OIDC doc, or (b) set the NHO_NPM_TOKEN secret for token-based publishing."
             exit 0
           fi
 
-          echo "NPM_TOKEN is set — running token-mode preflight."
+          echo "NHO_NPM_TOKEN is set — running token-mode preflight."
           echo "Step 1: confirm token authenticates (npm whoami hits registry)"
           WHOAMI_OUT=$(npm whoami 2>&1)
           WHOAMI_RC=$?
           if [ $WHOAMI_RC -ne 0 ]; then
             {
-              echo "::error::NPM_TOKEN is set but does not authenticate. npm whoami output: $WHOAMI_OUT"
+              echo "::error::NHO_NPM_TOKEN is set but does not authenticate. npm whoami output: $WHOAMI_OUT"
               echo "::error::This is an E401-class failure (invalid or expired token)."
               echo "::error::Fix: regenerate the token per docs/PUBLISH-NPM-TOKEN.md, OR remove the secret entirely to use OIDC per docs/PUBLISH-NPM-OIDC.md."
             }
@@ -272,7 +272,7 @@ jobs:
         if: steps.guard.outputs.skip == 'false'
         run: pnpm publish -r --access public --no-git-checks
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NHO_NPM_TOKEN }}
 
       - name: Push commit and tag
         if: steps.guard.outputs.skip == 'false'
