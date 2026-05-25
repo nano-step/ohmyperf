@@ -1,0 +1,63 @@
+name: Verify NPM Token
+
+# Manual-only safety workflow: runs preflight (npm whoami + scope check)
+# WITHOUT publishing anything. Use to validate NHO_NPM_TOKEN after rotation.
+#
+# Usage: gh workflow run "Verify NPM Token" --repo nano-step/ohmyperf
+#
+# Exit codes:
+#   0 = token authenticates and has write access to @ohmyperf scope
+#   1 = token is empty, invalid, or lacks scope access
+
+on:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Preflight — verify NHO_NPM_TOKEN authenticates against registry
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NHO_NPM_TOKEN }}
+        run: |
+          set -e
+          if [ -z "${NODE_AUTH_TOKEN}" ]; then
+            echo "::error::NHO_NPM_TOKEN secret is empty in this repo's scope."
+            echo "::error::This is an org-level secret. The repo nano-step/ohmyperf must be"
+            echo "::error::within the org's secret visibility (visibility=all)."
+            exit 1
+          fi
+
+          echo "Step 1: npm whoami (token authentication probe)"
+          WHOAMI=$(npm whoami 2>&1)
+          echo "  → npm whoami: $WHOAMI"
+          if ! echo "$WHOAMI" | grep -qE "^[a-zA-Z0-9_-]+$"; then
+            echo "::error::Token does not authenticate. Output: $WHOAMI"
+            exit 1
+          fi
+
+          echo ""
+          echo "Step 2: npm access list packages @ohmyperf (scope coverage)"
+          ACCESS=$(npm access list packages @ohmyperf 2>&1)
+          echo "$ACCESS" | head -25
+          if echo "$ACCESS" | grep -q "read-write"; then
+            COUNT=$(echo "$ACCESS" | grep -c "read-write")
+            echo "  → $COUNT @ohmyperf packages writable by this token"
+          else
+            echo "::warning::Token authenticates but lacks read-write on @ohmyperf scope."
+            echo "::warning::This will cause E404 on publish step."
+            exit 1
+          fi
+
+          echo ""
+          echo "✅ NHO_NPM_TOKEN is healthy and properly scoped for @ohmyperf publishes."
